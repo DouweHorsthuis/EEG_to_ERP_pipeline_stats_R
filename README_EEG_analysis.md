@@ -14,3 +14,22 @@ Script 4 (D_interpolate) it interpolates the channels and creates a file which c
 Script 5 (E_epoching) it epochs the continues data, runs a last cleaning where it deletes all the epochs that are too noisy (this amount gets saved for each participant) saves the data as both .erp and .set.
 
 events.txt this file is used in script 5. it can be created by using ERP lab, but it needs all the triggers from the data that are relevant, assigns a name to them and a bin. (example: 101 "first trigger" 1 "first trigger" 102 "last trigger" 2 "last trigger").
+
+# Stats-R
+Calculating Stats in R
+
+
+importing data from .txt file
+
+Creating Factors
+
+Creates summary-mean and standard deviation
+
+Randomly selects 200 trials per subject (so everyone has equal amounts of data)
+
+plots (violin + boxplot)
+
+mixed-effects models
+
+Summary of mixed effects model
+
