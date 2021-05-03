@@ -1,8 +1,8 @@
 % EEGLAB and ERPlab epoching script by Douwe Horsthuis on6/18/2020
 % This script epochs and deletes the noisy epochs.
 % It creates a matrix with how much data it deletes at the end.
-% it can also record the RTs and put them in and excel, but it needs a
-% folder after the homepath called \All RT files\
+% it can also record the RTs and put them in and excel, but it needs folder after the homepath called \All RT files\
+
 
 clear variables
 eeglab
@@ -14,7 +14,7 @@ nsubj = length(subject_list); % number of subjects
 participant_info_temp = []; % needed for creating matrix at the end
 % Path to the parent folder, which contains the data folders for all subjects
 home_path  = 'the main folder where you store your data\';
-eventlist_location = 'the folder where you stored your eventlist\'; %event list should be named event.txt
+binlist_location = 'the folder where you stored your binlist\'; %binlist should be named binlist.txt
 epoch_time = [-50 400];
 baseline_time = [-50 0];
 % Loop through all subjects
@@ -29,7 +29,9 @@ for s=1:nsubj
     EEG = pop_loadset('filename', [subject_list{s} '_inter.set'], 'filepath', data_path);
     %epoching
     EEG = eeg_checkset( EEG );
-    EEG  = pop_editeventlist( EEG , 'AlphanumericCleaning', 'on', 'BoundaryNumeric', { -99}, 'BoundaryString', { 'boundary' }, 'List', [eventlist_location 'events.txt'], 'SendEL2', 'EEG', 'UpdateEEG', 'codelabel', 'Warning', 'off' ); %here it reads in eventlist so it knows what to eppoch.
+    EEG  = pop_creabasiceventlist( EEG , 'AlphanumericCleaning', 'on', 'BoundaryNumeric', { -99 }, 'BoundaryString', { 'boundary' } ); 
+    EEG = eeg_checkset( EEG );
+    EEG  = pop_binlister( EEG , 'BDF', [binlist_location '\binlist.txt'], 'IndexEL',  1, 'SendEL2', 'EEG', 'Voutput', 'EEG' ); 
     EEG = eeg_checkset( EEG );
     EEG = pop_epochbin( EEG , epoch_time,  baseline_time); %epoch size and baseline size
     EEG = eeg_checkset( EEG );
