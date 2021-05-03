@@ -1,3 +1,5 @@
+made this change in Rstudio
+
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -19,13 +21,13 @@
   <p align="center">
     This EEG pipeline is made to analyze data collected with a biosemi system, using however many chanels you want. There are several cleaning steps (e.g. channel rejection, ICA, epoch rejection) after which stats can be done using Rstudio
     <br />
-    <a href="https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R"><strong>Explore the docs ?</strong></a>
     <br />
     <br />
     <a href="https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R">View Demo</a>
-    ·
+    ?
     <a href="https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/issues">EEG_to_ERP_pipeline_stats_Rrt Bug</a>
-    ·
+    ?
     <a href="https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/issues">Request Feature</a>
   </p>
 </p>
