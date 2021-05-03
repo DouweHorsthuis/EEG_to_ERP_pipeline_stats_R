@@ -21,7 +21,6 @@
     <br />
     <br />
     <br />
-    .
     <a href="https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/issues">Report a Bug</a>
     .
     <a href="https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/issues">Request Feature</a>
@@ -219,14 +218,35 @@ EEG = pop_interp(EEG, ALLEEG(1).chanlocs, 'spherical');%
 ### E_epoching
 This is the last file for pre-processing the data. In this script the interpolated data gets epoched cleaned and turned into an ERP. Some of these functions are ERPlab based. 
 
-Firstly, the data needs to have their events (or triggers) to be updated. You need to create a text file that assigns this info. [See this tutorial for more info.](https://github.com/lucklab/erplab/wiki/Creating-an-EventList:-ERPLAB-Functions:-Tutorial)
+Firstly, the data needs to have their events (or triggers) to be updated. You need to create a text file that assigns this info. There are 2 ways of doing this you can define all trials using an eventlist. This is more restrictive, because it seems like you cannot add a sequence of trigger, only individual ones [See this tutorial for more info.](https://github.com/lucklab/erplab/wiki/Creating-an-EventList:-ERPLAB-Functions:-Tutorial).
+Instead we use the Binlist option. You can create as many bins as you want. Each bin will create a different ERP, and if you want to use ERP lab to plot ERPs you can choose which ones to plot. If you want to use another program it might be worth it to just save the ERPs of 1 specific bin and run the script mulitple times. [see this for information on how to create a binlist.txt file](https://github.com/DouweHorsthuis/trial_by_trial_data_export_eeglab/blob/main/images/binlist.PNG)
+
+
 After that you set the time for the epoch. This is pre-defined in the variable epoch_time and baseline_time  at the start. 
 After that we use the pop_artmwppth function to flag all the epochs that are too noisy.
 We save this info, after which we delete them. 
 Lastly we create the ERPs and save the data as a final .set file.
 You will also have a file at the end with each participants ID number and the percentage of data that got deleted. 
 
+You can choose to use the pop_binlister function (see line 35). 
+
 If you end up wanting Reaction time for the ERPs. consider including the [pop_rt2text](https://github.com/lucklab/erplab/blob/master/pop_functions/pop_rt2text.m) function. For this to work you need to define your reaction in the eventlist.  
+
+These are the variables you NEED to change:
+```matlab
+subject_list = {'some sort of ID' 'a different id for a different particpant'}; 
+name_paradigm = 'name'; % this is needed for saving the table at the end
+participant_info_temp = []; % needed for creating matrix at the end
+home_path  = 'the main folder where you store your data\';
+eventlist_location = 'the folder where you stored your eventlist\'; %event list should be named event.txt
+epoch_time = [-50 400]; %epoch start and end time in ms
+baseline_time = [-50 0];%baseline start and end time in ms
+```
+
+These you can change if you want to change settings
+```matlab
+EEG = pop_interp(EEG, ALLEEG(1).chanlocs, 'spherical');% 
+```
 
 ### F_individual_trials_export
 If you want to do stats in R or any program that doesn't read .mat files. you need to export your data. This happens in the F script. [For detailed info see its own repo](https://github.com/DouweHorsthuis/trial_by_trial_data_export_eeglab). 
@@ -250,8 +270,6 @@ after that you can create a summary with the results of the mixed effects model
 See the [open issues](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/issues) for a list of proposed features (and known issues).
 
 
-
-<!-- CONTRIBUTING -->
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
