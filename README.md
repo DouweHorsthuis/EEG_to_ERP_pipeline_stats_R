@@ -219,7 +219,7 @@ EEG = pop_interp(EEG, ALLEEG(1).chanlocs, 'spherical');%
 This is the last file for pre-processing the data. In this script the interpolated data gets epoched cleaned and turned into an ERP. Some of these functions are ERPlab based. 
 
 Firstly, the data needs to have their events (or triggers) to be updated. You need to create a text file that assigns this info. There are 2 ways of doing this you can define all trials using an eventlist. This is more restrictive, because it seems like you cannot add a sequence of trigger, only individual ones [See this tutorial for more info.](https://github.com/lucklab/erplab/wiki/Creating-an-EventList:-ERPLAB-Functions:-Tutorial).
-Instead we use the Binlist option. You can create as many bins as you want. Each bin will create a different ERP, and if you want to use ERP lab to plot ERPs you can choose which ones to plot. If you want to use another program it might be worth it to just save the ERPs of 1 specific bin and run the script mulitple times. [see this for information on how to create a binlist.txt file](https://github.com/DouweHorsthuis/trial_by_trial_data_export_eeglab/blob/main/images/binlist.PNG)
+Instead we use the Binlist option. You can create as many bins as you want. Each bin will create a different ERP, and if you want to use ERP lab to plot ERPs you can choose which ones to plot. If you want to use another program it might be worth it to just save the ERPs of 1 specific bin and run the script mulitple times. [see this for information on how to create a binlist.txt file](https://https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/binlist.PNG)
 
 
 After that you set the time for the epoch. This is pre-defined in the variable epoch_time and baseline_time  at the start. 
