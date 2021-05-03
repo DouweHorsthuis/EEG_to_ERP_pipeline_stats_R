@@ -328,7 +328,7 @@ Project Link: [https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R](ht
 [license-shield]: https://img.shields.io/github/license/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge
 [license-url]: https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/DouweHorsthuis
+[linkedin-url]: https://www.linkedin.com/in/douwe-horsthuis-725bb9188/
 
 
 
