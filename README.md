@@ -19,13 +19,11 @@
   <p align="center">
     This EEG pipeline is made to analyze data collected with a biosemi system, using however many channels you want. There are several cleaning steps (e.g. channel rejection, ICA, epoch rejection) after which stats can be done using R studio. This pipeline contain several scripts, organized alphabetically. Each script runs a loop on all the participants, making sure that the same steps are taken for each participant. The reason it is not one big script is, because after running each script it would be a good moment to check if you are happy with the data. 
     <br />
-    <a href="https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R"><strong>Explore the docs ?</strong></a>
     <br />
     <br />
-    <a href="https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R">View Demo</a>
-    ?
-    <a href="https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/issues">EEG_to_ERP_pipeline_stats_Rrt Bug</a>
-    ?
+    .
+    <a href="https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/issues">Report a Bug</a>
+    .
     <a href="https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/issues">Request Feature</a>
   </p>
 </p>
@@ -55,25 +53,25 @@
       <ul>
         <li><a href="#pre-proccesing">Pre-processing</a></li>
         <ul>
-          <li><a href="#a_merge_sets">A_merge_sets</a></li>
-          <li><a href="#b_downs_filter_chaninfo_exclextern_exclchan">B_downs_filter_chaninfo_exclextern_exclchan</a></li>
-          <li><a href="#c_avgref_ica_autoexcom">C_avgref_ica_autoexcom</a></li>
-          <li><a href="#d_interpolate">D_interpolate</a></li>
-          <li><a href="#e_epoching">E_epoching</a></li>
+          <li><a href="#a_merge_sets">A_merge_sets(Matlab)</a></li>
+          <li><a href="#b_downs_filter_chaninfo_exclextern_exclchan">B_downs_filter_chaninfo_exclextern_exclchan(Matlab)</a></li>
+          <li><a href="#c_avgref_ica_autoexcom">C_avgref_ica_autoexcom(Matlab)</a></li>
+          <li><a href="#d_interpolate">D_interpolate(Matlab)</a></li>
+          <li><a href="#e_epoching">E_epoching(Matlab)</a></li>
         </ul>
         <li><a href="#exporting">exporting</a></li>
         <ul>
-           <li><a href="#f_individual_trials_export">F_individual_trials_export</a></li>
+           <li><a href="#f_individual_trials_export">F_individual_trials_export(Matlab)</a></li>
         </ul>
         <li><a href="#statistics">Statistics</a></li>
         <ul>
-           <li><a href="#loading-and-setting-up-the-structure">Loading and setting up the structure</a></li>
-           <li><a href="#statistics-including-mixed-effects-models">Statistics (including mixed-effects models)</a></li>
+           <li><a href="#loading-and-setting-up-the-structure">Loading and setting up the structure(Rstudio)</a></li>
+           <li><a href="#statistics-including-mixed-effects-models">Statistics (including mixed-effects models)(Rstudio)</a></li>
         </ul>
     </ul>    
     </li>
     <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#Publications">Publications</a></li>
+    <li><a href="#publications-using-this-pipeline">Publications using this pipeline</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
@@ -265,7 +263,15 @@ Contributions are what make the open source community such an amazing place to b
 5. Open a Pull Request
 
 
-##Publications
+## Publications using this pipeline (Only including Papers)
+Francisco, A. A., Foxe, J. J., Horsthuis, D. J., DeMaio, D., & Molholm, S. (2020). Assessing auditory processing endophenotypes associated with Schizophrenia in individuals with 22q11. 2 deletion syndrome. Translational psychiatry, 10(1), 1-11
+
+Francisco, A. A., Horsthuis, D. J., Popiel, M., Foxe, J. J., & Molholm, S. (2020). Atypical response inhibition and error processing in 22q11. 2 Deletion Syndrome and schizophrenia: Towards neuromarkers of disease progression and risk. NeuroImage: Clinical, 27, 102351.
+
+Francisco, A. A., Foxe, J. J., Horsthuis, D. J., & Molholm, S. (2020). Impaired auditory sensory memory in Cystinosis despite typical sensory processing: A high-density electrical mapping study of the mismatch negativity (MMN). NeuroImage: Clinical, 25, 102170.
+
+
+Francisco, A. A., Berruti, A. S., Kaskel, F. J., Foxe, J. J., & Molholm, S. (2021). Assessing the integrity of auditory processing and sensory memory in adults with cystinosis (CTNS gene mutations). Orphanet Journal of Rare Diseases, 16(1), 1-10.
 
 <!-- LICENSE -->
 ## License
