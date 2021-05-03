@@ -12,6 +12,8 @@ nsubj = length(subject_list); % number of subjects
 
 % Path to the parent folder, which contains the data folders for all subjects
 home_path  = 'the main folder where you store all the data';
+
+
 fprintf('have you manually inspected if there are channels that should have been rejected but are missed? \n If yes, hit any key to continue')
 pause;
 % Loop through all subjects
@@ -37,7 +39,7 @@ for s=1:nsubj
     %Deleting the bad components
     EEG = iclabel(EEG); %does ICLable function
     ICA_components = EEG.etc.ic_classification.ICLabel.classifications ; %creates a new matrix with ICA components
-    ICA_components(:,8) = sum(ICA_components(:,[2 3 4 5 6]),2); %row 2 = muscle row 3= eye row 6 = channel noise, combining this makes sure that the component also gets deleted if its a combination of the 3.
+    ICA_components(:,8) = sum(ICA_components(:,[2 3 4 5 6]),2); %row 2 = muscle row 3= eye row 6 = channel noise, combining this makes sure that the component also gets deleted if its a combination of all.
     bad_components = find(ICA_components(:,8)>0.80 & ICA_components(:,1)<0.05); %if the new row is over 80% of the component and the component has less the 5% brain
     %will plot all the IC components that get deleted
     figure

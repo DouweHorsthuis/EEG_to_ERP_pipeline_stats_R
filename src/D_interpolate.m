@@ -27,7 +27,7 @@ for s=1:nsubj
     labels_all = {EEG.chanlocs.labels}.'; %stores all the labels in a new matrix
     [ALLEEG EEG index] = eeg_store( ALLEEG, EEG, 1); %store specified EEG dataset(s) in the ALLEG variable
     index = index +1; %creates new index (it might overwrite it otherwise, but not sure)
-    EEG = pop_loadset('filename', [subject_list{s} '_excand om.set'], 'filepath', data_path); %loads latest pre-proc file
+    EEG = pop_loadset('filename', [subject_list{s} '_excom.set'], 'filepath', data_path); %loads latest pre-proc file
     labels_good = [];
     labels_good = {EEG.chanlocs.labels}.'; %saves all the channels that are in the excom file
     disp(EEG.nbchan); %writes down how many channels are there
@@ -46,8 +46,6 @@ for s=1:nsubj
     data_subj                  = [];
     data_subj                  = [ID, All_bad_chan]; %combines IDs and Bad channels
     participant_info           = [participant_info; data_subj];%combine new data with old data
-end;
+end
 save([home_path name_paradigm '_participant_interpolation_info'], 'participant_info');
 
-
-EEG age
