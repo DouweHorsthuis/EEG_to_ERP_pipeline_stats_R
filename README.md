@@ -1,5 +1,3 @@
-made this change in Rstudio
-
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -19,7 +17,7 @@ made this change in Rstudio
   <h3 align="center">EEG pipeline using EEGlab</h3>
 
   <p align="center">
-    This EEG pipeline is made to analyze data collected with a biosemi system, using however many chanels you want. There are several cleaning steps (e.g. channel rejection, ICA, epoch rejection) after which stats can be done using Rstudio
+    This EEG pipeline is made to analyze data collected with a biosemi system, using however many chanels you want. There are several cleaning steps (e.g. channel rejection, ICA, epoch rejection) after which stats can be done using Rstudio. This pipeline contain several scripts, organized alphabetically. Each script runs a loop on all the particpants, making sure that the same steps are taken for each participant. The reason it is not one big script is, because after running each script it would be a good moment to check if you are happy with the data. 
     <br />
     <a href="https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R"><strong>Explore the docs ?</strong></a>
     <br />
@@ -49,11 +47,12 @@ made this change in Rstudio
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
+        <li><a href="#usage">Usage</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#Publications">Publications</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
@@ -66,17 +65,14 @@ made this change in Rstudio
 ## About The Project
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
-
-Here's a blank template to get started:
-**To avoid retyping too much info. Do a search and replace with your text editor for the following:**
-`DouweHorsthuis`, `EEG_to_ERP_pipeline_stats_R`, `douwejhorsthuis`, `douwehorsthuis@gmail.com`, `EEG pipeline using EEGlab`, `This EEG pipeline is made to analyze data collected with a biosemi system, using however many chanels you want. There are several cleaning steps (e.g. channel rejection, ICA, epoch rejection) after which stats can be done using Rstudio`
+This EEG pipeline is made to analyze data collected with a biosemi system, using however many chanels you want. There are several cleaning steps (e.g. channel rejection, ICA, epoch rejection) after which stats can be done using Rstudio. It is scalable to mulitple groups and variables such as filter strenght, and rejection thresholds are changeable, but are pre-tested and worked for mulitple publications.
 
 
 ### Built With
 
-* []()
-* []()
-* []()
+* [Matlab](https://www.mathworks.com/)
+* [EEGlab](https://sccn.ucsd.edu/eeglab/index.php)
+* [ERPlab](https://github.com/lucklab/erplab) (EEGlab plugin)
 
 
 
@@ -86,38 +82,59 @@ Here's a blank template to get started:
 To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
+Software: You need to have a copy of [EEGlab](https://sccn.ucsd.edu/eeglab/download.php) (these scripts works for version eeglab2019_1)
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+You need to install the [ERPlab](https://erpinfo.org/erplab) plugin. (these scripts work with erplab8.01)
 
 ### Installation
+Download a copy of [EEGlab](https://sccn.ucsd.edu/eeglab/download.php). 
 
-1. Clone the EEG_to_ERP_pipeline_stats_R
-   ```sh
-   git clone https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.git
-   ```
-2. Install NPM packages
-   ```sh
-   npm install
-   ```
-
+To install the ERPlab, either download it from [Github](https://github.com/lucklab/erplab/releases) and save it in the "Plugins" folder in EEGlab, or open EEGlab and download it via File-->Manage EEGLAB extention and look for ERPlab.
 
 
 <!-- USAGE EXAMPLES -->
-## Usage
+### Usage
+To use EEGlab you need to set the path to include this folder and all it's subfolders:
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+[In matlab, set path --> add with Subfolders... -->the main eeglab folder --> close](https://github.com/DouweHorsthuis/trial_by_trial_data_export_eeglab/blob/main/images/screenshot_add_path.PNG)
+Or you can hardcode this: 
 
-_For more examples, please refer to the [Documentation](https://example.com)_
-
+```matlab
+addpath(genpath('theplacewhereyouhavethefolder\eeglab2019_1\'));
+```
 
 
 <!-- ROADMAP -->
-## Roadmap
+## Pipeline roadmap
+Here you'll see what each scipt does and what variables you can need to change.
 
+### A_merge_sets
+In this script EEGlab will look for all the .bdf or .edf files for all the IDs you enter. Even if you only have one file per participant, you need to run them through this script, because you end up with .set files that have the EEGlab structure in them.
+Besides, defining the home/save path, you can choose how many blocks (or .BDF files) your participants have. Normally everyone does the same amount of blocks so this would be the same for everyone, but if not, you need to run that participant separately. 
+Furthermore, you can choose a reference channel. This is suggested by [BIOsemi](https://www.biosemi.com/faq/cms&drl.htm). In our case we use the mastoids (channel 65/66 for us), but you can change this to a different channel or leave it empty if you don't want to do this.
+
+
+These are the variables to change:
+```matlab
+subject_list = {'some sort of ID' 'a different id for a different particpant'}; 
+filename= 'the_rest_of_the_file_name';  
+home_path  = 'path_where_to_load_in_pc'; 
+save_path  = 'path_where_to_save_in_pc'; 
+blocks = 5; 
+ref_chan = [65 66] 
+```
+
+### B_downs_filter_chaninfo_exclextern_exclchan
+This script starts by loading the previously created .set file, so you need to set the home_path to where you saved the data and the new data will also be saved there. 
+The first thing the script does is downsample to 256 hz. We collect data at 512Hz, and there is no real reason to keep it at this high resolution. 
+
+The second step is a 1Hz highpass filter. To change this you need to also decide on the filter order. [See this for more info](https://github.com/widmann/firfilt/blob/master/pop_eegfiltnew.m)
+
+Same counts for the third step, which is a 45hz highpass filter.
+
+To optimize the ICA solutions, these are the suggested filters. Howerver, if you want to look at components that show up later in the data, 1Hz might be too high. [See this paper for more info.](https://www.sciencedirect.com/science/article/pii/S0896627319301746)
+
+# Issues
 See the [open issues](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/issues) for a list of proposed features (and known issues).
 
 
@@ -134,6 +151,7 @@ Contributions are what make the open source community such an amazing place to b
 5. Open a Pull Request
 
 
+##Publications
 
 <!-- LICENSE -->
 ## License
