@@ -132,7 +132,81 @@ The second step is a 1Hz highpass filter. To change this you need to also decide
 
 Same counts for the third step, which is a 45hz highpass filter.
 
-To optimize the ICA solutions, these are the suggested filters. Howerver, if you want to look at components that show up later in the data, 1Hz might be too high. [See this paper for more info.](https://www.sciencedirect.com/science/article/pii/S0896627319301746)
+To optimize the ICA solutions, these are the suggested filters. Howerver, if you want to look at components that show up later in the data, 1Hz might be too high. [See this paper for more info on filters.](https://www.sciencedirect.com/science/article/pii/S0896627319301746)
+
+The fourth step is adding information to the channels. This is why you need to define the path to EEGlab. It will look for a file to import the channel information. After which it will delete the externals
+
+Lastly, in step 5, it will reject all the channels based on a kurtiose threshold. It is set to 5, which is the standard. 
+
+It is important that after running this script, you open every participants data, and see if you need to manually delete more channels. To do this, in the EEGlab gui (if you type eeglab in matlab it shows up) click Plot channel data (scroll). Look at enough data to be sure if a channel need rejecting. One thing to think about is, you will reject bad epochs at the end, but you want as clean as possible data for the ICA. Be critical, but if you delete too much (10+ channels) you should think about not using the participant at all. 
+[To delete click Edit--> Select data add the channels to delete in the Channel Range box and select the check next to it (otherwise everything but these channels get deleted)](https://github.com/DouweHorsthuis/trial_by_trial_data_export_eeglab/blob/main/images/screenshot_add_path.PNG) Overwrite the old .set file if you manually delete channels.
+
+These are the variables you NEED to change:
+```matlab
+subject_list = {'some sort of ID' 'a different id for a different particpant'}; 
+eeglab_location = 'C:\Users\wherever\eeglab2019_1\'
+home_path  = 'the main folder where you store your data';
+```
+
+These you can change if you want to change settings
+```matlab
+EEG = pop_resample( EEG, 256); %downsampling
+EEG = pop_eegfiltnew(EEG, [],1,1690,1,[],1); % High pass filter
+EEG = pop_eegfiltnew(EEG, [],45,152,0,[],1); % Low  pass filter
+EEG = pop_chanedit(EEG, 'lookup',[eeglab_location 'plugins\dipfit\standard_BESA\standard-10-5-cap385.elp']); 
+EEG = pop_select( EEG,'nochannel',{'EXG1','EXG2','EXG3','EXG4','EXG5','EXG6','EXG7','EXG8'}); To delete different channels if needed 
+EEG = pop_rejchan(EEG ,'threshold',5,'norm','on','measure','kurt'); %the rejection threshold (standard is 5)
+```
+
+### C_avgref_ica_autoexcom
+In this script the data gets an referenced to the average to prepare the data for Inter Component Analysis (ICA). 
+We are using the pop_runica function for the ICA because it works great as an ICA, but there are other options that might be quicker (this might come at a cost). We do an ICA mainly to delete artifacts that are repeated, such as Eyeblinks, eyemovement, muscle movement and electrical noise.
+We are using [IClable](https://www.sciencedirect.com/science/article/pii/S1053811919304185) as a function to automatically label the components. After that it combines looks what the percentage of "Bad components" are in each individual component. If there is over 80% noise and less then 5% brain a component gets deleted. 
+
+These are the variables you NEED to change:
+```matlab
+subject_list = {'some sort of ID' 'a different id for a different particpant'}; 
+home_path  = 'the main folder where you store all the data';
+
+```
+
+These you can change if you want to change settings
+```matlab
+EEG = pop_runica(EEG, 'extended',1,'interupt','on'); % you can choose a different ICA function, or command it out if you don't want to use it (you will also need to command out the IClable part)
+ICA_components(:,8) = sum(ICA_components(:,[2 3 4 5 6]),2); % you can choose different components to be deleted.
+bad_components = find(ICA_components(:,8)>0.80 & ICA_components(:,1)<0.05); how much brain data is too much
+```
+
+### D_interpolate
+This script interpolates all the channels that got deleted before. It does this using the pop_interp function. It loads first the _exext.set file (that was created in B script) to see how many channels there were originally. Then loads the new _excom.set file  and uses the pop_interp to do a spherical interpolation for all channels that were rejected. 
+
+It is important to realize that if too many channels from around the same location are rejected, the newly formed channels have bad data. 
+
+For each particpant data gets stored containing the ID number and how many channels were interpolated. 
+
+These are the variables you NEED to change:
+```matlab
+subject_list = {'some sort of ID' 'a different id for a different particpant'}; 
+name_paradigm = 'name' % this is how the .mat file with the info is being called
+home_path  = 'the main folder where you store all the data';
+```
+
+These you can change if you want to change settings
+```matlab
+EEG = pop_interp(EEG, ALLEEG(1).chanlocs, 'spherical');% 
+```
+
+### E-epoching
+This is the last file for Pre-processing the data. In this script the interpolated data gets epoched cleaned and turned into an ERP. Some of these functions are ERPlab based. 
+
+Firstly, the data needs to have their events (or triggers) to be updated. You need to create a text file that assigns this info. [See this tutorial for more info.](https://github.com/lucklab/erplab/wiki/Creating-an-EventList:-ERPLAB-Functions:-Tutorial)
+After that you set the time for the epoch. This is pre-defined in the variable epoch_time and baseline_time  at the start. 
+After that we use the pop_artmwppth function to flag all the epochs that are too noisy.
+We save this info, after which we delete them. 
+Lastly we create the ERPs and save the data as a final .set file.
+You will also have a file at the end with each participants ID number and the percentage of data that got deleted. 
+
+If you end up wanting Reaction time for the ERPs. consider including the [pop_rt2text](https://github.com/lucklab/erplab/blob/master/pop_functions/pop_rt2text.m) function. For this to work you need to define your reaction in the eventlist.  
 
 # Issues
 See the [open issues](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/issues) for a list of proposed features (and known issues).
@@ -163,7 +237,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@douwejhorsthuis](https://twitter.com/douwejhorsthuis) - douwehorsthuis@gmail.com
+Douwe John Horsthuis - [@douwejhorsthuis](https://twitter.com/douwejhorsthuis) - douwehorsthuis@gmail.com
 
 Project Link: [https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R)
 
@@ -172,16 +246,12 @@ Project Link: [https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R](ht
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 
-* []()
-* []()
-* []()
+* [Ana Francisco](https://github.com/anafrancisco) Who created the basis for this pipeline and took the time to explain everything in detail.
 
 
 
 
 
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge
 [contributors-url]: https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge
