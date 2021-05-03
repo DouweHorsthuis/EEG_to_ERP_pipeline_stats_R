@@ -5,7 +5,7 @@
 % This defines the set of subjects
 subject_list = {'some sort of ID' 'a different id for a different particpant'}; 
 nsubj = length(subject_list); % number of subjects
-
+eeglab_location = 'C:\Users\wherever\eeglab2019_1\'
 % Path to the parent folder, which contains the data folders for all subjects
 home_path  = 'the main folder where you store your data';
 
@@ -30,8 +30,7 @@ for s=1:nsubj
     EEG = eeg_checkset( EEG );
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_downft.set'],'filepath', data_path);
     %excluding externals
-    EEG=pop_chanedit(EEG, 'lookup','C:\Users\dohorsth\Documents\Matlab\eeglab2019_1\plugins\dipfit\standard_BESA\standard-10-5-cap385.elp'); %make sure you put here the location of this file for your computer
-    if isempty = 
+    EEG=pop_chanedit(EEG, 'lookup',[eeglab_location 'plugins\dipfit\standard_BESA\standard-10-5-cap385.elp']); %make sure you put here the location of this file for your computer
     EEG = pop_select( EEG,'nochannel',{'EXG1','EXG2','EXG3','EXG4','EXG5','EXG6','EXG7','EXG8'});
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_exext.set'],'filepath', data_path);
     %auto channel rejection
