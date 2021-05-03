@@ -11,7 +11,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R">
-    <img src="images/logo.png" alt="Logo" width="286" height="120">
+    <img src="images/CNL_logo_2.jpeg" alt="Logo" width="286" height="120">
   </a>
 
   <h3 align="center">EEG pipeline using EEGlab</h3>
