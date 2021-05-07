@@ -1,29 +1,19 @@
 % This scripts does an average reference, uses runica and IClabel to created IC components
 % and defines and deletes the bad ones. The bad components also get printed.
-% last edits done on by Douwe 6/29/2020
+% last edits done on by Douwe 5/7/2021
 % ------------------------------------------------
 
 clear variables
 
-
 % This defines the set of subjects
-subject_list = {'some sort of ID' 'a different id for a different particpant'}; 
-nsubj = length(subject_list); % number of subjects
-
+subject_list = {'some sort of ID' 'a different id for a different particpant'};
 % Path to the parent folder, which contains the data folders for all subjects
 home_path  = 'the main folder where you store all the data';
 
-
-fprintf('have you manually inspected if there are channels that should have been rejected but are missed? \n If yes, hit any key to continue')
-pause;
-% Loop through all subjects
-for s=1:nsubj
+for s=1:length(subject_list)
     fprintf('\n******\nProcessing subject %s\n******\n\n', subject_list{s});
-    
     % Path to the folder containing the current subject's data
     data_path  = [home_path subject_list{s} '\\'];
-    
-    
     fprintf('\n\n\n**** %s: Loading dataset ****\n\n\n', subject_list{s});
     EEG = pop_loadset('filename', [subject_list{s} '_exchn.set'], 'filepath', data_path);
     %Doing an average reference
@@ -55,9 +45,7 @@ for s=1:nsubj
     end
     close all
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_excom.set'],'filepath', data_path);%save
-   
-    
-end;
+end
 
 
 
