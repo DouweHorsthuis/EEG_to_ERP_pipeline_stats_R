@@ -50,7 +50,7 @@
     <li>
       <a href="#pipeline-roadmap">Pipeline roadmap</a></li>
       <ul>
-        <li><a href="#pre-proccesing">Pre-processing</a></li>
+        <li><a href="#pre-processing">Pre-processing</a></li>
         <ul>
           <li><a href="#a_merge_sets">A_merge_sets(Matlab)</a></li>
           <li><a href="#b_downs_filter_chaninfo_exclextern_exclchan">B_downs_filter_chaninfo_exclextern_exclchan(Matlab)</a></li>
@@ -130,6 +130,8 @@ addpath(genpath('theplacewhereyouhavethefolder\eeglab2019_1\'));
 ## Pipeline roadmap
 Here you'll see what each script does and what variables you can need to change.
 
+## Pre-processing
+
 ### A_merge_sets
 In this script EEGlab will look for all the .bdf or .edf files for all the IDs you enter. Even if you only have one file per participant, you need to run them through this script, because you end up with .set files that have the EEGlab structure in them.
 Besides, defining the home/save path, you can choose how many blocks (or .BDF files) your participants have. Normally everyone does the same amount of blocks so this would be the same for everyone, but if not, you need to run that participant separately. 
@@ -156,17 +158,16 @@ Same counts for the third step, which is a 45Hz high-pass filter.
 
 To optimize the ICA solutions, these are the suggested filters. However, if you want to look at components that show up later in the data, 1Hz might be too high. [See this paper for more info on filters.](https://www.sciencedirect.com/science/article/pii/S0896627319301746)
 
-The fourth step is adding information to the channels. This is why you need to define the path to EEGlab. It will look for a file to import the channel information. After which it will delete the externals
+The fourth step is adding information to the channels. This is why you need to define the path to EEGlab or to the 'biosemi160' file. It will look for a file to import the channel information. After which it will delete the externals. The difference between the two paths has to do with that for 64channels we use a 10-20 layout for the BIOsemi caps, however for the 160channel caps we have a spherical layout. The first file is part of EEGlab, but this is not the case for the 160channel cap. 
 
 Lastly, in step 5, it will reject all the channels based on a kurtosis threshold. It is set to 5, which is the standard. 
 
-**It is important that after running this script, you open every participants data, and see if you need to manually delete more channels.** To do this, in the EEGlab GUI (if you type eeglab in matlab it shows up) click Plot channel data (scroll). Look at enough data to be sure if a channel need rejecting. One thing to think about is, you will reject bad epochs at the end, but you want as clean as possible data for the ICA. Be critical, but if you delete too much (10+ channels) you should think about not using the participant at all. 
-[To delete click Edit--> Select data add the channels to delete in the Channel Range box and select the check next to it (otherwise everything but these channels get deleted)](https://github.com/DouweHorsthuis/trial_by_trial_data_export_eeglab/blob/main/images/screenshot_add_path.PNG) Overwrite the old .set file if you manually delete channels.
 
 These are the variables you NEED to change:
 ```matlab
 subject_list = {'some sort of ID' 'a different id for a different particpant'}; 
-eeglab_location = 'C:\Users\wherever\eeglab2019_1\'
+eeglab_location = 'C:\Users\wherever\eeglab2019_1\'; %needed if using a 10-5-cap
+scripts_location = 'C:\\Scripts\'; %needed if using 160channel data
 home_path  = 'the main folder where you store your data';
 ```
 
@@ -181,19 +182,31 @@ EEG = pop_rejchan(EEG ,'threshold',5,'norm','on','measure','kurt'); %the rejecti
 ```
 
 ### C_manual_check
-This script was added on 5/7/2021, before that this was done, but not through the use of a script. It was compeletly ran in the EEGlab GUI. 
+This script was added on 5/7/2021, before that this was done, but not through the use of a script. It was completely ran in the EEGlab GUI. 
 
 In this script each subjects data gets loaded and plotted in the EEGlab GUI.
 
 In the GUI set the scale to 5, so you can see if there are flat channels
 
 (example)
-[![flat channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/flat%20channel.PNG "flat channel")
+
+![flat channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/flat%20channel.PNG "flat channel")
 After that Change the scale to 50 (it is important to always set it to the same scale, so you are sure if data is noisy and not just in a lower scale)
-[![Noisy channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/very%20noisy.PNG "noisy channel")
+
+![Noisy channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/very%20noisy.PNG "noisy channel")
 
 When looking at 160 channel data, be sure to check in settings how many channels you want to see. Because it is clear that there are bad channels, but their label is hard to spot.
-[![160 channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/160-badchan.PNG "160 noisy channel")
+
+![160 channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/160-badchan.PNG "160 noisy channel")
+
+After figuring out what channels to delete, type their labels in the command window of Matlab. They need to be entered in the following structure: 
+
+```matlab
+{'FC1' 'P1' 'po3'}
+```
+
+**Be critical, but if you delete too much (10+ channels) you should think about not using the participant at all.**
+
 
 ### D_avgref_ica_autoexcom
 In this script the data gets an referenced to the average to prepare the data for Inter Component Analysis (ICA). 
@@ -238,7 +251,7 @@ EEG = pop_interp(EEG, ALLEEG(1).chanlocs, 'spherical');%
 This is the last file for pre-processing the data. In this script the interpolated data gets epoched cleaned and turned into an ERP. Some of these functions are ERPlab based. 
 
 Firstly, the data needs to have their events (or triggers) to be updated. You need to create a text file that assigns this info. There are 2 ways of doing this you can define all trials using an eventlist. This is more restrictive, because it seems like you cannot add a sequence of trigger, only individual ones [See this tutorial for more info.](https://github.com/lucklab/erplab/wiki/Creating-an-EventList:-ERPLAB-Functions:-Tutorial).
-Instead we use the Binlist option. You can create as many bins as you want. Each bin will create a different ERP, and if you want to use ERP lab to plot ERPs you can choose which ones to plot. If you want to use another program it might be worth it to just save the ERPs of 1 specific bin and run the script mulitple times. [see this for information on how to create a binlist.txt file](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/binlist.PNG), or [see this tutorial](https://github.com/lucklab/erplab/wiki/ERP-Bin-Operations)
+Instead we use the Binlist option. You can create as many bins as you want. Each bin will create a different ERP, and if you want to use ERP lab to plot ERPs you can choose which ones to plot. If you want to use another program it might be worth it to just save the ERPs of 1 specific bin and run the script multiple times. [see this for information on how to create a binlist.txt file](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/binlist.PNG), or [see this tutorial](https://github.com/lucklab/erplab/wiki/ERP-Bin-Operations)
 
 
 After that you set the time for the epoch. This is pre-defined in the variable epoch_time and baseline_time  at the start. 
@@ -300,7 +313,7 @@ Contributions are what make the open source community such an amazing place to b
 5. Open a Pull Request
 
 ### Updates 
-5/7/2021 - adding C_manual_check script + biosemi160sfp file
+5/7/2021 - adding [C_manual_check script](#c-manual-check) + [biosemi160sfp file](#b-downs-filter-chaninfo-exclextern-exclchan)
 
 
 ## Publications using this pipeline (Only including Papers)
@@ -315,7 +328,9 @@ Contributions are what make the open source community such an amazing place to b
 
 [Francisco, A. A., Berruti, A. S., Kaskel, F. J., Foxe, J. J., & Molholm, S. (2021). Assessing the integrity of auditory processing and sensory memory in adults with cystinosis (CTNS gene mutations). Orphanet Journal of Rare Diseases, 16(1), 1-10.](https://link.springer.com/article/10.1186/s13023-021-01818-0)
 (unique settings: re-referenced to TP8 and epochs are −100 to 400ms using a baseline of −50 to 0ms.)
+
 <!-- LICENSE -->
+
 ## License
 
 Distributed under the MIT License. See [LICENSE](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/LICENSE) for more information.
