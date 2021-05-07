@@ -71,7 +71,7 @@
     </ul>    
     </li>
     <li><a href="#contributing">Contributing</a></li>
-    </ul>
+    <ul>
         <li><a href="#updates">Updates</a></li>
         </ul>
     <li><a href="#publications-using-this-pipeline-only-including-papers">Publications using this pipeline</a></li>
