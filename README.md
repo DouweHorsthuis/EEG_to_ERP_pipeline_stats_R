@@ -73,7 +73,7 @@
     <li><a href="#contributing">Contributing</a></li>
     </ul>
         <li><a href="#updates">Updates</a></li>
-        <ul>
+        </ul>
     <li><a href="#publications-using-this-pipeline-only-including-papers">Publications using this pipeline</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -312,7 +312,7 @@ Contributions are what make the open source community such an amazing place to b
 4. Push to the Branch 
 5. Open a Pull Request
 
-### Updates 
+## Updates 
 5/7/2021 - adding [C_manual_check script](#c_manual_check) + [biosemi160sfp file](#b_downs_filter_chaninfo_exclextern_exclchan)
 
 
