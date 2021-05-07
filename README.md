@@ -54,9 +54,10 @@
         <ul>
           <li><a href="#a_merge_sets">A_merge_sets(Matlab)</a></li>
           <li><a href="#b_downs_filter_chaninfo_exclextern_exclchan">B_downs_filter_chaninfo_exclextern_exclchan(Matlab)</a></li>
-          <li><a href="#c_avgref_ica_autoexcom">C_avgref_ica_autoexcom(Matlab)</a></li>
-          <li><a href="#d_interpolate">D_interpolate(Matlab)</a></li>
-          <li><a href="#e_epoching">E_epoching(Matlab)</a></li>
+          <li><a href="#c_manual_check">C_manual_check(Matlab)</a></li>
+          <li><a href="#d_avgref_ica_autoexcom">D_avgref_ica_autoexcom(Matlab)</a></li>
+          <li><a href="#e_interpolate">E_interpolate(Matlab)</a></li>
+          <li><a href="#f_epoching">F_epoching(Matlab)</a></li>
         </ul>
         <li><a href="#exporting">exporting</a></li>
         <ul>
@@ -70,6 +71,9 @@
     </ul>    
     </li>
     <li><a href="#contributing">Contributing</a></li>
+    </ul>
+        <li><a href="#updates">Updates</a></li>
+        <ul>
     <li><a href="#publications-using-this-pipeline-only-including-papers">Publications using this pipeline</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -176,7 +180,22 @@ EEG = pop_select( EEG,'nochannel',{'EXG1','EXG2','EXG3','EXG4','EXG5','EXG6','EX
 EEG = pop_rejchan(EEG ,'threshold',5,'norm','on','measure','kurt'); %the rejection threshold (standard is 5)
 ```
 
-### C_avgref_ica_autoexcom
+### C_manual_check
+This script was added on 5/7/2021, before that this was done, but not through the use of a script. It was compeletly ran in the EEGlab GUI. 
+
+In this script each subjects data gets loaded and plotted in the EEGlab GUI.
+
+In the GUI set the scale to 5, so you can see if there are flat channels
+
+(example)
+[![flat channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/flat%20channel.PNG "flat channel")
+After that Change the scale to 50 (it is important to always set it to the same scale, so you are sure if data is noisy and not just in a lower scale)
+[![Noisy channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/very%20noisy.PNG "noisy channel")
+
+When looking at 160 channel data, be sure to check in settings how many channels you want to see. Because it is clear that there are bad channels, but their label is hard to spot.
+[![160 channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/160-badchan.PNG "160 noisy channel")
+
+### D_avgref_ica_autoexcom
 In this script the data gets an referenced to the average to prepare the data for Inter Component Analysis (ICA). 
 We are using the pop_runica function for the ICA because it works great as an ICA, but there are other options that might be quicker (this might come at a cost). We do an ICA mainly to delete artifacts that are repeated, such as eye blinks, eye movement, muscle movement and electrical noise.
 We are using [IClable](https://www.sciencedirect.com/science/article/pii/S1053811919304185) as a function to automatically label the components. After that it combines looks what the percentage of "Bad components" are in each individual component. If there is over 80% noise and less then 5% brain a component gets deleted. 
@@ -196,7 +215,7 @@ ICA_components(:,8) = sum(ICA_components(:,[2 3 4 5 6]),2); % you can choose dif
 bad_components = find(ICA_components(:,8)>0.80 & ICA_components(:,1)<0.05);% how much brain data is too much
 ```
 
-### D_interpolate
+### E_interpolate
 This script interpolates all the channels that got deleted before. It does this using the pop_interp function. It loads first the _exext.set file (that was created in B script) to see how many channels there were originally. Then loads the new _excom.set file  and uses the pop_interp to do a spherical interpolation for all channels that were rejected. 
 
 **It is important to realize that if too many channels from around the same location are rejected, the newly formed channels have bad data.** 
@@ -215,7 +234,7 @@ These you can change if you want to change settings
 EEG = pop_interp(EEG, ALLEEG(1).chanlocs, 'spherical');% 
 ```
 
-### E_epoching
+### F_epoching
 This is the last file for pre-processing the data. In this script the interpolated data gets epoched cleaned and turned into an ERP. Some of these functions are ERPlab based. 
 
 Firstly, the data needs to have their events (or triggers) to be updated. You need to create a text file that assigns this info. There are 2 ways of doing this you can define all trials using an eventlist. This is more restrictive, because it seems like you cannot add a sequence of trigger, only individual ones [See this tutorial for more info.](https://github.com/lucklab/erplab/wiki/Creating-an-EventList:-ERPLAB-Functions:-Tutorial).
@@ -279,6 +298,9 @@ Contributions are what make the open source community such an amazing place to b
 3. Commit your Changes 
 4. Push to the Branch 
 5. Open a Pull Request
+
+### Updates 
+5/7/2021 - adding C_manual_check script + biosemi160sfp file
 
 
 ## Publications using this pipeline (Only including Papers)
