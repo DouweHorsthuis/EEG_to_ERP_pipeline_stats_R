@@ -10,7 +10,6 @@ eeglab
 % This defines the set of subjects
 subject_list = {'some sort of ID' 'a different id for a different particpant'}; 
 name_paradigm = 'name'; % this is needed for saving the table at the end
-nsubj = length(subject_list); % number of subjects
 participant_info_temp = []; % needed for creating matrix at the end
 % Path to the parent folder, which contains the data folders for all subjects
 home_path  = 'the main folder where you store your data\';
@@ -18,7 +17,7 @@ binlist_location = 'the folder where you stored your binlist\'; %binlist should 
 epoch_time = [-50 400];
 baseline_time = [-50 0];
 % Loop through all subjects
-for s=1:nsubj
+for s=1:length(subject_list)
     fprintf('\n******\nProcessing subject %s\n******\n\n', subject_list{s});
     
     % Path to the folder containing the current subject's data
@@ -49,7 +48,7 @@ for s=1:nsubj
     data_subj                  = [];
     data_subj                  = [ID, percent_deleted, ERP.EVENTLIST.trialsperbin]; %ERP.EVENTLIST.trialsperbin gives all the trials per bin
     participant_info_temp      = [participant_info_temp; data_subj];
-end;
+end
 colNames                   = [{'ID','%data deleted'} ERP.bindescr]; %adding names for columns [ERP.bindescr] adds all the name of the bins
 participant_info = array2table( participant_info_temp,'VariableNames',colNames); %creating table with column names
 save([home_path name_paradigm '_participant_epoching_cleaing_bin_info_' type_epoch], 'participant_info');

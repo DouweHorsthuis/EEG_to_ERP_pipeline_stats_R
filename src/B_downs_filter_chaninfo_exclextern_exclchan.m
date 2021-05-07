@@ -4,14 +4,13 @@
 
 % This defines the set of subjects
 subject_list = {'some sort of ID' 'a different id for a different particpant'};
-nsubj = length(subject_list); % number of subjects
 eeglab_location = 'C:\Users\wherever\eeglab2019_1\'; %needed if using a 10-5-cap
 scripts_location = 'C:\\Scripts\'; %needed if using 160channel data
 % Path to the parent folder, which contains the data folders for all subjects
 home_path  = 'the main folder where you store your data';
 
 % Loop through all subjects
-for s=1:nsubj
+for s=1:length(subject_list)
     fprintf('\n******\nProcessing subject %s\n******\n\n', subject_list{s});
     
     % Path to the folder containing the current subject's data
@@ -42,5 +41,5 @@ for s=1:nsubj
     EEG = eeg_checkset( EEG );
     EEG = pop_rejchan(EEG ,'threshold',5,'norm','on','measure','kurt');
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_exchn.set'],'filepath', data_path);
-end;
+end
 

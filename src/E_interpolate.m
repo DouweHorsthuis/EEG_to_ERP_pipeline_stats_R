@@ -7,14 +7,13 @@ eeglab
 % This defines the set of subjects
 subject_list = {'some sort of ID' 'a different id for a different particpant'}; 
 name_paradigm = 'name' % this is needed for saving the table at the end
-nsubj = length(subject_list); % number of subjects
 participant_info = []; % needed for creating matrix at the end
 % Path to the parent folder, which contains the data folders for all subjects
 home_path  = 'the main folder where you store your data';
 
 
 % Loop through all subjects
-for s=1:nsubj
+for s=1:length(subject_list)
     fprintf('\n******\nProcessing subject %s\n******\n\n', subject_list{s});
     
     % Path to the folder containing the current subject's data
