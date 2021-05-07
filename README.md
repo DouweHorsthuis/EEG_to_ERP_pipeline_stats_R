@@ -313,7 +313,7 @@ Contributions are what make the open source community such an amazing place to b
 5. Open a Pull Request
 
 ### Updates 
-5/7/2021 - adding [C_manual_check script](#c-manual-check) + [biosemi160sfp file](#b-downs-filter-chaninfo-exclextern-exclchan)
+5/7/2021 - adding [C_manual_check script](#c_manual_check) + [biosemi160sfp file](#b_downs_filter_chaninfo_exclextern_exclchan)
 
 
 ## Publications using this pipeline (Only including Papers)
