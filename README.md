@@ -158,7 +158,7 @@ Same counts for the third step, which is a 45Hz high-pass filter.
 
 To optimize the ICA solutions, these are the suggested filters. However, if you want to look at components that show up later in the data, 1Hz might be too high. [See this paper for more info on filters.](https://www.sciencedirect.com/science/article/pii/S0896627319301746)
 
-The fourth step is adding information to the channels. This is why you need to define the path to EEGlab or to the 'biosemi160' file. It will look for a file to import the channel information. After which it will delete the externals. The difference between the two paths has to do with that for 64channels we use a 10-20 layout for the BIOsemi caps, however for the 160channel caps we have a spherical layout. The first file is part of EEGlab, but this is not the case for the 160channel cap. 
+The fourth step is adding information to the channels. This is why you need to define the path to EEGlab or to the 'biosemi160' file. It will look for a file to import the channel information. After which it will delete the externals. The difference between the two paths has to do with that for 64channels we use a 10-20 layout for the BIOsemi caps, however for the 160channel caps we have a spherical layout. The first file is part of EEGlab, but this is not the case for the 160channel cap. 64channels is defined as 64 to 95, because a full extra ribbon would be 96 channels. In or lab we normally go up to 8 channels, but we have data that has more. This takes that in consideration. 
 
 Lastly, in step 5, it will reject all the channels based on a kurtosis threshold. It is set to 5, which is the standard. 
 
@@ -211,8 +211,22 @@ After figuring out what channels to delete, type their labels in the command win
 ### D_avgref_ica_autoexcom
 In this script the data gets an referenced to the average to prepare the data for Inter Component Analysis (ICA). 
 We are using the pop_runica function for the ICA because it works great as an ICA, but there are other options that might be quicker (this might come at a cost). We do an ICA mainly to delete artifacts that are repeated, such as eye blinks, eye movement, muscle movement and electrical noise.
-We are using [IClable](https://www.sciencedirect.com/science/article/pii/S1053811919304185) as a function to automatically label the components. After that it combines looks what the percentage of "Bad components" are in each individual component. If there is over 80% noise and less then 5% brain a component gets deleted. 
+We are using [IClable](https://www.sciencedirect.com/science/article/pii/S1053811919304185) as a function to automatically label the components. After that it looks what the percentage of "Bad components" are in each individual component. Then it sums the percentage of all of the flagged components and if there is over 80% noise and less then 5% brain a component gets deleted. 
+
+The following components get will get flagged:
+
+- Muscle components
+  
+- Eye components
+  
+- Heart components
+  
+- Line Noise components
+  
+- Channel noise components
+
 Before deleting the components, EEGlab will save a figure with all the bad components for that participant, or if they were all good, a figure with all the components.
+Lastly, Matlab will save a variable called components, with the ID and how many of each type of component reached the threshold. (80% and less then 5% brain, unless it's brain then it's just 80% brain)
 
 These are the variables you NEED to change:
 ```matlab
