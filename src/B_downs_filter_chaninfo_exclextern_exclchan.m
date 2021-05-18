@@ -12,10 +12,7 @@ home_path  = 'the main folder where you store your data';
 % Loop through all subjects
 for s=1:length(subject_list)
     fprintf('\n******\nProcessing subject %s\n******\n\n', subject_list{s});
-    
-    % Path to the folder containing the current subject's data
     data_path  = [home_path subject_list{s} '\\'];
-    
     % Load original dataset
     fprintf('\n\n\n**** %s: Loading dataset ****\n\n\n', subject_list{s});
     EEG = pop_loadset('filename', [subject_list{s} '.set'], 'filepath', data_path);
@@ -30,9 +27,9 @@ for s=1:length(subject_list)
     EEG = eeg_checkset( EEG );
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_downft.set'],'filepath', data_path);
     %excluding externals
-    if EEG.nbchan >63 && EEG.nbchan < 76 %64chan cap
+    if EEG.nbchan >63 && EEG.nbchan < 95 %64chan cap (can be a lot of externals, this makes sure that it includes a everything that is under 96 channels, which could be an extra ribbon)
         EEG=pop_chanedit(EEG, 'lookup',[eeglab_location 'plugins\dipfit\standard_BESA\standard-10-5-cap385.elp']); %make sure you put here the location of this file for your computer
-    elseif EEG.nbchan >159 && EEG.nbchan < 172 %160chan cap
+    elseif EEG.nbchan >159 && EEG.nbchan < 191 %160chan cap
         EEG=pop_chanedit(EEG, 'lookup',[scripts_location 'BioSemi160.sfp']); %make sure you put here the location of this file for your computer
     end
     EEG = pop_select( EEG,'nochannel',{'EXG1','EXG2','EXG3','EXG4','EXG5','EXG6','EXG7','EXG8' 'GSR1' 'GSR2' 'Erg1' 'Erg2' 'Resp' 'Plet' 'Temp'});
