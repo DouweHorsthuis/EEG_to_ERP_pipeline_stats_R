@@ -19,4 +19,4 @@ else
     EEG = pop_mergeset( ALLEEG, [1:blocks], 0);
 end
 EEG = pop_saveset( EEG, 'filename',[subject_list{s} '.set'],'filepath',data_path);
-end
+end 
