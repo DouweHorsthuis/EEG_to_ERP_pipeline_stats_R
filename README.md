@@ -185,7 +185,14 @@ This is what a 1 Hz filter does
 ![1hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-1hz.jpg "1Hz_hit")
 It's intresting to point out that the impact of the filter is bigger on later components compared to early components of an ERP. Since we are interested in the P1 (90-130ms) which is early, we can use this filter. The impact is not big enough to say that it distorts the data.
 ![fa1hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Fa-FCz-downs-1hz.jpg "1Hz_fa")
-In the first figure, we were interested in the first component, whereas in the second figure we were interested in the error-related positivity (Pe), that is around  200-400ms. Here the filter causes a pretty big difference. For us to use this data, we need to use a lower highpass filter.
+
+
+In the first figure, we were intressted in the first component, whereas in the second figure we were interested in the error-related positivity (Pe), that is around  200-400ms. Here the filter causes a pretty big difference. For us to use this data, we need to use a lower highpass filter.
+
+##### Final product
+This is the combination of a 1Hz and a 45Hz filter
+![1hz_45hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-1%2645hz.jpg "1Hz_45hz")
+
 ##### coming soon, 0.1Hz filter, filter orders
 
 ### C_manual_check
