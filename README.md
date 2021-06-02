@@ -37,7 +37,7 @@
     - [Pre-processing](#pre-processing)
       - [A_merge_sets(Matlab)](#a_merge_sets)
       - [B_downs_filter_chaninfo_exclextern_exclchan(Matlab)](#b_downs_filter_chaninfo_exclextern_exclchan)
-         -[Filtering](#filtering)
+        - [Filtering](#filtering)
       - [C_manual_check(Matlab)](#c_manual_check)
       - [D_avgref_ica_autoexcom(Matlab)](#d_avgref_ica_autoexcom)
       - [E_interpolate(Matlab)](#e_interpolate)
@@ -160,12 +160,21 @@ You do not need to follow the filtering in this script. EEGlab makes it relative
 
 ##### What filter should I choose
 Choosing what filters to use will have a big inpact on your data. There are a couple things to consider because filters will have impact in several different ways on your data. 
-*ICA* The [EEGlab people](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#High-pass_filter_the_data_at_1-Hz_.28for_ICA.2C_ASR.2C_and_CleanLine.29.2809.2F23.2F2019_updated.29) suggest using a 1hz and 45hz filter to get the best ICA solutions. But if one only uses the ICA for removing eyeblinks and eyemovement it might be worth it to think more.
+**ICA** The [EEGlab people](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#High-pass_filter_the_data_at_1-Hz_.28for_ICA.2C_ASR.2C_and_CleanLine.29.2809.2F23.2F2019_updated.29) suggest using a 1hz and 45hz filter to get the best ICA solutions. But if one only uses the ICA for removing eyeblinks and eyemovement it might be worth it to think more.
 ###### Lowpass filter 
 We usually use a lowpass filter to get rid of high frequency noise that cannot be caused by the brain. By using a 45hz filter this can be solved.Unless you are intressted in specific frequencies that go above 40Hz it's normally safe to use it. 
 This is what the filter will do to data:  
 ![45hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-45hz.jpg "45hz")  
-The black line is downsampled like the Red line + a 45Hz filter is ran on it. If you look close it is clear the this smooths out the ERP. 
+The black line is downsampled like the Red line + a 45Hz filter is ran on it. If you look at the zoomed in parts it is clear the this smooths out the ERP. 
+###### Highpass filter
+A highpass filter is used to stop Baseline drift. [This drift is stronger for kids and some patient populations (0.1Hz) then for Adult subjects (0.01Hz).](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#High-pass_filter_the_data_at_1-Hz_.28for_ICA.2C_ASR.2C_and_CleanLine.29.2809.2F23.2F2019_updated.29) On of the other things that it helps with is solving artifacts created by sweaty participants.  
+When looking at early components, one can usually use a 1Hz filter. This filter might however cause issues if you look at later components (starting at P2 and onwards). 
+This is what a 1 Hz filter does
+![1hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-1hz.jpg "1Hz_hit")
+It's intresting to point out that the inpact of the filter is gets stronger the later you look at the ERP. Since we are interested in the P1 (90-130ms) which is early, we can use this filter. The impact is not big enough to say that it distorts the data.
+![fa1hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Fa-FCz-downs-1hz.jpg "1Hz_fa")
+In the first figure, we were intressted in the first component, whereas in the second figure we were interested in the error-related positivity (Pe), that is around  200-400ms. Here the filter causes a pretty big difference. For us to use this data, we need to use a lower highpass filter.
+##### coming soon, 0.1Hz filter, filter orders
 
 ### C_manual_check
 This script was added on 5/7/2021, before that this was done, but not through the use of a script. It was completely ran in the EEGlab GUI. 
@@ -227,6 +236,7 @@ EEG = pop_runica(EEG, 'extended',1,'interupt','on'); % you can choose a differen
 ICA_components(:,8) = sum(ICA_components(:,[2 3 4 5 6]),2); % you can choose different components to be deleted.
 bad_components = find(ICA_components(:,8)>0.80 & ICA_components(:,1)<0.05);% how much brain data is too much
 ```
+#### Coming soon, impact of filters on ICA, impact of ICA on simple ERPs
 
 ### E_interpolate
 This script interpolates all the channels that got deleted before. It does this using the pop_interp function. It loads first the _exext.set file (that was created in B script) to see how many channels there were originally. Then loads the new _excom.set file  and uses the pop_interp to do a spherical interpolation for all channels that were rejected. 
