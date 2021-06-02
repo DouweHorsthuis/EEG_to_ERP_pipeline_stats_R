@@ -179,7 +179,7 @@ This is what the filter will do to data:
 ![45hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-45hz.jpg "45hz")  
 The black line is downsampled like the Red line + a 45Hz filter is ran on it. If you look at the zoomed in parts it is clear the this smooths out the ERP. 
 ###### Highpass filter
-A highpass filter is used to stop Baseline drift. [This drift is stronger for kids and some patient populations (0.1Hz) then for Adult subjects (0.01Hz).](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#High-pass_filter_the_data_at_1-Hz_.28for_ICA.2C_ASR.2C_and_CleanLine.29.2809.2F23.2F2019_updated.29) On of the other things that it helps with is solving artifacts created by sweaty participants.  
+A highpass filter is used to stop Baseline drift. [This drift is stronger for kids and some patient populations (0.1Hz) than for Adult subjects (0.01Hz).](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#High-pass_filter_the_data_at_1-Hz_.28for_ICA.2C_ASR.2C_and_CleanLine.29.2809.2F23.2F2019_updated.29) One of the other things that it helps with is solving artifacts created by sweaty participants.  
 When looking at early components, one can usually use a 1Hz filter. This filter might however cause issues if you look at later components (starting at P2 and onwards). 
 This is what a 1 Hz filter does
 ![1hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-1hz.jpg "1Hz_hit")
