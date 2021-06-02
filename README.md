@@ -27,59 +27,32 @@
   </p>
 </p>
 
-
-
-<!-- TABLE OF CONTENTS -->
-<details open="open">
-  <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-        <li><a href="#usage">Usage</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#pipeline-roadmap">Pipeline roadmap</a></li>
-      <ul>
-        <li><a href="#pre-processing">Pre-processing</a></li>
-        <ul>
-          <li><a href="#a_merge_sets">A_merge_sets(Matlab)</a></li>
-          <li><a href="#b_downs_filter_chaninfo_exclextern_exclchan">B_downs_filter_chaninfo_exclextern_exclchan(Matlab)</a></li>
-          <li><a href="#c_manual_check">C_manual_check(Matlab)</a></li>
-          <li><a href="#d_avgref_ica_autoexcom">D_avgref_ica_autoexcom(Matlab)</a></li>
-          <li><a href="#e_interpolate">E_interpolate(Matlab)</a></li>
-          <li><a href="#f_epoching">F_epoching(Matlab)</a></li>
-        </ul>
-        <li><a href="#exporting">exporting</a></li>
-        <ul>
-           <li><a href="#f_individual_trials_export">F_individual_trials_export(Matlab)</a></li>
-        </ul>
-        <li><a href="#statistics">Statistics</a></li>
-        <ul>
-           <li><a href="#loading-and-setting-up-the-structure">Loading and setting up the structure(Rstudio)</a></li>
-           <li><a href="#statistics-including-mixed-effects-models">Statistics (including mixed-effects models)(Rstudio)</a></li>
-        </ul>
-    </ul>    
-    </li>
-    <li><a href="#contributing">Contributing</a></li>
-    <ul>
-        <li><a href="#updates">Updates</a></li>
-        </ul>
-    <li><a href="#publications-using-this-pipeline-only-including-papers">Publications using this pipeline</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgements">Acknowledgements</a></li>
-  </ol>
-</details>
+1. [About the project](#about-the-project) 
+    - [Built With](#built-with)
+2. [Getting started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+    - [Usage](#usage)
+3. [Pipeline roadmap](#pipeline-roadmap)
+    - [Pre-processing](#pre-processing)
+      - [A_merge_sets(Matlab)](#a_merge_sets)
+      - [B_downs_filter_chaninfo_exclextern_exclchan(Matlab)](#b_downs_filter_chaninfo_exclextern_exclchan)
+         -[Filtering](#filtering)
+      - [C_manual_check(Matlab)](#c_manual_check)
+      - [D_avgref_ica_autoexcom(Matlab)](#d_avgref_ica_autoexcom)
+      - [E_interpolate(Matlab)](#e_interpolate)
+      - [F_epoching(Matlab)](#f_epoching)
+    - [exporting](#exporting)
+      - [F_individual_trials_export(Matlab)](#f_individual_trials_export)
+    - [Statistics](#statistics)
+      - [Loading and setting up the structure(Rstudio)](#loading-and-setting-up-the-structure)
+      - [Statistics (including mixed-effects models)(Rstudio)](#statistics-including-mixed-effects-models)
+3. [Contributing](#contributing)
+3. [Updates](#updates)
+3. [Publications using this pipeline](#publications-using-this-pipeline-only-including-papers)
+3. [License](#license)
+3. [Contact](#contact)
+3. [Acknowledgements](#acknowledgements)
 
 
 
@@ -180,6 +153,19 @@ EEG = pop_chanedit(EEG, 'lookup',[eeglab_location 'plugins\dipfit\standard_BESA\
 EEG = pop_select( EEG,'nochannel',{'EXG1','EXG2','EXG3','EXG4','EXG5','EXG6','EXG7','EXG8'});% To delete different channels if needed 
 EEG = pop_rejchan(EEG ,'threshold',5,'norm','on','measure','kurt'); %the rejection threshold (standard is 5)
 ```
+#### Filtering 
+You do not need to follow the filtering in this script. EEGlab makes it relatively easy to created/use new filters. 
+
+##### Using a new filter in EEGlab
+
+##### What filter should I choose
+Choosing what filters to use will have a big inpact on your data. There are a couple things to consider because filters will have impact in several different ways on your data. 
+*ICA* The [EEGlab people](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#High-pass_filter_the_data_at_1-Hz_.28for_ICA.2C_ASR.2C_and_CleanLine.29.2809.2F23.2F2019_updated.29) suggest using a 1hz and 45hz filter to get the best ICA solutions. But if one only uses the ICA for removing eyeblinks and eyemovement it might be worth it to think more.
+###### Lowpass filter 
+We usually use a lowpass filter to get rid of high frequency noise that cannot be caused by the brain. By using a 45hz filter this can be solved.Unless you are intressted in specific frequencies that go above 40Hz it's normally safe to use it. 
+This is what the filter will do to data:  
+![45hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-45hz.jpg "45hz")  
+The black line is downsampled like the Red line + a 45Hz filter is ran on it. If you look close it is clear the this smooths out the ERP. 
 
 ### C_manual_check
 This script was added on 5/7/2021, before that this was done, but not through the use of a script. It was completely ran in the EEGlab GUI. 
