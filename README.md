@@ -164,6 +164,12 @@ If you want to change your filter the easiest way, you open a random .set file. 
 Here you input the Filter you want. To create a 1Hz filter, you input the number 1 in the "lower edge of the frequency pass band (Hz)" box and hit "ok"  
 ![step3](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/figure%20out%20filter%20order.PNG "output")  
 This shows up in Matlab. Replace the filter number with the number 1. followed by the number "preforming [number] point highpass filter" -1 as the filter order. 
+
+```matlab
+EEG = pop_eegfiltnew(EEG, [],0.01,168960,1,[],1); %this 0.01hz filter changes like this: 
+EEG = pop_eegfiltnew(EEG, [],1,1690,0,[],1); %into a 1 hz filter
+```
+
 ##### What filter should I choose
 Choosing what filters to use will have a big inpact on your data. There are a couple things to consider because filters will have impact in several different ways on your data. 
 **ICA** The [EEGlab people](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#High-pass_filter_the_data_at_1-Hz_.28for_ICA.2C_ASR.2C_and_CleanLine.29.2809.2F23.2F2019_updated.29) suggest using a 1hz and 45hz filter to get the best ICA solutions. But if one only uses the ICA for removing eyeblinks and eyemovement it might be worth it to think more.
