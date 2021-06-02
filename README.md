@@ -157,6 +157,13 @@ EEG = pop_rejchan(EEG ,'threshold',5,'norm','on','measure','kurt'); %the rejecti
 You do not need to follow the filtering in this script. EEGlab makes it relatively easy to created/use new filters. 
 
 ##### Using a new filter in EEGlab
+If you want to change your filter the easiest way, you open a random .set file. and do the following 3 steps:
+
+![step1](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Open_filter.PNG "open")  
+![step2](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/filter%20inputs.PNG "input")  
+Here you input the Filter you want. To create a 1Hz filter, you input the number 1 in the "lower edge of the frequency pass band (Hz)" box and hit "ok"  
+![step3](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/figure%20out%20filter%20order.PNG "output")  
+This shows up in Matlab. Replace the filter number with the number 1. followed by the number "preforming [number] point highpass filter" -1 as the filter order. 
 
 ##### What filter should I choose
 Choosing what filters to use will have a big inpact on your data. There are a couple things to consider because filters will have impact in several different ways on your data. 
