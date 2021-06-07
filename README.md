@@ -108,7 +108,9 @@ Here you'll see what each script does and what variables you can need to change.
 ### A_merge_sets
 In this script EEGlab will look for all the .bdf or .edf files for all the IDs you enter. Even if you only have one file per participant, you need to run them through this script, because you end up with .set files that have the EEGlab structure in them.
 Besides, defining the home/save path, you can choose how many blocks (or .BDF files) your participants have. Normally everyone does the same amount of blocks so this would be the same for everyone, but if not, you need to run that participant separately. 
-Furthermore, you can choose a reference channel. This is suggested by [BIOsemi](https://www.biosemi.com/faq/cms&drl.htm). In our case we use the mastoids (channel 65/66 for us), but you can change this to a different channel or leave it empty if you don't want to do this.
+Furthermore, you can choose a reference channel. This is suggested by [BIOsemi](https://www.biosemi.com/faq/cms&drl.htm) to be done at the start. [Brainproducts](https://pressrelease.brainproducts.com/referencing/) and [this paper](https://www.frontiersin.org/articles/10.3389/fnins.2017.00205/full) Also agree that Mastoides are commonly used and good, the paper also talks about different options that could work. 
+
+In our case we use the average of both mastoids (channel 65/66 for us), but you can change this to a different channel or leave it empty if you don't want to do this.
 
 
 These are the variables to change:
@@ -120,7 +122,12 @@ save_path  = 'path_where_to_save_in_pc';
 blocks = 5; 
 ref_chan = [65 66] 
 ```
+This is the impact it has on our data. Here we compare data referenced to the mastoid externals with data where we left the ref_chan variable empty.  
+![hit-ref](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/hit-po7-ext-noext.jpg "hit-ref")  
+![fa-ref](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/fa-fcz-ext-noext.jpg "fa-ref")  
+The first plot is a after a Hit. The second one after a False alarm. It is clear that the amplitudes increase significantly, however it does seem like the standard error also increases. 
 
+However **a very big downside** is that if you re-reference, you wont be able to see if channels were flat. 
 ### B_downs_filter_chaninfo_exclextern_exclchan
 This script starts by loading the previously created .set file, so you need to set the home_path to where you saved the data and the new data will also be saved there. 
 The first thing the script does is down-sample to 256 Hz. We collect data at 512Hz, and there is no real reason to keep it at this high resolution. 
@@ -163,7 +170,7 @@ If you want to change your filter the easiest way, you open a random .set file. 
 ![step2](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/filter%20inputs.PNG "input")  
 Here you input the Filter you want. To create a 1Hz filter, you input the number 1 in the "lower edge of the frequency pass band (Hz)" box and hit "ok"  
 ![step3](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/figure%20out%20filter%20order.PNG "output")  
-This shows up in Matlab. Replace the filter number with the number 1. followed by the number "preforming [number] point highpass filter" -1 as the filter order. 
+This shows up in Matlab. Replace the filter number with the number 1. followed by the number "preforming [number] point high-pass filter" -1 as the filter order. 
 
 ```matlab
 EEG = pop_eegfiltnew(EEG, [],0.01,168960,1,[],1); %this 0.01hz filter changes like this: 
@@ -171,21 +178,21 @@ EEG = pop_eegfiltnew(EEG, [],1,1690,0,[],1); %into a 1 hz filter
 ```
 
 ##### What filter should I choose
-Choosing what filters to use will have a big inpact on your data. There are a couple things to consider because filters will have impact in several different ways on your data. 
-**ICA** The [EEGlab people](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#High-pass_filter_the_data_at_1-Hz_.28for_ICA.2C_ASR.2C_and_CleanLine.29.2809.2F23.2F2019_updated.29) suggest using a 1hz and 45hz filter to get the best ICA solutions. But if one only uses the ICA for removing eyeblinks and eyemovement it might be worth it to think more.
-###### Lowpass filter 
-We usually use a lowpass filter to get rid of high frequency noise that cannot be caused by the brain. By using a 45hz filter this can be solved.Unless you are intressted in specific frequencies that go above 40Hz it's normally safe to use it. 
+Choosing what filters to use will have a big impact on your data. There are a couple things to consider because filters will have impact in several different ways on your data. 
+**ICA** The [EEGlab people](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#High-pass_filter_the_data_at_1-Hz_.28for_ICA.2C_ASR.2C_and_CleanLine.29.2809.2F23.2F2019_updated.29) suggest using a 1Hz and 45Hz filter to get the best ICA solutions. But if one only uses the ICA for removing eye blinks and eye movement it might be worth it to think more.
+###### Low-pass filter 
+We usually use a low-pass filter to get rid of high frequency noise that cannot be caused by the brain. By using a 45Hz filter this can be solved.Unless you are interested in specific frequencies that go above 40Hz it's normally safe to use it. 
 This is what the filter will do to data:  
-![45hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-45hz.jpg "45hz")  
-The black line is downsampled like the Red line + a 45Hz filter is ran on it. If you look at the zoomed in parts it is clear the this smooths out the ERP. 
-###### Highpass filter
-A highpass filter is used to stop Baseline drift. [This drift is stronger for kids and some patient populations (0.1Hz) then for Adult subjects (0.01Hz).](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#High-pass_filter_the_data_at_1-Hz_.28for_ICA.2C_ASR.2C_and_CleanLine.29.2809.2F23.2F2019_updated.29) On of the other things that it helps with is solving artifacts created by sweaty participants.  
-When looking at early components, one can usually use a 1Hz filter. This filter might however cause issues if you look at later components (starting at P2 and onwards). 
+![45hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-45hz.jpg "45Hz")  
+The black line is down-sampled like the Red line + a 45Hz filter is ran on it. If you look at the zoomed in parts it is clear the this smooths out the ERP. 
+###### High-pass filter
+A high-pass filter is used to stop Baseline drift. [This drift is stronger for kids and some patient populations (0.1Hz) then for Adult subjects (0.01Hz).](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#High-pass_filter_the_data_at_1-Hz_.28for_ICA.2C_ASR.2C_and_CleanLine.29.2809.2F23.2F2019_updated.29) On of the other things that it helps with is solving artifacts created by sweaty participants.  
+When looking at early components, one can usually use a 1Hz filter. This filter might however cause issues if you look at later components (starting at P2 and onward). 
 This is what a 1 Hz filter does
 ![1hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-1hz.jpg "1Hz_hit")
-It's intresting to point out that the inpact of the filter is gets stronger the later you look at the ERP. Since we are interested in the P1 (90-130ms) which is early, we can use this filter. The impact is not big enough to say that it distorts the data.
+It's interesting to point out that the impact of the filter is gets stronger the later you look at the ERP. Since we are interested in the P1 (90-130ms) which is early, we can use this filter. The impact is not big enough to say that it distorts the data.
 ![fa1hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Fa-FCz-downs-1hz.jpg "1Hz_fa")
-In the first figure, we were intressted in the first component, whereas in the second figure we were interested in the error-related positivity (Pe), that is around  200-400ms. Here the filter causes a pretty big difference. For us to use this data, we need to use a lower highpass filter.
+In the first figure, we were interested in the first component, whereas in the second figure we were interested in the error-related positivity (Pe), that is around  200-400ms. Here the filter causes a pretty big difference. For us to use this data, we need to use a lower high-pass filter.
 ##### coming soon, 0.1Hz filter, filter orders
 
 ### C_manual_check
@@ -280,7 +287,7 @@ After that you set the time for the epoch. This is pre-defined in the variable e
 After that we use the pop_artmwppth function to flag all the epochs that are too noisy.
 We save this info, after which we delete them. 
 **bug**  
-For now you need to create at least 2 bins, or ERPlab breaks when you want to average the ERPs. When plotting you can always choose not to use one of the two bins. Later on in the F_individual_trials_export script you can choose to only include the bin you want to (or mutlipe if that is what you want)
+For now you need to create at least 2 bins, or ERPlab breaks when you want to average the ERPs. When plotting you can always choose not to use one of the two bins. Later on in the F_individual_trials_export script you can choose to only include the bin you want to (or multiple if that is what you want)
 **bug** 
 Lastly we create the ERPs and save the data as a final .set file.
 You will also have a file at the end with each participants ID number and the percentage of data that got deleted. 
@@ -329,13 +336,7 @@ See the [open issues](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stat
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch 
-3. Commit your Changes 
-4. Push to the Branch 
-5. Open a Pull Request
+Please contact me if you see anything in this pipeline that you think is not good or problematic. I am very happy with any input!
 
 ## Updates 
 5/7/2021 - adding [C_manual_check script](#c_manual_check) + [biosemi160sfp file](#b_downs_filter_chaninfo_exclextern_exclchan)
