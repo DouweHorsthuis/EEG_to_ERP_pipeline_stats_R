@@ -179,6 +179,7 @@ EEG = pop_eegfiltnew(EEG, [],1,1690,0,[],1); %into a 1 hz filter
 
 ##### What filter should I choose
 Choosing what filters to use will have a big impact on your data. There are a couple things to consider because filters will have impact in several different ways on your data. 
+
 **ICA** The [EEGlab people](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#High-pass_filter_the_data_at_1-Hz_.28for_ICA.2C_ASR.2C_and_CleanLine.29.2809.2F23.2F2019_updated.29) suggest using a 1Hz and 45Hz filter to get the best ICA solutions. But if one only uses the ICA for removing eye blinks and eye movement it might be worth it to think more.
 ###### Low-pass filter 
 We usually use a low-pass filter to get rid of high frequency noise that cannot be caused by the brain. By using a 45Hz filter this can be solved.Unless you are interested in specific frequencies that go above 40Hz it's normally safe to use it. 
@@ -193,6 +194,12 @@ This is what a 1 Hz filter does
 It's interesting to point out that the impact of the filter is gets stronger the later you look at the ERP. Since we are interested in the P1 (90-130ms) which is early, we can use this filter. The impact is not big enough to say that it distorts the data.
 ![fa1hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Fa-FCz-downs-1hz.jpg "1Hz_fa")
 In the first figure, we were interested in the first component, whereas in the second figure we were interested in the error-related positivity (Pe), that is around  200-400ms. Here the filter causes a pretty big difference. For us to use this data, we need to use a lower high-pass filter.
+
+##### Final product
+This is the combination of a 1Hz and a 45Hz filter
+![1hz_45hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-1%2645hz.jpg "1Hz_45hz")
+
+
 ##### coming soon, 0.1Hz filter, filter orders
 
 ### C_manual_check
