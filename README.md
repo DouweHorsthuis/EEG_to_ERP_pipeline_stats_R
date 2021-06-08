@@ -61,6 +61,7 @@
 
 This EEG pipeline is made to analyze data collected with a biosemi system, using however many channels you want. There are several cleaning steps (e.g. channel rejection, ICA, epoch rejection) after which stats can be done using R studio. It is scalable to multiple groups and variables such as filter strength, and rejection thresholds are changeable, but are pre-tested and worked for multiple publications.
 
+[Back to top](#eeg-pipeline-using-eeglab)  
 
 ### Built With
 
