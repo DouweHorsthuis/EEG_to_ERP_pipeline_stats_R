@@ -201,6 +201,14 @@ It's interesting to point out that the impact of the filter is gets stronger the
 ![fa1hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Fa-FCz-downs-1hz.jpg "1Hz_fa")
 In the first figure, we were interested in the first component, whereas in the second figure we were interested in the error-related positivity (Pe), that is around  200-400ms. Here the filter causes a pretty big difference. For us to use this data, we need to use a lower high-pass filter.
 
+##### comparing different filters
+It is very important that you know what the impact of your filter can be. One of the things to think of is what is the frequency in which you expect your ERP to be. If it's in the higher Range you could go for a 0.5Hz or maybe a 1Hz filter (1Hz might be too much according to some).
+![1-01-001hzfilters](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-1-01-001hz.jpg)
+As you can see here, the filters seem to have more or less the same impact, since we are intrested in the early components.  
+However here we want to look at later components and we are looking at a ERP based on a False alarm which should be a lower frequency response.
+![001-01-1hzfilters](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Fa-FCz-downs-1-01-001hz.jpg)  
+Here the 1Hz filter has way too much effect and distorts the data. 
+
 ##### Final product
 This is the combination of a 1Hz and a 45Hz filter
 ![1hz_45hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-1%2645hz.jpg "1Hz_45hz")
@@ -270,7 +278,11 @@ EEG = pop_runica(EEG, 'extended',1,'interupt','on'); % you can choose a differen
 ICA_components(:,8) = sum(ICA_components(:,[2 3 4 5 6]),2); % you can choose different components to be deleted.
 bad_components = find(ICA_components(:,8)>0.80 & ICA_components(:,1)<0.05);% how much brain data is too much
 ```
+
 #### Coming soon, impact of filters on ICA, impact of ICA on simple ERPs
+This is an example of what the an ICA does to an ERP. 
+![ERP-ICA-vs-no-ICA](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/1%2645-withandwithout-ica.jpg)  
+This is the impact of the ICA on data, using IClable to auto delete bad components. While all of the components that are deleted are non-brain related and we even check that within the components there less then 5% brain data, the impact is huge. When using ICA always make sure to use the right setting and make sure your data looks the way it should.  
 
 ### E_interpolate
 This script interpolates all the channels that got deleted before. It does this using the pop_interp function. It loads first the _exext.set file (that was created in B script) to see how many channels there were originally. Then loads the new _excom.set file  and uses the pop_interp to do a spherical interpolation for all channels that were rejected. 
