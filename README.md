@@ -282,7 +282,9 @@ bad_components = find(ICA_components(:,8)>0.80 & ICA_components(:,1)<0.05);% how
 #### Coming soon, impact of filters on ICA, impact of ICA on simple ERPs
 This is an example of what the an ICA does to an ERP. 
 ![ERP-ICA-vs-no-ICA](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/1%2645-withandwithout-ica.jpg)  
+
 This is the impact of the ICA on data, using IClable to auto delete bad components. While all of the components that are deleted are non-brain related and we even check that within the components there less then 5% brain data, the impact is huge. When using ICA always make sure to use the right setting and make sure your data looks the way it should.  
+
 
 ### E_interpolate
 This script interpolates all the channels that got deleted before. It does this using the pop_interp function. It loads first the _exext.set file (that was created in B script) to see how many channels there were originally. Then loads the new _excom.set file  and uses the pop_interp to do a spherical interpolation for all channels that were rejected. 
