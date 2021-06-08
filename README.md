@@ -279,7 +279,7 @@ ICA_components(:,8) = sum(ICA_components(:,[2 3 4 5 6]),2); % you can choose dif
 bad_components = find(ICA_components(:,8)>0.80 & ICA_components(:,1)<0.05);% how much brain data is too much
 ```
 
-#### Coming soon, impact of filters on ICA, impact of ICA on simple ERPs
+#### Impact of ICA on simple ERPs
 This is an example of what the an ICA does to an ERP. 
 ![ERP-ICA-vs-no-ICA](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/1%2645-withandwithout-ica.jpg)  
 
