@@ -74,17 +74,20 @@ This EEG pipeline is made to analyze data collected with a biosemi system, using
 ## Getting Started
 
 To get a local copy up and running follow these steps.
+[Back to top](#eeg-pipeline-using-eeglab)  
 
 ### Prerequisites
 Software: You need to have a copy of [EEGlab](https://sccn.ucsd.edu/eeglab/download.php) (these scripts works for version eeglab2019_1)
 
 You need to install the [ERPlab](https://erpinfo.org/erplab) plugin. (these scripts work with erplab8.01)
+[Back to top](#eeg-pipeline-using-eeglab)  
 
 ### Installation
 Download a copy of [EEGlab](https://sccn.ucsd.edu/eeglab/download.php). 
 
 To install the ERPlab, either download it from [Github](https://github.com/lucklab/erplab/releases) and save it in the "Plugins" folder in EEGlab, or open EEGlab and download it via File-->Manage EEGLAB extension and look for ERPlab.
 
+[Back to top](#eeg-pipeline-using-eeglab)  
 
 <!-- USAGE EXAMPLES -->
 ### Usage
@@ -126,7 +129,7 @@ This is the impact it has on our data. Here we compare data referenced to the ma
 ![fa-ref](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/fa-fcz-ext-noext.jpg "fa-ref")  
 The first plot is a after a Hit. The second one after a False alarm. It is clear that the amplitudes increase significantly, however it does seem like the standard error also increases. 
 
-However **a very big downside** is that if you re-reference, you wont be able to see if channels were flat. 
+However **a very big downside** is that if you re-reference, you wont be able to see if channels were flat.  
 [Back to top](#eeg-pipeline-using-eeglab)    
 
 ### B_downs_filter_chaninfo_exclextern_exclchan
@@ -351,10 +354,14 @@ See the [open issues](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stat
 
 ## Contributing
 
-Please contact me if you see anything in this pipeline that you think is not good or problematic. I am very happy with any input!
+Please contact me if you see anything in this pipeline that you think is not good or problematic. I am very happy with any input!  
+[Back to top](#eeg-pipeline-using-eeglab)  
+
 
 ## Updates 
-5/7/2021 - adding [C_manual_check script](#c_manual_check) + [biosemi160sfp file](#b_downs_filter_chaninfo_exclextern_exclchan)
+5/7/2021 - adding [C_manual_check script](#c_manual_check) + [biosemi160sfp file](#b_downs_filter_chaninfo_exclextern_exclchan)  
+
+[Back to top](#eeg-pipeline-using-eeglab)  
 
 
 ## Publications using this pipeline (Only including Papers)
