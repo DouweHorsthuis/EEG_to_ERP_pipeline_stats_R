@@ -61,8 +61,6 @@
 
 This EEG pipeline is made to analyze data collected with a biosemi system, using however many channels you want. There are several cleaning steps (e.g. channel rejection, ICA, epoch rejection) after which stats can be done using R studio. It is scalable to multiple groups and variables such as filter strength, and rejection thresholds are changeable, but are pre-tested and worked for multiple publications.
 
-[Back to top](#eeg-pipeline-using-eeglab)  
-
 ### Built With
 
 * [Matlab](https://www.mathworks.com/)
@@ -70,7 +68,7 @@ This EEG pipeline is made to analyze data collected with a biosemi system, using
 * [ERPlab](https://github.com/lucklab/erplab) (EEGlab plugin)
 * [Rstudio](https://www.rstudio.com/)
 
-
+[Back to top](#eeg-pipeline-using-eeglab)  
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -99,7 +97,7 @@ Or you can hard core this:
 addpath(genpath('theplacewhereyouhavethefolder\eeglab2019_1\'));
 ```
 
-
+[Back to top](#eeg-pipeline-using-eeglab)  
 <!-- ROADMAP -->
 ## Pipeline roadmap
 Here you'll see what each script does and what variables you can need to change.
@@ -129,6 +127,8 @@ This is the impact it has on our data. Here we compare data referenced to the ma
 The first plot is a after a Hit. The second one after a False alarm. It is clear that the amplitudes increase significantly, however it does seem like the standard error also increases. 
 
 However **a very big downside** is that if you re-reference, you wont be able to see if channels were flat. 
+[Back to top](#eeg-pipeline-using-eeglab)    
+
 ### B_downs_filter_chaninfo_exclextern_exclchan
 This script starts by loading the previously created .set file, so you need to set the home_path to where you saved the data and the new data will also be saved there. 
 The first thing the script does is down-sample to 256 Hz. We collect data at 512Hz, and there is no real reason to keep it at this high resolution. 
@@ -160,7 +160,9 @@ EEG = pop_eegfiltnew(EEG, [],45,152,0,[],1); % Low  pass filter
 EEG = pop_chanedit(EEG, 'lookup',[eeglab_location 'plugins\dipfit\standard_BESA\standard-10-5-cap385.elp']); 
 EEG = pop_select( EEG,'nochannel',{'EXG1','EXG2','EXG3','EXG4','EXG5','EXG6','EXG7','EXG8'});% To delete different channels if needed 
 EEG = pop_rejchan(EEG ,'threshold',5,'norm','on','measure','kurt'); %the rejection threshold (standard is 5)
-```
+```  
+[Back to top](#eeg-pipeline-using-eeglab)  
+
 #### Filtering 
 You do not need to follow the filtering in this script. EEGlab makes it relatively easy to created/use new filters. 
 
@@ -200,6 +202,7 @@ In the first figure, we were interested in the first component, whereas in the s
 This is the combination of a 1Hz and a 45Hz filter
 ![1hz_45hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-1%2645hz.jpg "1Hz_45hz")
 
+[Back to top](#eeg-pipeline-using-eeglab)  
 
 ##### coming soon, 0.1Hz filter, filter orders
 
@@ -229,6 +232,7 @@ After figuring out what channels to delete, type their labels in the command win
 
 **Be critical, but if you delete too much (10+ channels) you should think about not using the participant at all.**
 
+[Back to top](#eeg-pipeline-using-eeglab)  
 
 ### D_avgref_ica_autoexcom
 In this script the data gets an referenced to the average to prepare the data for Inter Component Analysis (ICA). 
@@ -283,6 +287,7 @@ These you can change if you want to change settings
 ```matlab
 EEG = pop_interp(EEG, ALLEEG(1).chanlocs, 'spherical');% 
 ```
+[Back to top](#eeg-pipeline-using-eeglab)  
 
 ### F_epoching
 This is the last file for pre-processing the data. In this script the interpolated data gets epoched cleaned and turned into an ERP. Some of these functions are ERPlab based. 
@@ -319,6 +324,7 @@ These you can change if you want to change settings
 ```matlab
 EEG = pop_interp(EEG, ALLEEG(1).chanlocs, 'spherical');% 
 ```
+[Back to top](#eeg-pipeline-using-eeglab)  
 
 ### F_individual_trials_export
 If you want to do stats in R or any program that doesn't read .mat files. you need to export your data. This happens in the F script. [For detailed info see its own repo](https://github.com/DouweHorsthuis/trial_by_trial_data_export_eeglab). 
@@ -337,6 +343,7 @@ First it creates summary-mean and standard deviation.After that it will plot the
 you can design your mixed-effects models
 
 after that you can create a summary with the results of the mixed effects model
+[Back to top](#eeg-pipeline-using-eeglab)  
 
 # Issues
 See the [open issues](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/issues) for a list of proposed features (and known issues).
@@ -362,6 +369,7 @@ Please contact me if you see anything in this pipeline that you think is not goo
 
 [Francisco, A. A., Berruti, A. S., Kaskel, F. J., Foxe, J. J., & Molholm, S. (2021). Assessing the integrity of auditory processing and sensory memory in adults with cystinosis (CTNS gene mutations). Orphanet Journal of Rare Diseases, 16(1), 1-10.](https://link.springer.com/article/10.1186/s13023-021-01818-0)
 (unique settings: re-referenced to TP8 and epochs are −100 to 400ms using a baseline of −50 to 0ms.)
+[Back to top](#eeg-pipeline-using-eeglab)  
 
 <!-- LICENSE -->
 
@@ -369,6 +377,7 @@ Please contact me if you see anything in this pipeline that you think is not goo
 
 Distributed under the MIT License. See [LICENSE](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/LICENSE) for more information.
 
+[Back to top](#eeg-pipeline-using-eeglab)  
 
 
 <!-- CONTACT -->
@@ -378,6 +387,7 @@ Douwe John Horsthuis - [@douwejhorsthuis](https://twitter.com/douwejhorsthuis) -
 
 Project Link: [https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R)
 
+[Back to top](#eeg-pipeline-using-eeglab)  
 
 
 <!-- ACKNOWLEDGEMENTS -->
@@ -388,6 +398,7 @@ Project Link: [https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R](ht
 
 
 
+[Back to top](#eeg-pipeline-using-eeglab)  
 
 
 [contributors-shield]: https://img.shields.io/github/contributors/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge
