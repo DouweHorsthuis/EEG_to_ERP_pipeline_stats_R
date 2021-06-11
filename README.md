@@ -17,7 +17,7 @@
   <h3 align="center">EEG pipeline using EEGlab</h3>
 
   <p align="center">
-    This EEG pipeline is made to analyze data collected with a biosemi system, using however many channels you want. There are several cleaning steps (e.g. channel rejection, ICA, epoch rejection) after which stats can be done using R studio. This pipeline contain several scripts, organized alphabetically. Each script runs a loop on all the participants, making sure that the same steps are taken for each participant. The reason it is not one big script is, because after running each script it would be a good moment to check if you are happy with the data. 
+    This EEG pipeline is made to analyze data collected with a biosemi system, using however many channels you want. There are several cleaning steps (e.g. channel rejection, ICA, epoch rejection) after which stats can be done using R studio. This pipeline contains several scripts, organized alphabetically. Each script runs a loop on all the participants, making sure that the same steps are taken for each participant. The reason it is not one big script is, because after running each script it would be a good moment to check if you are happy with the data. 
     <br />
     <br />
     <br />
@@ -91,10 +91,10 @@ To install the ERPlab, either download it from [Github](https://github.com/luckl
 
 <!-- USAGE EXAMPLES -->
 ### Usage
-To use EEGlab you need to set the path to include this folder and all it's sub folders:
+To use EEGlab you need to set the path to include this folder and all its sub folders:
 
 [In matlab, set path --> add with Subfolders... -->the main eeglab folder --> close](https://github.com/DouweHorsthuis/trial_by_trial_data_export_eeglab/blob/main/images/screenshot_add_path.PNG)
-Or you can hard core this: 
+Or you can hard code this: 
 
 ```matlab
 addpath(genpath('theplacewhereyouhavethefolder\eeglab2019_1\'));
@@ -103,7 +103,7 @@ addpath(genpath('theplacewhereyouhavethefolder\eeglab2019_1\'));
 [Back to top](#eeg-pipeline-using-eeglab)  
 <!-- ROADMAP -->
 ## Pipeline roadmap
-Here you'll see what each script does and what variables you can need to change.
+Here you'll see what each script does and what variables you can change.
 
 ## Pre-processing
 
@@ -127,9 +127,9 @@ ref_chan = [65 66]
 This is the impact it has on our data. Here we compare data referenced to the mastoid externals with data where we left the ref_chan variable empty.  
 ![hit-ref](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/hit-po7-ext-noext.jpg "hit-ref")  
 ![fa-ref](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/fa-fcz-ext-noext.jpg "fa-ref")  
-The first plot is a after a Hit. The second one after a False alarm. It is clear that the amplitudes increase significantly, however it does seem like the standard error also increases. 
+The first plot is the ERP after a Hit. The second one is after a False alarm. It is clear that the amplitudes increase significantly, however it does seem like the standard error also increases. 
 
-However **a very big downside** is that if you re-reference, you wont be able to see if channels were flat.  
+However **a very big downside** is that if you re-reference, you won't be able to see if channels were flat.  
 [Back to top](#eeg-pipeline-using-eeglab)    
 
 ### B_downs_filter_chaninfo_exclextern_exclchan
@@ -144,7 +144,7 @@ To optimize the ICA solutions, these are the suggested filters. However, if you 
 
 The fourth step is adding information to the channels. This is why you need to define the path to EEGlab or to the 'biosemi160' file. It will look for a file to import the channel information. After which it will delete the externals. The difference between the two paths has to do with that for 64channels we use a 10-20 layout for the BIOsemi caps, however for the 160channel caps we have a spherical layout. The first file is part of EEGlab, but this is not the case for the 160channel cap. 64channels is defined as 64 to 95, because a full extra ribbon would be 96 channels. In or lab we normally go up to 8 channels, but we have data that has more. This takes that in consideration. 
 
-Lastly, in step 5, it will reject all the channels based on a kurtosis threshold. It is set to 5, which is the standard. 
+Lastly, in step 5, it will reject channels based on a kurtosis threshold. It is set to 5, which is the standard. Channels with a kurtosis > 5 will be deleted.
 
 
 These are the variables you NEED to change:
@@ -186,20 +186,34 @@ EEG = pop_eegfiltnew(EEG, [],1,1690,0,[],1); %into a 1 hz filter
 ##### What filter should I choose
 Choosing what filters to use will have a big impact on your data. There are a couple things to consider because filters will have impact in several different ways on your data. 
 
-**ICA** The [EEGlab people](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#High-pass_filter_the_data_at_1-Hz_.28for_ICA.2C_ASR.2C_and_CleanLine.29.2809.2F23.2F2019_updated.29) suggest using a 1Hz and 45Hz filter to get the best ICA solutions. But if one only uses the ICA for removing eye blinks and eye movement it might be worth it to think more.
+**ICA** The [EEGlab people](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#High-pass_filter_the_data_at_1-Hz_.28for_ICA.2C_ASR.2C_and_CleanLine.29.2809.2F23.2F2019_updated.29) suggest using a 1Hz and 45Hz filter to get the best ICA solutions. But if one only uses the ICA for removing eye blinks and eye movement it might be worth it to think this through.
 ###### Low-pass filter 
 We usually use a low-pass filter to get rid of high frequency noise that cannot be caused by the brain. By using a 45Hz filter this can be solved.Unless you are interested in specific frequencies that go above 40Hz it's normally safe to use it. 
 This is what the filter will do to data:  
 ![45hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-45hz.jpg "45Hz")  
 The black line is down-sampled like the Red line + a 45Hz filter is ran on it. If you look at the zoomed in parts it is clear the this smooths out the ERP. 
 ###### High-pass filter
-A high-pass filter is used to stop Baseline drift. [This drift is stronger for kids and some patient populations (0.1Hz) then for Adult subjects (0.01Hz).](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#High-pass_filter_the_data_at_1-Hz_.28for_ICA.2C_ASR.2C_and_CleanLine.29.2809.2F23.2F2019_updated.29) On of the other things that it helps with is solving artifacts created by sweaty participants.  
+A high-pass filter is used to stop Baseline drift. [This drift is stronger for kids and some patient populations (0.1Hz) then for Adult subjects (0.01Hz).](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#High-pass_filter_the_data_at_1-Hz_.28for_ICA.2C_ASR.2C_and_CleanLine.29.2809.2F23.2F2019_updated.29) One other thing it helps with is solving artifacts created by sweat.  
 When looking at early components, one can usually use a 1Hz filter. This filter might however cause issues if you look at later components (starting at P2 and onward). 
 This is what a 1 Hz filter does
 ![1hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-1hz.jpg "1Hz_hit")
-It's interesting to point out that the impact of the filter is gets stronger the later you look at the ERP. Since we are interested in the P1 (90-130ms) which is early, we can use this filter. The impact is not big enough to say that it distorts the data.
+It's interesting to point out that the impact of the filter is more strongly seen the later you look at the ERP. Since we are interested in the P1 (90-130ms) which is early, we can use this filter. The impact is not big enough to say that it distorts the data.
 ![fa1hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Fa-FCz-downs-1hz.jpg "1Hz_fa")
-In the first figure, we were interested in the first component, whereas in the second figure we were interested in the error-related positivity (Pe), that is around  200-400ms. Here the filter causes a pretty big difference. For us to use this data, we need to use a lower high-pass filter.
+In the first figure, we were interested in the first component, whereas in the second figure we were interested in the error-related positivity (Pe), that is around  200-400ms. Here the filter causes a pretty big difference. For us to use these data, we need to use a lower high-pass filter.
+
+##### comparing different filters
+It is very important that you know what the impact of your filter can be. One of the things to think of is what frequency you expect in the ERP. If it's in the higher Range you could go for a 0.5Hz or maybe a 1Hz filter (1Hz might be too much according to some).
+![1-01-001hzfilters](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-1-01-001hz.jpg)
+As you can see here, the filters seem to have more or less the same impact, since we are looking at the early components.  
+However here we want to look at later components and we are looking at a ERP based on a False alarm which should be a lower frequency response.
+![001-01-1hzfilters](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Fa-FCz-downs-1-01-001hz.jpg)  
+Here the 1Hz filter has way too much effect and distorts the data. 
+
+##### comparing different filter orders
+In the following 2 plots we ran the same 1Hz filter on the data, but we changed the filter order. The standard filter order suggested by EEGlab for a 1Hz filter is 1690 (this order is different for different filters; a 0.1Hz filter has a suggested order of 16895). We chose 846 as filter order because this is the smallest filter order that can be chosen for this filter. If you would choose a different filter the minimum is different. There is no max filter order, but when we tested 100000000 as an order, after 2 days EEGlab hadn't completed 5%.  
+
+![hit-filteroder](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/filterorder_hit.jpg)
+![fa-filteroder](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/filterorder_fa.jpg)  
 
 ##### Final product
 This is the combination of a 1Hz and a 45Hz filter
@@ -207,19 +221,17 @@ This is the combination of a 1Hz and a 45Hz filter
 
 [Back to top](#eeg-pipeline-using-eeglab)  
 
-##### coming soon, 0.1Hz filter, filter orders
 
 ### C_manual_check
-This script was added on 5/7/2021, before that this was done, but not through the use of a script. It was completely ran in the EEGlab GUI. 
-
-In this script each subjects data gets loaded and plotted in the EEGlab GUI.
+ 
+In this script each subject's data gets loaded and plotted in the EEGlab GUI.
 
 In the GUI set the scale to 5, so you can see if there are flat channels
 
 (example)
 
 ![flat channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/flat%20channel.PNG "flat channel")
-After that Change the scale to 50 (it is important to always set it to the same scale, so you are sure if data is noisy and not just in a lower scale)
+After that Change the scale to 50 (this value will be automatically set and different for each dataset). It is important to always set it to the same scale, so that you can compare noise between datasets.
 
 ![Noisy channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/very%20noisy.PNG "noisy channel")
 
@@ -227,22 +239,22 @@ When looking at 160 channel data, be sure to check in settings how many channels
 
 ![160 channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/160-badchan.PNG "160 noisy channel")
 
-After figuring out what channels to delete, type their labels in the command window of Matlab. They need to be entered in the following structure: 
+After figuring out which channels to delete, type their labels in the command window of Matlab. They need to be entered in the following structure: 
 
 ```matlab
 {'FC1' 'P1' 'po3'}
 ```
 
-**Be critical, but if you delete too much (10+ channels) you should think about not using the participant at all.**
+**Be critical, but if you delete too many channels (>10) you should consider whether that dataset should be included.**
 
 [Back to top](#eeg-pipeline-using-eeglab)  
 
 ### D_avgref_ica_autoexcom
-In this script the data gets an referenced to the average to prepare the data for Inter Component Analysis (ICA). 
-We are using the pop_runica function for the ICA because it works great as an ICA, but there are other options that might be quicker (this might come at a cost). We do an ICA mainly to delete artifacts that are repeated, such as eye blinks, eye movement, muscle movement and electrical noise.
-We are using [IClable](https://www.sciencedirect.com/science/article/pii/S1053811919304185) as a function to automatically label the components. After that it looks what the percentage of "Bad components" are in each individual component. Then it sums the percentage of all of the flagged components and if there is over 80% noise and less then 5% brain a component gets deleted. 
+In this script we start by re-referencing the data to the average, in preparation for Independent Component Analysis (ICA). 
+We are using the pop_runica function, as suggested by EEGLab, but there are other options that might be quicker (this might, however, come at a cost). We do an ICA mainly to delete artifacts that are repeated, such as eye blinks, eye movement, muscle movement and electrical noise.
+We are using [IClable](https://www.sciencedirect.com/science/article/pii/S1053811919304185) as a function to automatically label the components. After that, the percentage of "Bad components" is calculated for each individual component. Then it sums the percentage of all of the flagged components and if there is over 80% noise and less than 5% brain a component gets deleted. 
 
-The following components get will get flagged:
+The following components will get flagged:
 
 - Muscle components
   
@@ -255,7 +267,7 @@ The following components get will get flagged:
 - Channel noise components
 
 Before deleting the components, EEGlab will save a figure with all the bad components for that participant, or if they were all good, a figure with all the components.
-Lastly, Matlab will save a variable called components, with the ID and how many of each type of component reached the threshold. (80% and less then 5% brain, unless it's brain then it's just 80% brain)
+Lastly, Matlab will save a variable called components, with the ID and how many of each type of component reached the threshold. (80% and less than 5% brain)
 
 These are the variables you NEED to change:
 ```matlab
@@ -270,14 +282,20 @@ EEG = pop_runica(EEG, 'extended',1,'interupt','on'); % you can choose a differen
 ICA_components(:,8) = sum(ICA_components(:,[2 3 4 5 6]),2); % you can choose different components to be deleted.
 bad_components = find(ICA_components(:,8)>0.80 & ICA_components(:,1)<0.05);% how much brain data is too much
 ```
-#### Coming soon, impact of filters on ICA, impact of ICA on simple ERPs
+
+#### Impact of ICA on simple ERPs
+This is an example of what the ICA does to an ERP. 
+![ERP-ICA-vs-no-ICA](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/1%2645-withandwithout-ica.jpg)  
+
+This is the impact of the ICA on data, using IClable to auto delete bad components. While all of the components that are deleted are non-brain related and we even check that within the components there is less than 5% brain data, the impact is huge. When using ICA always make sure to use the right setting and make sure your data look the way it should.  
+
 
 ### E_interpolate
 This script interpolates all the channels that got deleted before. It does this using the pop_interp function. It loads first the _exext.set file (that was created in B script) to see how many channels there were originally. Then loads the new _excom.set file  and uses the pop_interp to do a spherical interpolation for all channels that were rejected. 
 
-**It is important to realize that if too many channels from around the same location are rejected, the newly formed channels have bad data.** 
+**It is important to realize that if too many channels from around the same location are rejected, the newly formed channels have inaccurate data.** 
 
-For each participant data gets stored containing the ID number and how many channels were interpolated. 
+For each participant, data get stored containing the ID number and how many channels were interpolated. 
 
 These are the variables you NEED to change:
 ```matlab
@@ -293,24 +311,25 @@ EEG = pop_interp(EEG, ALLEEG(1).chanlocs, 'spherical');%
 [Back to top](#eeg-pipeline-using-eeglab)  
 
 ### F_epoching
-This is the last file for pre-processing the data. In this script the interpolated data gets epoched cleaned and turned into an ERP. Some of these functions are ERPlab based. 
+This is the last file for pre-processing the data. In this script the interpolated data get epoched, cleaned, and transformed into an ERP. Some of these functions are ERPlab based. 
 
-Firstly, the data needs to have their events (or triggers) to be updated. You need to create a text file that assigns this info. There are 2 ways of doing this you can define all trials using an eventlist. This is more restrictive, because it seems like you cannot add a sequence of trigger, only individual ones [See this tutorial for more info.](https://github.com/lucklab/erplab/wiki/Creating-an-EventList:-ERPLAB-Functions:-Tutorial).
-Instead we use the Binlist option. You can create as many bins as you want. Each bin will create a different ERP, and if you want to use ERP lab to plot ERPs you can choose which ones to plot. If you want to use another program it might be worth it to just save the ERPs of 1 specific bin and run the script multiple times. [see this for information on how to create a binlist.txt file](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/binlist.PNG), or [see this tutorial](https://github.com/lucklab/erplab/wiki/ERP-Bin-Operations)
+Firstly, the data needs to have their events (or triggers) to be updated. You need to create a text file that assigns this info. There are 2 ways of doing this.  
+You can define all trials using an eventlist. This is more restrictive, because it seems like you cannot add a sequence of triggers, only individual ones [See this tutorial for more info.](https://github.com/lucklab/erplab/wiki/Creating-an-EventList:-ERPLAB-Functions:-Tutorial).  
+Instead, we use the Binlist option. You can create as many bins as needed. Each bin will create a different ERP, and if you want to use ERPlab to plot ERPs you can choose which ones to plot. If you want to use another program it might be worth it to just save the ERPs of 1 specific bin and run the script multiple times. [see this for information on how to create a binlist.txt file](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/binlist.PNG), or [see this tutorial](https://github.com/lucklab/erplab/wiki/ERP-Bin-Operations)
 
 
 After that you set the time for the epoch. This is pre-defined in the variable epoch_time and baseline_time  at the start. 
 After that we use the pop_artmwppth function to flag all the epochs that are too noisy.
-We save this info, after which we delete them. 
+We save this info, after which we delete them.  
 **bug**  
-For now you need to create at least 2 bins, or ERPlab breaks when you want to average the ERPs. When plotting you can always choose not to use one of the two bins. Later on in the F_individual_trials_export script you can choose to only include the bin you want to (or multiple if that is what you want)
-**bug** 
+For now you need to create at least 2 bins, or ERPlab breaks when you want to average the ERPs. When plotting you can always choose not to use one of the two bins. Later on in the F_individual_trials_export script you can choose to only include the bin you want to (or multiple if that is what you want)  
+**bug**  
 Lastly we create the ERPs and save the data as a final .set file.
-You will also have a file at the end with each participants ID number and the percentage of data that got deleted. 
+You will also have a file at the end with each participant's ID number and the percentage of data that got deleted. 
 
 You can choose to use the pop_binlister function (see line 35). 
 
-If you end up wanting Reaction time for the ERPs. consider including the [pop_rt2text](https://github.com/lucklab/erplab/blob/master/pop_functions/pop_rt2text.m) function. For this to work you need to define your reaction in the eventlist.  
+If you end up wanting Reaction time for the ERPs, consider including the [pop_rt2text](https://github.com/lucklab/erplab/blob/master/pop_functions/pop_rt2text.m) function. For this to work you need to define the event that reflects the reaction you want to measure in the eventlist.  
 
 These are the variables you NEED to change:
 ```matlab
@@ -330,22 +349,20 @@ EEG = pop_interp(EEG, ALLEEG(1).chanlocs, 'spherical');%
 [Back to top](#eeg-pipeline-using-eeglab)  
 
 ### F_individual_trials_export
-If you want to do stats in R or any program that doesn't read .mat files. you need to export your data. This happens in the F script. [For detailed info see its own repo](https://github.com/DouweHorsthuis/trial_by_trial_data_export_eeglab). 
+If you want to do stats in R or any program that doesn't read .mat files, you need to export your data. This happens in the F script. [For detailed info see its own repo](https://github.com/DouweHorsthuis/trial_by_trial_data_export_eeglab). 
 
 ## Statistics
 
 ### Loading and setting up the structure
-If you open the stats file in Rstudio, you can calculate the statistics in R.
-The script does the following, first importing data from .txt file.
-After that it creates factors. This is so that everything is in the format for R.
-Randomly selects 200 trials per subject (so everyone has equal amounts of data)
+Here we compute statistics using R and Rstudio.
+The script does the following. It imports data from .txt file, it creates factors and it randomly selects 200 trials per subject (so everyone has equal amounts of data)
 
 ### Statistics (including mixed-effects models)
-First it creates summary-mean and standard deviation.After that it will plot the data in a violin/box plot. 
+First it creates a summary of the data, which includes mean and standard deviation.
+After that it plots the data in a violin/box plot. 
 
-you can design your mixed-effects models
+You can design your mixed-effects model and, after that, create a summary with the results of your model computation.
 
-after that you can create a summary with the results of the mixed effects model
 [Back to top](#eeg-pipeline-using-eeglab)  
 
 # Issues
@@ -354,7 +371,7 @@ See the [open issues](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stat
 
 ## Contributing
 
-Please contact me if you see anything in this pipeline that you think is not good or problematic. I am very happy with any input!  
+Please contact me if you see anything in this pipeline that you think is problematic or could be improved. I am very happy with any input!  
 [Back to top](#eeg-pipeline-using-eeglab)  
 
 
