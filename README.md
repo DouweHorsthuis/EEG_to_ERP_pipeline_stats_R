@@ -202,15 +202,15 @@ It's interesting to point out that the impact of the filter is gets stronger the
 In the first figure, we were interested in the first component, whereas in the second figure we were interested in the error-related positivity (Pe), that is around  200-400ms. Here the filter causes a pretty big difference. For us to use this data, we need to use a lower high-pass filter.
 
 ##### comparing different filters
-It is very important that you know what the impact of your filter can be. One of the things to think of is what is the frequency in which you expect your ERP to be. If it's in the higher Range you could go for a 0.5Hz or maybe a 1Hz filter (1Hz might be too much according to some).
+It is very important that you know what the impact of your filter can be. One of the things to think of is what frequency you expect in the ERP. If it's in the higher Range you could go for a 0.5Hz or maybe a 1Hz filter (1Hz might be too much according to some).
 ![1-01-001hzfilters](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-1-01-001hz.jpg)
-As you can see here, the filters seem to have more or less the same impact, since we are intrested in the early components.  
+As you can see here, the filters seem to have more or less the same impact, since we are interested in the early components.  
 However here we want to look at later components and we are looking at a ERP based on a False alarm which should be a lower frequency response.
 ![001-01-1hzfilters](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Fa-FCz-downs-1-01-001hz.jpg)  
 Here the 1Hz filter has way too much effect and distorts the data. 
 
 ##### comparing different filter orders
-In the following 2 plots we ran the same 1Hz filter on the data, but we changed the filter order. The standard filter order suggested by EEGlab for a 1Hz filter is 1690 (this order is different for different filters, a 0.1Hz filter has a suggested order of 16895). We chose 846 as the because this is the smallest filter order that can be chosen for this filter. If you would choose a differnent filter the miminum is different. There is no max filter order, but when we tested 100000000 as an order, after 2 days EEGlab hadn't completed 5%.  
+In the following 2 plots we ran the same 1Hz filter on the data, but we changed the filter order. The standard filter order suggested by EEGlab for a 1Hz filter is 1690 (this order is different for different filters; a 0.1Hz filter has a suggested order of 16895). We chose 846 as the because this is the smallest filter order that can be chosen for this filter. If you would choose a different filter the minimum is different. There is no max filter order, but when we tested 100000000 as an order, after 2 days EEGlab hadn't completed 5%.  
 
 ![hit-filteroder](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/filterorder_hit.jpg)
 ![fa-filteroder](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/filterorder_fa.jpg)  
