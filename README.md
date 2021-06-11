@@ -209,13 +209,18 @@ However here we want to look at later components and we are looking at a ERP bas
 ![001-01-1hzfilters](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Fa-FCz-downs-1-01-001hz.jpg)  
 Here the 1Hz filter has way too much effect and distorts the data. 
 
+##### comparing different filter orders
+In the following 2 plots we ran the same 1Hz filter on the data, but we changed the filter order. The standard filter order suggested by EEGlab for a 1Hz filter is 1690 (this order is different for different filters, a 0.1Hz filter has a suggested order of 16895). We chose 846 as the because this is the smallest filter order that can be chosen for this filter. If you would choose a differnent filter the miminum is different. There is no max filter order, but when we tested 100000000 as an order, after 2 days EEGlab hadn't completed 5%.  
+
+![hit-filteroder](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/filterorder_hit.jpg)
+![fa-filteroder](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/filterorder_fa.jpg)  
+
 ##### Final product
 This is the combination of a 1Hz and a 45Hz filter
 ![1hz_45hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-1%2645hz.jpg "1Hz_45hz")
 
 [Back to top](#eeg-pipeline-using-eeglab)  
 
-##### coming soon, 0.1Hz filter, filter orders
 
 ### C_manual_check
 This script was added on 5/7/2021, before that this was done, but not through the use of a script. It was completely ran in the EEGlab GUI. 
