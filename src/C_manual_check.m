@@ -9,6 +9,9 @@ for s=1:length(subject_list)
     bad_chan = [];
     data_path  = [home_path subject_list{s} '\'];
     EEG = pop_loadset('filename', [subject_list{s} '_exchn.set'], 'filepath', data_path);
+    %deleting externals
+    EEG = pop_select( EEG,'nochannel',{'EXG1','EXG2','EXG3','EXG4','EXG5','EXG6','EXG7','EXG8' 'GSR1' 'GSR2' 'Erg1' 'Erg2' 'Resp' 'Plet' 'Temp'});
+    EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_exext.set'],'filepath', data_path);
     pop_eegplot( EEG, 1, 1, 1);
     prompt = 'Delete channels? If yes, input them all as strings inside {}. If none hit enter ';
     bad_chan = input(prompt); %

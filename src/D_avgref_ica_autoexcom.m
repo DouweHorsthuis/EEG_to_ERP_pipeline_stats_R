@@ -1,6 +1,6 @@
 % This scripts does an average reference, uses runica and IClabel to created IC components
 % and defines and deletes the bad ones. The bad components also get printed.
-% last edits done on by Douwe 5/11/2021
+% last edits done on by Douwe 6/17/2021
 % ------------------------------------------------
 
 clear variables
@@ -11,6 +11,7 @@ subject_list = {'some sort of ID' 'a different id for a different particpant'};
 home_path  = 'the main folder where you store all the data';
 figure_path = 'the main folder where you store all the ic figures';
 components = num2cell(zeros(length(subject_list), 8)); %prealocationg space for speed
+refchan = []; %if you want to re-ref to a channel add the chan number here (65 66 for mastiod) if empty won't re-ref to any channel
 for s=1:length(subject_list)
     fprintf('\n******\nProcessing subject %s\n******\n\n', subject_list{s});
     
@@ -21,8 +22,14 @@ for s=1:length(subject_list)
     fprintf('\n\n\n**** %s: Loading dataset ****\n\n\n', subject_list{s});
     EEG = pop_loadset('filename', [subject_list{s} '_exchn.set'], 'filepath', data_path);
     %Doing an average reference
+    %re-referencing, if refchan is empty this get's skipped
+    if isempty(refchan)~=1
+        disp('working')
+    EEG = pop_reref( EEG, refchan);
+    end
     EEG = eeg_checkset( EEG );
-    EEG = pop_reref( EEG, []);
+    %another re-ref to the averages as suggested for the ICA
+    EEG = pop_reref( EEG, []);%
     EEG = eeg_checkset( EEG );
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_ref.set'],'filepath', data_path);
     %Will do the ICA
@@ -30,11 +37,8 @@ for s=1:length(subject_list)
     EEG = pop_runica(EEG, 'extended',1,'interupt','on'); %runs runica function
     EEG = eeg_checkset( EEG );
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_ica.set'],'filepath', data_path);
+    %IClabel part
     clear bad_components brain_ic muscle_ic eye_ic hearth_ic line_noise_ic channel_ic other_ic
-    %Deleting the bad components
-    data_path  = [home_path subject_list{s} '\\'];
-    fprintf('\n\n\n**** %s: Loading dataset ****\n\n\n', subject_list{s});
-    EEG = pop_loadset('filename', [subject_list{s} '_ica.set'], 'filepath', data_path);
     EEG = iclabel(EEG); %does ICLable function
     ICA_components = EEG.etc.ic_classification.ICLabel.classifications ; %creates a new matrix with ICA components
     ICA_components(:,8) = ICA_components(:,3); %row 1 = Brain row 2 = muscle row 3= eye row 4 = Heart Row 5 = Line Noise row 6 = channel noise row 7 = other, combining this makes sure that the component also gets deleted if its a combination of all.

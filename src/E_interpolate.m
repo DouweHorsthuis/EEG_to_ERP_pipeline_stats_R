@@ -21,7 +21,9 @@ for s=1:length(subject_list)
     
     % Load original dataset
     fprintf('\n\n\n**** %s: Loading dataset ****\n\n\n', subject_list{s});
-    EEG = pop_loadset('filename', [subject_list{s} '_exext.set'], 'filepath', data_path);%loading participant file with 64 channels
+    EEG = pop_loadset('filename', [subject_list{s} '_downft.set'], 'filepath', data_path);%loading participant file with 64 channels
+    %deleting externals
+    EEG = pop_select( EEG,'nochannel',{'EXG1','EXG2','EXG3','EXG4','EXG5','EXG6','EXG7','EXG8' 'GSR1' 'GSR2' 'Erg1' 'Erg2' 'Resp' 'Plet' 'Temp'});
     labels_all = [];
     labels_all = {EEG.chanlocs.labels}.'; %stores all the labels in a new matrix
     [ALLEEG EEG index] = eeg_store( ALLEEG, EEG, 1); %store specified EEG dataset(s) in the ALLEG variable
