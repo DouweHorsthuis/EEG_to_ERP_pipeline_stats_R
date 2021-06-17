@@ -252,22 +252,10 @@ After figuring out which channels to delete, type their labels in the command wi
 ### D_avgref_ica_autoexcom
 In this script we start by re-referencing the data to the average, in preparation for Independent Component Analysis (ICA). 
 We are using the pop_runica function, as suggested by EEGLab, but there are other options that might be quicker (this might, however, come at a cost). We do an ICA mainly to delete artifacts that are repeated, such as eye blinks, eye movement, muscle movement and electrical noise.
-We are using [IClable](https://www.sciencedirect.com/science/article/pii/S1053811919304185) as a function to automatically label the components. After that, the percentage of "Bad components" is calculated for each individual component. Then it sums the percentage of all of the flagged components and if there is over 80% noise and less than 5% brain a component gets deleted. 
-
-The following components will get flagged:
-
-- Muscle components
-  
-- Eye components
-  
-- Heart components
-  
-- Line Noise components
-  
-- Channel noise components
+We are using [IClable](https://www.sciencedirect.com/science/article/pii/S1053811919304185) as a function to automatically label the components. After that, we only delete the eyecomponents. We only focus on eyeblinks because we know they have a bad/strong impact on the data and as you can see in [the next part](#impact-of-ica-on-simple-erps) deleting more has a very strong impact on the data and we are not sure what gets deleted.
 
 Before deleting the components, EEGlab will save a figure with all the bad components for that participant, or if they were all good, a figure with all the components.
-Lastly, Matlab will save a variable called components, with the ID and how many of each type of component reached the threshold. (80% and less than 5% brain)
+Lastly, Matlab will save a variable called components, with the ID and how many of each type of component reached the threshold. 
 
 These are the variables you NEED to change:
 ```matlab
@@ -279,17 +267,29 @@ home_path  = 'the main folder where you store all the data';
 These you can change if you want to change settings
 ```matlab
 EEG = pop_runica(EEG, 'extended',1,'interupt','on'); % you can choose a different ICA function, or command it out if you don't want to use it (you will also need to command out the IClable part)
-ICA_components(:,8) = sum(ICA_components(:,[2 3 4 5 6]),2); % you can choose different components to be deleted.
-bad_components = find(ICA_components(:,8)>0.80 & ICA_components(:,1)<0.05);% how much brain data is too much
+bad_components = find(ICA_components(:,3)>0.80 & ICA_components(:,1)<0.05);% look for >80% eye and <5% brain
 ```
 
 #### Impact of ICA on simple ERPs
 This is an example of what the ICA does to an ERP. 
 ![ERP-ICA-vs-no-ICA](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/1%2645-withandwithout-ica.jpg)  
 
-This is the impact of the ICA on data, using IClable to auto delete bad components. While all of the components that are deleted are non-brain related and we even check that within the components there is less than 5% brain data, the impact is huge. When using ICA always make sure to use the right setting and make sure your data look the way it should.  
+This is the impact of the ICA on data, using IClable to auto delete bad components. While all of the components that are deleted are non-brain related and we even check that within the components there is less than 5% brain data, the impact is huge. When using ICA always make sure to use the right setting and make sure your data look the way it should. Doing it manually takes a lot of practice and understanding of the data and a lot of time. This is why we currently prefer the more objective [IClabel](https://github.com/sccn/ICLabel) function in EEGlab  
 
+To make more sense of the impact of deleting components I've plotted 4 different ERPs. 
+  - For the first ERP I deleted for each participant every component if the labels* of the sum of bad** components >90 and the brain label <3%***
+  - For the second ERP I only deleted a component if the eye label would be >80% and the brain label <5% 
+  - For the third ERP I deleted for each participant every component if the labels of the sum of bad components >80 and the brain label <5%
+  - For the fourth ERP I did not delete any component, this is the ERP before IClabel is ran.
 
+The first plot is an VEP directly after seeing a stimulus  
+![ERP-ICA-vs-no-ICA-hit](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/iclabledifferences_hit.jpg)  
+The second plot is an ERP after a False Alarm (button press when they were supposed to inhibit)
+![ERP-ICA-vs-no-ICA-fa](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/iclabledifferences_fa.jpg) 
+
+*IClabel labels for each component how much % they are made up out of [Brain, muscle, eye, Heart, Line Noise, channel noise and other] 
+** We only use a sum of muscle, eye, Heart, Line Noise, channel noise to create bad components
+/*** every label will always have something above 0%, this is why I didn't want to go lower then 3%  
 ### E_interpolate
 This script interpolates all the channels that got deleted before. It does this using the pop_interp function. It loads first the _exext.set file (that was created in B script) to see how many channels there were originally. Then loads the new _excom.set file  and uses the pop_interp to do a spherical interpolation for all channels that were rejected. 
 
