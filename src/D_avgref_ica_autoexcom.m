@@ -37,7 +37,7 @@ for s=1:length(subject_list)
     EEG = pop_loadset('filename', [subject_list{s} '_ica.set'], 'filepath', data_path);
     EEG = iclabel(EEG); %does ICLable function
     ICA_components = EEG.etc.ic_classification.ICLabel.classifications ; %creates a new matrix with ICA components
-    ICA_components(:,8) = sum(ICA_components(:,[2 3 4 5 6]),2); %row 1 = Brain row 2 = muscle row 3= eye row 4 = Heart Row 5 = Line Noise row 6 = channel noise row 7 = other, combining this makes sure that the component also gets deleted if its a combination of all.
+    ICA_components(:,8) = ICA_components(:,3); %row 1 = Brain row 2 = muscle row 3= eye row 4 = Heart Row 5 = Line Noise row 6 = channel noise row 7 = other, combining this makes sure that the component also gets deleted if its a combination of all.
     bad_components = find(ICA_components(:,8)>0.80 & ICA_components(:,1)<0.05); %if the new row is over 80% of the component and the component has less the 5% brain
     brain_ic = length(find(ICA_components(:,1)>0.80));
     muscle_ic = length(find(ICA_components(:,2)>0.80 & ICA_components(:,1)<0.05));
