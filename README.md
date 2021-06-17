@@ -110,10 +110,8 @@ Here you'll see what each script does and what variables you can change.
 ### A_merge_sets
 In this script EEGlab will look for all the .bdf or .edf files for all the IDs you enter. Even if you only have one file per participant, you need to run them through this script, because you end up with .set files that have the EEGlab structure in them.
 Besides, defining the home/save path, you can choose how many blocks (or .BDF files) your participants have. Normally everyone does the same amount of blocks so this would be the same for everyone, but if not, you need to run that participant separately. 
-Furthermore, you can choose a reference channel. This is suggested by [BIOsemi](https://www.biosemi.com/faq/cms&drl.htm) to be done at the start. [Brainproducts](https://pressrelease.brainproducts.com/referencing/) and [this paper](https://www.frontiersin.org/articles/10.3389/fnins.2017.00205/full) Also agree that Mastoides are commonly used and good, the paper also talks about different options that could work. 
 
-In our case we use the average of both mastoids (channel 65/66 for us), but you can change this to a different channel or leave it empty if you don't want to do this.
-
+We used to re-reference the data here (to the mastoids most of the time), but after realizing that it's impossible to spot flat channels after this we pushed this to later in the script.
 
 These are the variables to change:
 ```matlab
@@ -122,19 +120,11 @@ filename= 'the_rest_of_the_file_name';
 home_path  = 'path_where_to_load_in_pc'; 
 save_path  = 'path_where_to_save_in_pc'; 
 blocks = 5; 
-ref_chan = [65 66] 
 ```
-This is the impact it has on our data. Here we compare data referenced to the mastoid externals with data where we left the ref_chan variable empty.  
-![hit-ref](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/hit-po7-ext-noext.jpg "hit-ref")  
-![fa-ref](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/fa-fcz-ext-noext.jpg "fa-ref")  
-The first plot is the ERP after a Hit. The second one is after a False alarm. It is clear that the amplitudes increase significantly, however it does seem like the standard error also increases. 
-
-However **a very big downside** is that if you re-reference, you won't be able to see if channels were flat.  
 [Back to top](#eeg-pipeline-using-eeglab)    
-
 ### B_downs_filter_chaninfo_exclextern_exclchan
 This script starts by loading the previously created .set file, so you need to set the home_path to where you saved the data and the new data will also be saved there. 
-The first thing the script does is down-sample to 256 Hz. We collect data at 512Hz, and there is no real reason to keep it at this high resolution. 
+The first thing the script does is down-sample to 256 Hz. We collect data at 512Hz, and there is no real reason to keep it at this high resolution, but it does take up more space and slows down the process when analyzing. 
 
 The second step is a 1Hz high-pass filter. To change this you need to also decide on the filter order. [See this for more info](https://github.com/widmann/firfilt/blob/master/pop_eegfiltnew.m)
 
@@ -162,7 +152,7 @@ EEG = pop_eegfiltnew(EEG, [],1,1690,1,[],1); % High pass filter
 EEG = pop_eegfiltnew(EEG, [],45,152,0,[],1); % Low  pass filter
 EEG = pop_chanedit(EEG, 'lookup',[eeglab_location 'plugins\dipfit\standard_BESA\standard-10-5-cap385.elp']); 
 EEG = pop_select( EEG,'nochannel',{'EXG1','EXG2','EXG3','EXG4','EXG5','EXG6','EXG7','EXG8'});% To delete different channels if needed 
-EEG = pop_rejchan(EEG ,'threshold',5,'norm','on','measure','kurt'); %the rejection threshold (standard is 5)
+EEG = pop_rejchan(EEG,'elec', [1:64],'threshold',5,'norm','on','measure','kurt'); %the rejection threshold (standard is 5), [1:64 or 1:160 because you don't want to include the externals]
 ```  
 [Back to top](#eeg-pipeline-using-eeglab)  
 
@@ -217,14 +207,14 @@ In the following 2 plots we ran the same 1Hz filter on the data, but we changed 
 
 ##### Final product
 This is the combination of a 1Hz and a 45Hz filter
-![1hz_45hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-1%2645hz.jpg "1Hz_45hz")
+![1hz_45hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-1%2645hz.jpg "1Hz_45Hz")
 
 [Back to top](#eeg-pipeline-using-eeglab)  
 
 
 ### C_manual_check
  
-In this script each subject's data gets loaded and plotted in the EEGlab GUI.
+In this script each subject's data gets loaded, externals get deleted and the data gets plotted in the EEGlab GUI.
 
 In the GUI set the scale to 5, so you can see if there are flat channels
 
@@ -250,9 +240,20 @@ After figuring out which channels to delete, type their labels in the command wi
 [Back to top](#eeg-pipeline-using-eeglab)  
 
 ### D_avgref_ica_autoexcom
-In this script we start by re-referencing the data to the average, in preparation for Independent Component Analysis (ICA). 
+
+After realizing that re-referencing causes flat channels to have the data of the reference channel and thus making it impossible to see if it's flat we only re-reference here (after having deleted all the channels that are noisy/flat).  
+You can choose a reference channel. Biosemi is suggested re-referencing [BIOsemi](https://www.biosemi.com/faq/cms&drl.htm) to be done [not perse at the start](https://www.biosemi.nl/forum/viewtopic.php?f=7&t=810&p=3871#p3871). [Brainproducts](https://pressrelease.brainproducts.com/referencing/) and [this paper](https://www.frontiersin.org/articles/10.3389/fnins.2017.00205/full) Also agree that mastoids are commonly used and good, the paper also talks about different options that could work. 
+
+In our case we use the average of both mastoids (channel 65/66 for us), but you can change this to a different channel or leave it empty if you don't want to do this.
+
+This is the impact it has on our data. Here we compare data referenced to the mastoid externals with data where we left the ref_chan variable empty.  
+![hit-ref](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/hit-po7-ext-noext.jpg "hit-ref")  
+![fa-ref](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/fa-fcz-ext-noext.jpg "fa-ref")  
+The first plot is the ERP after a Hit. The second one is after a False alarm. It is clear that the amplitudes increase significantly, however it does seem like the standard error also increases. 
+
+After that we re-referencing the data to the average, in preparation for Independent Component Analysis (ICA). 
 We are using the pop_runica function, as suggested by EEGLab, but there are other options that might be quicker (this might, however, come at a cost). We do an ICA mainly to delete artifacts that are repeated, such as eye blinks, eye movement, muscle movement and electrical noise.
-We are using [IClable](https://www.sciencedirect.com/science/article/pii/S1053811919304185) as a function to automatically label the components. After that, we only delete the eyecomponents. We only focus on eyeblinks because we know they have a bad/strong impact on the data and as you can see in [the next part](#impact-of-ica-on-simple-erps) deleting more has a very strong impact on the data and we are not sure what gets deleted.
+We are using [IClable](https://www.sciencedirect.com/science/article/pii/S1053811919304185) as a function to automatically label the components. After that, we only delete the eye-components. We only focus on eye-blinks because we know they have a bad/strong impact on the data and as you can see in [the next part](#impact-of-ica-on-simple-erps) deleting more has a very strong impact on the data and we are not sure what gets deleted.
 
 Before deleting the components, EEGlab will save a figure with all the bad components for that participant, or if they were all good, a figure with all the components.
 Lastly, Matlab will save a variable called components, with the ID and how many of each type of component reached the threshold. 
@@ -274,7 +275,7 @@ bad_components = find(ICA_components(:,3)>0.80 & ICA_components(:,1)<0.05);% loo
 This is an example of what the ICA does to an ERP. 
 ![ERP-ICA-vs-no-ICA](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/1%2645-withandwithout-ica.jpg)  
 
-This is the impact of the ICA on data, using IClable to auto delete bad components. While all of the components that are deleted are non-brain related and we even check that within the components there is less than 5% brain data, the impact is huge. When using ICA always make sure to use the right setting and make sure your data look the way it should. Doing it manually takes a lot of practice and understanding of the data and a lot of time. This is why we currently prefer the more objective [IClabel](https://github.com/sccn/ICLabel) function in EEGlab  
+This is the impact of the ICA on data, using IClabel to auto delete bad components. While all of the components that are deleted are non-brain related and we even check that within the components there is less than 5% brain data, the impact is huge. When using ICA always make sure to use the right setting and make sure your data look the way it should. Doing it manually takes a lot of practice and understanding of the data and a lot of time. This is why we currently prefer the more objective [IClabel](https://github.com/sccn/ICLabel) function in EEGlab  
 
 To make more sense of the impact of deleting components I've plotted 4 different ERPs. 
   - For the first ERP I deleted for each participant every component if the labels* of the sum of bad** components >90 and the brain label <3%***
@@ -292,7 +293,7 @@ The second plot is an ERP after a False Alarm (button press when they were suppo
 \*** every label will always have something above 0%, this is why I didn't want to go lower then 3%  
 
 ### E_interpolate
-This script interpolates all the channels that got deleted before. It does this using the pop_interp function. It loads first the _exext.set file (that was created in B script) to see how many channels there were originally. Then loads the new _excom.set file  and uses the pop_interp to do a spherical interpolation for all channels that were rejected. 
+This script interpolates all the channels that got deleted before. It does this using the pop_interp function. It loads first the _downft.set file (that was created in B script) to see how many channels there were originally (it deletes the externals because you don't want these in your new data). Then loads the new _excom.set file  and uses the pop_interp to do a spherical interpolation for all channels that were rejected. 
 
 **It is important to realize that if too many channels from around the same location are rejected, the newly formed channels have inaccurate data.** 
 
@@ -372,12 +373,14 @@ See the [open issues](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stat
 
 ## Contributing
 
-Please contact me if you see anything in this pipeline that you think is problematic or could be improved. I am very happy with any input!  
+Please contact me if you see anything in this pipeline that you think could be improved. I'm always looking to improve the pipeline!  
 [Back to top](#eeg-pipeline-using-eeglab)  
 
 
 ## Updates 
 5/7/2021 - adding [C_manual_check script](#c_manual_check) + [biosemi160sfp file](#b_downs_filter_chaninfo_exclextern_exclchan)  
+6/17/2021- updating the re-referencing situation. We used to do this in the first script when loading the BDF file, but this caused problems with flat channels not being flat anymore.  
+6/17/2021- updating [D_avgref_ica_autoexcom](#d_avgref_ica_autoexcom), only deleting eye-components from now on. 
 
 [Back to top](#eeg-pipeline-using-eeglab)  
 
