@@ -287,9 +287,10 @@ The first plot is an VEP directly after seeing a stimulus
 The second plot is an ERP after a False Alarm (button press when they were supposed to inhibit)
 ![ERP-ICA-vs-no-ICA-fa](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/iclabledifferences_fa.jpg) 
 
-*IClabel labels for each component how much % they are made up out of [Brain, muscle, eye, Heart, Line Noise, channel noise and other] 
-** We only use a sum of muscle, eye, Heart, Line Noise, channel noise to create bad components
-/*** every label will always have something above 0%, this is why I didn't want to go lower then 3%  
+\* IClabel labels for each component how much % they are made up out of [Brain, muscle, eye, Heart, Line Noise, channel noise and other]  
+\** We only use a sum of muscle, eye, Heart, Line Noise, channel noise to create bad components  
+\*** every label will always have something above 0%, this is why I didn't want to go lower then 3%  
+
 ### E_interpolate
 This script interpolates all the channels that got deleted before. It does this using the pop_interp function. It loads first the _exext.set file (that was created in B script) to see how many channels there were originally. Then loads the new _excom.set file  and uses the pop_interp to do a spherical interpolation for all channels that were rejected. 
 
