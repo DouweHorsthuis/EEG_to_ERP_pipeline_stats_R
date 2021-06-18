@@ -19,7 +19,7 @@
   <p align="center">
     This EEG pipeline is made to analyze data collected with a biosemi system, using however many channels you want. There are several cleaning steps (e.g. channel rejection, ICA, epoch rejection) after which stats can be done using R studio. This pipeline contains several scripts, organized alphabetically. Each script runs a loop on all the participants, making sure that the same steps are taken for each participant. The reason it is not one big script is, because after running each script it would be a good moment to check if you are happy with the data.  
  <br />      
-  
+  <br />  
 All plots are made using the average data of 38 controls participants while they are doing a go-no-go task.
   <br />   
     <br />
