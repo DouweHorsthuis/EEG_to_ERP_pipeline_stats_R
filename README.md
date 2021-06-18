@@ -17,7 +17,10 @@
   <h3 align="center">EEG pipeline using EEGlab</h3>
 
   <p align="center">
-    This EEG pipeline is made to analyze data collected with a biosemi system, using however many channels you want. There are several cleaning steps (e.g. channel rejection, ICA, epoch rejection) after which stats can be done using R studio. This pipeline contains several scripts, organized alphabetically. Each script runs a loop on all the participants, making sure that the same steps are taken for each participant. The reason it is not one big script is, because after running each script it would be a good moment to check if you are happy with the data. 
+    This EEG pipeline is made to analyze data collected with a biosemi system, using however many channels you want. There are several cleaning steps (e.g. channel rejection, ICA, epoch rejection) after which stats can be done using R studio. This pipeline contains several scripts, organized alphabetically. Each script runs a loop on all the participants, making sure that the same steps are taken for each participant. The reason it is not one big script is, because after running each script it would be a good moment to check if you are happy with the data.  
+    
+    All plots are made using the average data of 38 controls participants while they are doing a go-no-go task.
+    
     <br />
     <br />
     <br />
@@ -128,11 +131,11 @@ The first thing the script does is down-sample to 256 Hz. We collect data at 512
 
 The second step is a 1Hz high-pass filter. To change this you need to also decide on the filter order. [See this for more info](https://github.com/widmann/firfilt/blob/master/pop_eegfiltnew.m)
 
-Same counts for the third step, which is a 45Hz high-pass filter.
+Same counts for the third step, which is a 45Hz high-pass filter. For more detailed info on filters see the ["What filter should I choose" chapter](#what-filter-should-I-choose).
 
 To optimize the ICA solutions, these are the suggested filters. However, if you want to look at components that show up later in the data, 1Hz might be too high. [See this paper for more info on filters.](https://www.sciencedirect.com/science/article/pii/S0896627319301746)
 
-The fourth step is adding information to the channels. This is why you need to define the path to EEGlab or to the 'biosemi160' file. It will look for a file to import the channel information. After which it will delete the externals. The difference between the two paths has to do with that for 64channels we use a 10-20 layout for the BIOsemi caps, however for the 160channel caps we have a spherical layout. The first file is part of EEGlab, but this is not the case for the 160channel cap. 64channels is defined as 64 to 95, because a full extra ribbon would be 96 channels. In or lab we normally go up to 8 channels, but we have data that has more. This takes that in consideration. 
+The fourth step is adding information to the channels. This is why you need to define the path to EEGlab or to the 'biosemi160' file. It will look for a file to import the channel information. The difference between the two paths has to do with that for 64channels we use a 10-20 layout for the BIOsemi caps, however for the 160channel caps we have a spherical layout. The first file is part of EEGlab, but this is not the case for the 160channel cap. 64channels is defined as 64 to 95, because a full extra ribbon would be 96 channels. In or lab we normally go up to 8 channels, but we have data that has more. This takes that in consideration. 
 
 Lastly, in step 5, it will reject channels based on a kurtosis threshold. It is set to 5, which is the standard. Channels with a kurtosis > 5 will be deleted.
 
@@ -241,8 +244,8 @@ After figuring out which channels to delete, type their labels in the command wi
 
 ### D_reref_avgref_ica_autoexcom
 
-After realizing that re-referencing causes flat channels to have the data of the reference channel and thus making it impossible to see if it's flat we only re-reference here (after having deleted all the channels that are noisy/flat).  
-You can choose a reference channel. Biosemi is suggested re-referencing [BIOsemi](https://www.biosemi.com/faq/cms&drl.htm) to be done [not perse at the start](https://www.biosemi.nl/forum/viewtopic.php?f=7&t=810&p=3871#p3871). [Brainproducts](https://pressrelease.brainproducts.com/referencing/) and [this paper](https://www.frontiersin.org/articles/10.3389/fnins.2017.00205/full) Also agree that mastoids are commonly used and good, the paper also talks about different options that could work. 
+After realizing that re-referencing causes flat channels to have the data of the reference channel and thus making it impossible to see if it's flat, we only re-reference here (after having deleted all the channels that are noisy/flat).  
+You can choose a reference channel. [Biosemi explains why it matters for their system](https://www.biosemi.com/faq/cms&drl.htm) but that you should [delete flat channels first](https://www.biosemi.nl/forum/viewtopic.php?f=7&t=810&p=3871#p3871). [Brainproducts](https://pressrelease.brainproducts.com/referencing/) and [this paper](https://www.frontiersin.org/articles/10.3389/fnins.2017.00205/full) Also agree that mastoids are commonly used and good, the paper also talks about different options that could work. 
 
 In our case we use the average of both mastoids (channel 65/66 for us), but you can change this to a different channel or leave it empty if you don't want to do this.
 
@@ -275,7 +278,7 @@ bad_components = find(ICA_components(:,3)>0.80 & ICA_components(:,1)<0.05);% loo
 This is an example of what the ICA does to an ERP. 
 ![ERP-ICA-vs-no-ICA](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/1%2645-withandwithout-ica.jpg)  
 
-This is the impact of the ICA on data, using IClabel to auto delete bad components. While all of the components that are deleted are non-brain related and we even check that within the components there is less than 5% brain data, the impact is huge. When using ICA always make sure to use the right setting and make sure your data look the way it should. Doing it manually takes a lot of practice and understanding of the data and a lot of time. This is why we currently prefer the more objective [IClabel](https://github.com/sccn/ICLabel) function in EEGlab  
+Here you see the impact of the ICA on data after using IClabel to auto delete bad components. While all of the components that are deleted are non-brain related and we even check that within the components there is less than 5% brain data, the impact is huge. When using ICA always make sure to use the right setting and make sure your data look the way it should. Doing it manually takes a lot of practice and understanding of the data and a lot of time. This is why we currently prefer the more objective [IClabel](https://github.com/sccn/ICLabel) function in EEGlab  
 
 To make more sense of the impact of deleting components I've plotted 4 different ERPs. 
   - For the first ERP I deleted for each participant every component if the labels* of the sum of bad** components >90 and the brain label <3%***
