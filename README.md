@@ -41,8 +41,8 @@
       - [A_merge_sets(Matlab)](#a_merge_sets)
       - [B_downs_filter_chaninfo_exclchan(Matlab)](#b_downs_filter_chaninfo_exclchan)
         - [Filtering](#filtering)
-      - [C_exclextrn_manual_check(Matlab)](#c_exclextrn_manual_check)
-      - [D_reref_avgref_ica_autoexcom(Matlab)](#d_reref_avgref_ica_autoexcom)
+      - [C_manual_check(Matlab)](#c_manual_check)
+      - [D_reref_exclextrn_avgref_ica_autoexcom(Matlab)](#d_reref_exclextrn_avgref_ica_autoexcom)
       - [E_interpolate(Matlab)](#e_interpolate)
       - [F_epoching(Matlab)](#f_epoching)
     - [exporting](#exporting)
@@ -215,7 +215,7 @@ This is the combination of a 1Hz and a 45Hz filter
 [Back to top](#eeg-pipeline-using-eeglab)  
 
 
-### C_exclextrn_manual_check
+### C_manual_check
  
 In this script each subject's data gets loaded, externals get deleted and the data gets plotted in the EEGlab GUI.
 
@@ -242,7 +242,7 @@ After figuring out which channels to delete, type their labels in the command wi
 
 [Back to top](#eeg-pipeline-using-eeglab)  
 
-### D_reref_avgref_ica_autoexcom
+### D_reref_exclextrn_avgref_ica_autoexcom
 
 After realizing that re-referencing causes flat channels to have the data of the reference channel and thus making it impossible to see if it's flat, we only re-reference here (after having deleted all the channels that are noisy/flat).  
 You can choose a reference channel. [Biosemi explains why it matters for their system](https://www.biosemi.com/faq/cms&drl.htm) but that you should [delete flat channels first](https://www.biosemi.nl/forum/viewtopic.php?f=7&t=810&p=3871#p3871). [Brainproducts](https://pressrelease.brainproducts.com/referencing/) and [this paper](https://www.frontiersin.org/articles/10.3389/fnins.2017.00205/full) Also agree that mastoids are commonly used and good, the paper also talks about different options that could work. 
@@ -381,9 +381,9 @@ Please contact me if you see anything in this pipeline that you think could be i
 
 
 ## Updates 
-5/7/2021 - adding [C_exclextrn_manual_check script](#C_exclextrn_manual_check) + [biosemi160sfp file](#B_downs_filter_chaninfo_exclchan)  
+5/7/2021 - adding [C_manual_check script](#C_manual_check) + [biosemi160sfp file](#B_downs_filter_chaninfo_exclchan)  
 6/17/2021- updating the re-referencing situation. We used to do this in the first script when loading the BDF file, but this caused problems with flat channels not being flat anymore.  
-6/17/2021- updating [D_reref_avgref_ica_autoexcom](#D_reref_avgref_ica_autoexcom), only deleting eye-components from now on. 
+6/17/2021- updating [D_reref_exclextrn_avgref_ica_autoexcom](#D_reref_exclextrn_avgref_ica_autoexcom), only deleting eye-components from now on. 
 
 [Back to top](#eeg-pipeline-using-eeglab)  
 
