@@ -1,5 +1,5 @@
 % Combination of EEGLAB downsample and filter, Exclude external and reject channel script by Ana on 2017-07-11
-% Combined and updated by Douwe Horsthuis last update 5/7/2021
+% Combined and updated by Douwe Horsthuis last update 6/18/2021
 % ------------------------------------------------
 
 % This defines the set of subjects

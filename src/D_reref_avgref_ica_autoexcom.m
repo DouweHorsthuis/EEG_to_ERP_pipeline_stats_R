@@ -1,6 +1,8 @@
-% This scripts does an average reference, uses runica and IClabel to created IC components
-% and defines and deletes the bad ones. The bad components also get printed.
-% last edits done on by Douwe 6/17/2021
+% This scripts allows you to re-reference to any channel including
+% externals it deletes the externals after that and does an average 
+% reference, uses runica and IClabel to created IC component and 
+% defines and deletes the bad ones. The bad components also get printed.
+% last edits done on by Douwe 6/18/2021
 % ------------------------------------------------
 
 clear variables
@@ -28,6 +30,9 @@ for s=1:length(subject_list)
     EEG = pop_reref( EEG, refchan);
     end
     EEG = eeg_checkset( EEG );
+    %deleting externals
+    EEG = pop_select( EEG,'nochannel',{'EXG1','EXG2','EXG3','EXG4','EXG5','EXG6','EXG7','EXG8' 'GSR1' 'GSR2' 'Erg1' 'Erg2' 'Resp' 'Plet' 'Temp'});
+    EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_exext.set'],'filepath', data_path);
     %another re-ref to the averages as suggested for the ICA
     EEG = pop_reref( EEG, []);%
     EEG = eeg_checkset( EEG );

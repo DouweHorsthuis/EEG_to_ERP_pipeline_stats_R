@@ -1,5 +1,5 @@
 % EEGLAB merge sets, and creates .set file
-% by Douwe Horsthuis on 3/24/2021
+% by Douwe Horsthuis updated on 6/18/2021
 % ------------------------------------------------
 subject_list = {'some sort of ID' 'a different id for a different particpant'}; %all the IDs for the indivual particpants
 filename= 'the_rest_of_the_file_name'; % if your bdf file has a name besides the ID of the participant
