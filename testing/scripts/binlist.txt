@@ -1,0 +1,12 @@
+bin 1
+hit
+{75;76}{1}.{75;76}{1:rt<"hit">}
+
+bin 2
+false alarm
+{75;76}{1}.{85;86}{1:rt<"false_alarm">}
+
+bin 3
+aft false alarm
+{85;86}{1}.{75;76}{1:rt<"aft_false_alarm">}
+
