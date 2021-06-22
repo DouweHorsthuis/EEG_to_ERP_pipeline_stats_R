@@ -1,5 +1,5 @@
 % Created on 8/27/2018 By Douwe Horsthuis
-% Last update 4/27/2021
+% Last update 6/22/2021
 % Script will take the pre-proccesed and epoched data and transfer for each trial a mean for time window of interest to a non matlab file (to be loaded in different softwares (such as R studio)
 % 1)create the means of the epoched data, for a defined time window, for a selected channel
 % 2)asign a number to the condition (can have up to 3 conditions)
@@ -19,8 +19,8 @@ time_window = [];%specify the begin and end points of the time window of interes
 name_timewindow= '';%name timewindow of intresset 
 chan = ''; %channel of interest 
 name_file = '_epoched'; %the name after the IDnumber (excluding .set)
-events_in_epoch_cond1 = {'1'}; % what triggers need to be exported.
-events_in_epoch_cond2 = {'15'}; %
+events_in_epoch_cond1 = {}; % what bins you want see EEG.EVENTLIST.eventinfo.binlabel or EEG.EVENTLIST.eventinfo.code
+events_in_epoch_cond2 = {}; %
 events_in_epoch_cond3 = {}; %
 %% variables and matrices that need to exist %%
 prev_subjects = 0; %needs this to calculate how many subjects existed in previous groups
@@ -36,13 +36,13 @@ for j=1:group %running it per group
         return
     end
     if j==1 %group 1
-        subj    =  {'id_participant_1' 'id_participant_2'};%
+        subj    =  {'subjID1' 'subjID2' };%
         if isempty(subj)
             disp('you forgot to input subject IDs for group 1');
             return
         end
     elseif j==2 %group 2
-        subj    = {};
+        subj    = {'subjID1' 'subjID2'};
         if isempty(subj) && group > 1
             disp('you forgot to input subject IDs for group 2');
             return
@@ -150,20 +150,21 @@ for j=1:group %running it per group
         if isrow(subject); subject = subject'; end
         prev_subjects= length(subj)+prev_subjects;
         %% combining
-        clear data_subj_small
+        clear data_subj_small 
         data_subj_small = [subject, Condition, Trial, Erp];
         data_temp       = [data_temp; data_subj_small];
     end
     
     %% group
-    if isempty(data_temp)~=1
         disp(['Completing group ' num2str(group)])
+        clear Group
         Group(1:length(data_temp)) = j;
-        if isrow(Group); Group = Group'; end
+        if isrow(Group) 
+            Group = Group'; 
+        end
         data = [Group, data_temp];
         data_subj = [data_subj; data]; %
         clear data data_temp Group
-    end
 end
 
 Group      = (data_subj(:,1));

@@ -1,12 +1,11 @@
 % Plotting the raw data to see if there are remaining bad or flat channels
-% Created by Douwe Horsthuis last update 5/7/2021
+% Created by Douwe Horsthuis last update 5/21/2021
 % ------------------------------------------------
-
 subject_list = {'some sort of ID' 'a different id for a different particpant'};
 home_path  = 'the main folder where you store your data';
 for s=1:length(subject_list)
+    clear bad_chan;
     fprintf('\n******\nProcessing subject %s\n******\n\n', subject_list{s});
-    bad_chan = [];
     data_path  = [home_path subject_list{s} '\'];
     EEG = pop_loadset('filename', [subject_list{s} '_exchn.set'], 'filepath', data_path);
     pop_eegplot( EEG, 1, 1, 1);
