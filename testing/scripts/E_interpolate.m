@@ -4,11 +4,11 @@
 clear variables
 eeglab
 close all
-subject_list = {'some sort of ID' 'a different id for a different particpant'}; % This defines the set of subjects
-name_paradigm = 'name'; % this is needed for saving the table at the end
+subject_list = {'11' '14'};
+name_paradigm = 'testing'; % this is needed for saving the table at the end
 %participant_info = []; % needed for creating matrix at the end
 % Path to the parent folder, which contains the data folders for all subjects
-home_path  = 'the main folder where you store your data';
+home_path  = 'C:\Users\dohorsth\Documents\GitHub\EEG_to_ERP_pipeline_stats_R\testing\data\';
 participant_badchan = string(zeros(length(subject_list), 2)); %prealocationg space for speed
 % Loop through all subjects
 for s=1:length(subject_list)
@@ -38,3 +38,4 @@ for s=1:length(subject_list)
     participant_badchan(s,:)     = data_subj;%combine new data with old data
 end
 save([home_path name_paradigm '_participant_interpolation_info'], 'participant_badchan');
+

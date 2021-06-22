@@ -1,13 +1,12 @@
-% Combination of EEGLAB downsample and filter, and reject channel script by Ana on 2017-07-11
-% Combined and updated by Douwe Horsthuis last update 6/21/2021
+% Testing the scr code 6/21/2021
 % ------------------------------------------------
 
 % This defines the set of subjects
-subject_list = {'some sort of ID' 'a different id for a different particpant'};
-eeglab_location = 'C:\Users\wherever\eeglab2019_1\'; %needed if using a 10-5-cap
-scripts_location = 'C:\\Scripts\'; %needed if using 160channel data
+subject_list = {'11' '14'};
+eeglab_location = 'C:\Users\dohorsth\Documents\Matlab\eeglab2019_1\'; %needed if using a 10-5-cap
+scripts_location = 'C:\Users\dohorsth\Documents\GitHub\EEG_to_ERP_pipeline_stats_R\testing\scripts\'; %needed if using 160channel data
 % Path to the parent folder, which contains the data folders for all subjects
-home_path  = 'the main folder where you store your data';
+home_path  = 'C:\Users\dohorsth\Documents\GitHub\EEG_to_ERP_pipeline_stats_R\testing\data\';
 % Loop through all subjects
 for s=1:length(subject_list)
     fprintf('\n******\nProcessing subject %s\n******\n\n', subject_list{s});
@@ -28,10 +27,12 @@ for s=1:length(subject_list)
     %adding channel location
     if EEG.nbchan >63 && EEG.nbchan < 95 %64chan cap (can be a lot of externals, this makes sure that it includes a everything that is under 96 channels, which could be an extra ribbon)
         EEG=pop_chanedit(EEG, 'lookup',[eeglab_location 'plugins\dipfit\standard_BESA\standard-10-5-cap385.elp']); %make sure you put here the location of this file for your computer
+        EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_info.set'],'filepath', data_path);
     %deleting bad channels
         EEG = pop_rejchan(EEG,'elec', [1:64],'threshold',5,'norm','on','measure','kurt');
     elseif EEG.nbchan >159 && EEG.nbchan < 191 %160chan cap
         EEG=pop_chanedit(EEG, 'lookup',[scripts_location 'BioSemi160.sfp']); %make sure you put here the location of this file for your computer
+        EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_info.set'],'filepath', data_path);
     %deleting bad channels
         EEG = pop_rejchan(EEG,'elec', [1:160],'threshold',5,'norm','on','measure','kurt');
     end

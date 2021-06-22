@@ -1,10 +1,9 @@
-% EEGLAB merge sets, and creates .set file
-% by Douwe Horsthuis updated on 6/21/2021
+% Testing the scr code 6/21/2021
 % ------------------------------------------------
-subject_list = {'some sort of ID' 'a different id for a different particpant'}; %all the IDs for the indivual particpants
-filename     = 'the_rest_of_the_file_name'; % if your bdf file has a name besides the ID of the participant (e.g. oddball_paradigm)
-home_path    = 'path_where_to_load_in_pc'; %place data is (something like 'C:\data\')
-blocks       = 5; % the amount of BDF files. if different participant have different amounts of blocks, run those participant separate
+subject_list = {'11' '14'}; %all the IDs for the indivual particpants
+filename     = 'IAPS'; % if your bdf file has a name besides the ID of the participant (e.g. oddball_paradigm)
+home_path    = 'C:\Users\dohorsth\Documents\GitHub\EEG_to_ERP_pipeline_stats_R\testing\data\'; %place data is (something like 'C:\data\')
+blocks       = 2; % the amount of BDF files. if different participant have different amounts of blocks, run those participant separate
 for s = 1:length(subject_list)
     clear ALLEEG
     eeglab

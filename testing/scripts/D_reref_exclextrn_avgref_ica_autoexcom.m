@@ -1,21 +1,15 @@
-% This scripts allows you to re-reference to any channel including externals
-% it deletes the externals
-% does an average reference
-% uses runica to do an Independent Component Analysis
-% uses IClabel to define the eye component
-% Deletes these and the components also get printed.
-% last edits done on by Douwe 6/21/2021
+% Testing the scr code 6/21/2021
 % ------------------------------------------------
+
 
 clear variables
 
-% This defines the set of subjects
-subject_list = {'some sort of ID' 'a different id for a different particpant'};
+subject_list = {'11' '14'};
 % Path to the parent folder, which contains the data folders for all subjects
-home_path  = 'the main folder where you store all the data';
-figure_path = 'the main folder where you store all the ic figures';
+home_path  = 'C:\Users\dohorsth\Documents\GitHub\EEG_to_ERP_pipeline_stats_R\testing\data\';
+figure_path = 'C:\Users\dohorsth\Documents\GitHub\EEG_to_ERP_pipeline_stats_R\testing\data\';
 components = num2cell(zeros(length(subject_list), 8)); %prealocationg space for speed
-refchan = { }; %if you want to re-ref to a channel add the name of the channel here, if empty won't re-ref to any specific channel (for example {'EXG3' 'EXG4'} or {'Cz'})
+refchan = {'EXG3' 'EXG4'}; %if you want to re-ref to a channel add the name of the channel here, if empty won't re-ref to any specific channel
 for s=1:length(subject_list)
     fprintf('\n******\nProcessing subject %s\n******\n\n', subject_list{s});
     % Path to the folder containing the current subject's data
