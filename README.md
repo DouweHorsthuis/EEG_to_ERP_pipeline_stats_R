@@ -255,8 +255,11 @@ This is the impact it has on our data. Here we compare data referenced to the ma
 ![fa-ref](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/fa-fcz-ext-noext.jpg "fa-ref")  
 The first plot is the ERP after a Hit. The second one is after a False alarm. It is clear that the amplitudes increase significantly, however it does seem like the standard error also increases. 
 
-After that we re-referencing the data to the average, in preparation for Independent Component Analysis (ICA). 
-We are using the pop_runica function, as suggested by EEGLab, but there are other options that might be quicker (this might, however, come at a cost). We do an ICA mainly to delete artifacts that are repeated, such as eye blinks, eye movement, muscle movement and electrical noise.
+After that we re-referencing the data to the average, in preparation for Independent Component Analysis (ICA).  
+
+We are using the pop_runica function, as suggested by EEGLab, but there are other options that might be quicker (this might, however, come at a cost). We do an ICA mainly to delete artifacts that are repeated, such as eye blinks, eye movement, muscle movement and electrical noise.  
+One of the issues cause by the re-refferencing is that we created a rank-deficiency. This can potentially create a "ghost" ICA component (not that important, but it's a duplicate of an already existing one)and has the potential to make the data a lot noisier (if this happens there will be at least one really noisy channel in the data) which is very problematic. The solution is relatively easy, you can either delete a channel (after the average ref) or you can simply set the pca option for the run_ica function to n-total-channel minus 1. This last option is added to this pipeline.  
+
 We are using [IClable](https://www.sciencedirect.com/science/article/pii/S1053811919304185) as a function to automatically label the components. After that, we only delete the eye-components. We only focus on eye-blinks because we know they have a bad/strong impact on the data and as you can see in [the next part](#impact-of-ica-on-simple-erps) deleting more has a very strong impact on the data and we are not sure what gets deleted.
 
 Before deleting the components, EEGlab will save a figure with all the bad components for that participant, or if they were all good, a figure with all the components.
