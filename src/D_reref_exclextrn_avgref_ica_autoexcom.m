@@ -50,7 +50,8 @@ for s=1:length(subject_list)
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_ref.set'],'filepath', data_path);
     %Independent Component Analysis
     EEG = eeg_checkset( EEG );
-    EEG = pop_runica(EEG, 'extended',1,'interupt','on'); %using runica function
+    pca = EEG.nbchan-1; %the PCA part of the ICA needs stops the rank-deficiency 
+    EEG = pop_runica(EEG, 'extended',1,'interupt','on','pca',pca); %using runica function, with the PCA part
     EEG = eeg_checkset( EEG );
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_ica.set'],'filepath', data_path);
     %organizing components
