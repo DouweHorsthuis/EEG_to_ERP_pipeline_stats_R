@@ -71,8 +71,8 @@ for s=1:length(subject_list)
     other_ic = length(find(ICA_components(:,7)>0.80 & ICA_components(:,1)<0.05));
     %will plot all the IC components that get deleted
     if isempty(bad_components)~= 1 %script would stop if people lack bad components
-        if ceil(sqrt(length(bad_components))) == 1
-            pop_topoplot(EEG, 0, [bad_components bad_components] ,subject_list{s} ,0,'electrodes','on');
+       if length(bad_components) == 1
+        figure;pop_topoplot(EEG ,0, [bad_components], subject_list{s},[1 1] ,0,'electrodes','on');
         else
             pop_topoplot(EEG, 0, [bad_components] ,subject_list{s},[ceil(sqrt(length(bad_components))) ceil(sqrt(length(bad_components)))] ,0,'electrodes','on');
         end
