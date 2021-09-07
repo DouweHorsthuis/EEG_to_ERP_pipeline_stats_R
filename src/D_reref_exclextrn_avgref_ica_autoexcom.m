@@ -82,8 +82,6 @@ for s=1:length(subject_list)
             close all
         else %instead of only plotting bad components it will plot all components
             title(subject_list{s}); text( 0.2,0.5, 'there are no eye-components found')
-            pop_topoplot(EEG, 0, 1:length(ICA_components) ,subject_list{s},[ceil(sqrt(length(ICA_components))) ceil(sqrt(length(ICA_components)))] ,0,'electrodes','on');
-            title(subject_list{s});
             print([figure_path subject_list{s} '_Bad_ICs_topos'], '-dpng' ,'-r300');
         end
         title(subject_list{s});
