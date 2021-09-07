@@ -225,7 +225,7 @@ In the GUI set the scale to 5, so you can see if there are flat channels
 (example)
 
 ![flat channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/flat%20channel.PNG "flat channel")
-After that Change the scale to 50 (this value will be automatically set and different for each dataset). It is important to always set it to the same scale, so that you can compare noise between datasets.
+After that Change the scale to 50 (this value will be automatically set and different for each data set). It is important to always set it to the same scale, so that you can compare noise between data sets.
 
 ![Noisy channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/very%20noisy.PNG "noisy channel")
 
@@ -239,7 +239,7 @@ After figuring out which channels to delete, type their labels in the command wi
 {'FC1' 'P1' 'po3'}
 ```
 
-**Be critical, but if you delete too many channels (>10) you should consider whether that dataset should be included.**
+**Be critical, but if you delete too many channels (>10) you should consider whether that data set should be included.**
 
 [Back to top](#eeg-pipeline-using-eeglab)  
 
@@ -258,11 +258,11 @@ The first plot is the ERP after a Hit. The second one is after a False alarm. It
 After that we re-referencing the data to the average, in preparation for Independent Component Analysis (ICA).  
 
 We are using the pop_runica function, as suggested by EEGLab, but there are other options that might be quicker (this might, however, come at a cost). We do an ICA mainly to delete artifacts that are repeated, such as eye blinks, eye movement, muscle movement and electrical noise.  
-One of the issues cause by the re-refferencing is that we created a rank-deficiency. This can potentially create a "ghost" ICA component (not that important, but it's a duplicate of an already existing one)and has the potential to make the data a lot noisier (if this happens there will be at least one really noisy channel in the data) which is very problematic. The solution is relatively easy, you can either delete a channel (after the average ref) or you can simply set the pca option for the run_ica function to n-total-channel minus 1. This last option is added to this pipeline.  
+One of the issues cause by the re-referencing is that we created a rank-deficiency. This can potentially create a "ghost" ICA component (not that important, but it's a duplicate of an already existing one)and has the potential to make the data a lot noisier (if this happens there will be at least one really noisy channel in the data) which is very problematic. The solution is relatively easy, you can either delete a channel (after the average ref) or you can simply set the pca option for the run_ica function to n-total-channel minus 1. This last option is added to this pipeline.  
 
-We are using [IClable](https://www.sciencedirect.com/science/article/pii/S1053811919304185) as a function to automatically label the components. After that, we only delete the eye-components. We only focus on eye-blinks because we know they have a bad/strong impact on the data and as you can see in [the next part](#impact-of-ica-on-simple-erps) deleting more has a very strong impact on the data and we are not sure what gets deleted.
+We are using [IClable](https://www.sciencedirect.com/science/article/pii/S1053811919304185) as a function to automatically label the components. After that, we only delete the eye-components. We only focus on eye-blinks because we know they have a bad/strong impact on the data and as you can see in [the next part](#impact-of-ica-on-simple-erps) deleting more has a very strong impact on the data and we are not sure what gets deleted. In our case components will only get deleted if they are >80% eye and <10% brain. We decided on these criteria after comparing how many components experts in our lab would delete and what criteria would match this the closesed.
 
-Before deleting the components, EEGlab will save a figure with all the bad components for that participant, or if they were all good, a figure with all the components.
+Matlab will save a figure with the deleted Eye components and with all the remaining components grouped separately.
 Lastly, Matlab will save a variable called components, with the ID and how many of each type of component reached the threshold. 
 
 These are the variables you NEED to change:
