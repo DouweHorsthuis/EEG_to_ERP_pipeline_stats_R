@@ -21,8 +21,10 @@ for s=1:length(subject_list)
     EEG = eeg_checkset( EEG );
     %filtering
     EEG = pop_eegfiltnew(EEG, [],1,1690,1,[],1); % 1hz filter
+    EEG.filter_1 = [1, 1690]; %add here the same info as above, so it's saved in the EEG structure
     EEG = eeg_checkset( EEG );
     EEG = pop_eegfiltnew(EEG, [],45,152,0,[],1); %45hz filter
+    EEG.filter_2 = [45,152]; %add here the same info as above, so it's saved in the EEG structure
     EEG = eeg_checkset( EEG );
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_downft.set'],'filepath', data_path);
     %adding channel location
@@ -35,6 +37,8 @@ for s=1:length(subject_list)
     %deleting bad channels
         EEG = pop_rejchan(EEG,'elec', [1:160],'threshold',5,'norm','on','measure','kurt');
     end
+        %adding info to the EEG structure
+    
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_exchn.set'],'filepath', data_path);
 end
 

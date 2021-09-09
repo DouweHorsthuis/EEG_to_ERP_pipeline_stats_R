@@ -24,6 +24,9 @@ for s = 1:length(subject_list)
         %since there are more than 1 files, they need to be merged to one big .set file.
         EEG = pop_mergeset( ALLEEG, 1:blocks, 0);
     end
+    %adding info to the EEG structure
+    EEG.subject = subject_list{s}; %subject ID
     %save the bdf as a .set file
+    
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '.set'],'filepath',data_path);
 end
