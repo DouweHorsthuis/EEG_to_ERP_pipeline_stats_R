@@ -14,7 +14,7 @@
     <img src="images/CNL_logo_2.jpeg" alt="Logo" width="286" height="120">
   </a>
 
-  <h3 align="center">EEG pipeline using EEGlab</h3>
+  <h3 align="center">EEG pipeline using EEGlab Specific to Visual Gating</h3>
 
   <p align="center">
     This EEG pipeline is made to analyze data collected with a biosemi system, using however many channels you want. There are several cleaning steps (e.g. channel rejection, ICA, epoch rejection) after which stats can be done using R studio. This pipeline contains several scripts, organized alphabetically. Each script runs a loop on all the participants, making sure that the same steps are taken for each participant. The reason it is not one big script is, because after running each script it would be a good moment to check if you are happy with the data.  
