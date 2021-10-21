@@ -6,7 +6,7 @@ authors:
 - family-names: "Ana Alves"
   given-names: "Francisco"
 title: "EEG_to_ERP_pipeline_stats_R"
-version: 2.0
+version: 2.02
 doi: 10.5281/zenodo.5584698
 date-released: 2021-10-20
 url: "https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R"
