@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Douwe John"
+  given-names: "Horsthuis"
+- family-names: "Ana Alves"
+  given-names: "Francisco"
+title: "EEG_to_ERP_pipeline_stats_R"
+version: 2.0
+doi: 10.5281/zenodo.5584698
+date-released: 2021-10-20
+url: "https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R"
