@@ -47,7 +47,7 @@ for s=1:length(subject_list)
     %values = pop_rt2text(ERP, 'eventlist',1, 'filename', [home_path '\All RT files\' subject_list{s} '_rt.xls'], 'header', 'on', 'listformat', 'basic' );
     
     ID                         = string(subject_list{s});
-    data_subj                  = [ID, percent_deleted, ERP.EVENTLIST.trialsperbin]; %ERP.EVENTLIST.trialsperbin gives all the trials per bin
+    data_subj                  = [ID, percent_deleted, ERP.ntrials.accepted  ]; %ERP.ntrials.accepted  gives all the trials per bin
     participant_info_temp(s,:)   = data_subj;
 end
 colNames                   = [{'ID','%data deleted'} ERP.bindescr]; %adding names for columns [ERP.bindescr] adds all the name of the bins
