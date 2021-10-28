@@ -330,9 +330,10 @@ Instead, we use the Binlist option. You can create as many bins as needed. Each 
 After that you set the time for the epoch. This is pre-defined in the variable epoch_time and baseline_time  at the start. 
 After that we use the pop_artmwppth function to flag all the epochs that are too noisy.
 We save this info, after which we delete them.  
-**bug**  
-For now you need to create at least 2 bins, or ERPlab breaks when you want to average the ERPs. When plotting you can always choose not to use one of the two bins. Later on in the F_individual_trials_export script you can choose to only include the bin you want to (or multiple if that is what you want)  
-**bug**  
+**bug when using EEGlab V2019_1**  
+You need to create at least 2 bins, or ERPlab breaks when you want to average the ERPs. When plotting you can always choose not to use one of the two bins. Later on in the F_individual_trials_export script you can choose to only include the bin you want to (or multiple if that is what you want).
+This is not the case if you use EEGlab V2021.1
+**bug when using EEGlab V2019_1** 
 Lastly we create the ERPs and save the data as a final .set file.
 You will also have a file at the end with each participant's ID number and the percentage of data that got deleted. 
 
