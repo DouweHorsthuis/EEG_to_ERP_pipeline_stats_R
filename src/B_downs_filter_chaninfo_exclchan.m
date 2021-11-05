@@ -1,5 +1,5 @@
 % Combination of EEGLAB downsample and filter, and reject channel script by Ana on 2017-07-11
-% Combined and updated by Douwe Horsthuis last update 6/21/2021
+% Combined and updated by Douwe Horsthuis last update 11/5/2021
 % ------------------------------------------------
 
 % This defines the set of subjects
@@ -8,6 +8,11 @@ eeglab_location = 'C:\Users\wherever\eeglab2019_1\'; %needed if using a 10-5-cap
 scripts_location = 'C:\\Scripts\'; %needed if using 160channel data
 % Path to the parent folder, which contains the data folders for all subjects
 home_path  = 'the main folder where you store your data';
+downsample_to=256; % what is the sample rate you want to downsample to
+lowpass_filter_hz=45; %45hz filter
+lowpass_filter_order=152;%this is the suggested value produced by EEGlab
+highpass_filter_hz=1; %1hz filter
+highpass_filter_order=1690;%this is the suggested value produced by EEGlab
 % Loop through all subjects
 for s=1:length(subject_list)
     fprintf('\n******\nProcessing subject %s\n******\n\n', subject_list{s});
@@ -17,14 +22,13 @@ for s=1:length(subject_list)
     EEG = pop_loadset('filename', [subject_list{s} '.set'], 'filepath', data_path);
     EEG = eeg_checkset( EEG );
     %downsample
-    EEG = pop_resample( EEG, 256); %downsample to 256hz
+    EEG = pop_resample( EEG, downsample_to);
     EEG = eeg_checkset( EEG );
     %filtering
-    EEG = pop_eegfiltnew(EEG, [],1,1690,1,[],1); % 1hz filter
-    EEG.filter_1 = [1, 1690]; %add here the same info as above, so it's saved in the EEG structure
+    EEG.filter=table(lowpass_filter_hz,lowpass_filter_order,highpass_filter_hz,highpass_filter_order); %adding it to subject EEG file
+    EEG = pop_eegfiltnew(EEG, [],highpass_filter_hz,highpass_filter_order,1,[],1); % 1hz filter
     EEG = eeg_checkset( EEG );
-    EEG = pop_eegfiltnew(EEG, [],45,152,0,[],1); %45hz filter
-    EEG.filter_2 = [45,152]; %add here the same info as above, so it's saved in the EEG structure
+    EEG= pop_eegfiltnew(EEG, [],lowpass_filter_hz,lowpass_filter_order,0,[],1); 
     EEG = eeg_checkset( EEG );
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_downft.set'],'filepath', data_path);
     %adding channel location
@@ -39,8 +43,6 @@ for s=1:length(subject_list)
         %deleting bad channels
         EEG = pop_rejchan(EEG,'elec', [1:160],'threshold',5,'norm','on','measure','kurt');
     end
-    %adding info to the EEG structure
-    
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_exchn.set'],'filepath', data_path);
 end
 
