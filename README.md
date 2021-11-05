@@ -43,8 +43,7 @@ All plots are made using the average data of 38 controls participants while they
       - [B_downs_filter_chaninfo_exclchan(Matlab)](#b_downs_filter_chaninfo_exclchan)
         - [Filtering](#filtering)
       - [C_manual_check(Matlab)](#c_manual_check)
-      - [D_reref_exclextrn_avgref_ica_autoexcom(Matlab)](#d_reref_exclextrn_avgref_ica_autoexcom)
-      - [E_interpolate(Matlab)](#e_interpolate)
+      - [D_reref_exclextrn_interp_avgref_ica_autoexcom(Matlab)](#d_reref_exclextrn_interp_avgref_ica_autoexcom)
       - [F_epoching(Matlab)](#f_epoching)
     - [exporting](#exporting)
       - [F_individual_trials_export(Matlab)](#f_individual_trials_export)
@@ -243,7 +242,7 @@ After figuring out which channels to delete, type their labels in the command wi
 
 [Back to top](#eeg-pipeline-using-eeglab)  
 
-### D_reref_exclextrn_avgref_ica_autoexcom
+### D_reref_exclextrn_interp_avgref_ica_autoexcom
 
 After realizing that re-referencing causes flat channels to have the data of the reference channel and thus making it impossible to see if it's flat, we only re-reference here (after having deleted all the channels that are noisy/flat).  
 You can choose a reference channel. [Biosemi explains why it matters for their system](https://www.biosemi.com/faq/cms&drl.htm) but that you should [delete flat channels first](https://www.biosemi.nl/forum/viewtopic.php?f=7&t=810&p=3871#p3871). [Brainproducts](https://pressrelease.brainproducts.com/referencing/) and [this paper](https://www.frontiersin.org/articles/10.3389/fnins.2017.00205/full) Also agree that mastoids are commonly used and good, the paper also talks about different options that could work. 
@@ -255,7 +254,31 @@ This is the impact it has on our data. Here we compare data referenced to the ma
 ![fa-ref](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/fa-fcz-ext-noext.jpg "fa-ref")  
 The first plot is the ERP after a Hit. The second one is after a False alarm. It is clear that the amplitudes increase significantly, however it does seem like the standard error also increases. 
 
-After that we re-referencing the data to the average, in preparation for Independent Component Analysis (ICA).  
+#### E_interpolate
+
+After that we re-referencing we interpolate. We moved this up from where it was before (after the ICA), because this allows us to use the ICA weights and gives us all the channels. 
+
+Here we interpolates all the channels that got deleted before. It does this using the pop_interp function. It loads first the _info.set file (that was created in B script) to see how many channels there were originally (it deletes the externals because you don't want these in your new data). Then we use the pop_interp to do a spherical interpolation for all channels that were rejected. 
+
+**It is important to realize that if too many channels from around the same location are rejected, the newly formed channels have inaccurate data.** 
+
+For each participant, data get stored containing the ID number and how many channels were interpolated. 
+
+These are the variables you NEED to change:
+```matlab
+subject_list = {'some sort of ID' 'a different id for a different particpant'}; 
+name_paradigm = 'name' % this is how the .mat file with the info is being called
+home_path  = 'the main folder where you store all the data';
+```
+
+These you can change if you want to change settings
+```matlab
+EEG = pop_interp(EEG, ALLEEG(1).chanlocs, 'spherical');% 
+```
+[Back to top](#eeg-pipeline-using-eeglab)  
+
+
+After this we reference the data to the average, in preparation for Independent Component Analysis (ICA). The PCA is set to the amount of channels deleted -1 (for the average reference)
 
 We are using the pop_runica function, as suggested by EEGLab, but there are other options that might be quicker (this might, however, come at a cost). We do an ICA mainly to delete artifacts that are repeated, such as eye blinks, eye movement, muscle movement and electrical noise.  
 One of the issues cause by the re-referencing is that we created a rank-deficiency. This can potentially create a "ghost" ICA component (not that important, but it's a duplicate of an already existing one)and has the potential to make the data a lot noisier (if this happens there will be at least one really noisy channel in the data) which is very problematic. The solution is relatively easy, you can either delete a channel (after the average ref) or you can simply set the pca option for the run_ica function to n-total-channel minus 1. This last option is added to this pipeline.  
@@ -299,25 +322,7 @@ The second plot is an ERP after a False Alarm (button press when they were suppo
 \** We only use a sum of muscle, eye, Heart, Line Noise, channel noise to create bad components  
 \*** every label will always have something above 0%, this is why I didn't want to go lower then 3%  
 
-### E_interpolate
-This script interpolates all the channels that got deleted before. It does this using the pop_interp function. It loads first the _downft.set file (that was created in B script) to see how many channels there were originally (it deletes the externals because you don't want these in your new data). Then loads the new _excom.set file  and uses the pop_interp to do a spherical interpolation for all channels that were rejected. 
 
-**It is important to realize that if too many channels from around the same location are rejected, the newly formed channels have inaccurate data.** 
-
-For each participant, data get stored containing the ID number and how many channels were interpolated. 
-
-These are the variables you NEED to change:
-```matlab
-subject_list = {'some sort of ID' 'a different id for a different particpant'}; 
-name_paradigm = 'name' % this is how the .mat file with the info is being called
-home_path  = 'the main folder where you store all the data';
-```
-
-These you can change if you want to change settings
-```matlab
-EEG = pop_interp(EEG, ALLEEG(1).chanlocs, 'spherical');% 
-```
-[Back to top](#eeg-pipeline-using-eeglab)  
 
 ### F_epoching
 This is the last file for pre-processing the data. In this script the interpolated data get epoched, cleaned, and transformed into an ERP. Some of these functions are ERPlab based. 
