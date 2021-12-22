@@ -37,7 +37,8 @@ All plots are made using the average data of 38 controls participants while they
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
     - [Usage](#usage)
-3. [Pipeline roadmap](#pipeline-roadmap)
+3. [Pipeline order](#pipeline-order)
+3. [Pipeline extended](#pipeline-extended)
     - [Pre-processing](#pre-processing)
       - [A_merge_sets(Matlab)](#a_merge_sets)
       - [B_downs_filter_chaninfo_exclchan(Matlab)](#b_downs_filter_chaninfo_exclchan)
@@ -101,11 +102,50 @@ Or you can hard code this:
 
 ```matlab
 addpath(genpath('theplacewhereyouhavethefolder\eeglab2019_1\'));
-```
+```  
+[Back to top](#eeg-pipeline-using-eeglab)  
+
+## Pipeline order  
+  
+Here we describe the order of the scripts. The order is obvious sometimes (for example there is no way to do anything without the first script), but less so in other moments (for example, when do you interpolate channels). For more in-dept explanations [click here](#pipeline-extended) 
+  
+#### merging and creating a set extention
+In the first script we merge files if needed so that all the .BDF files are now merged for each participant and turned into a .SET file that eeglab can read.  
+  
+#### Downsampling
+The data doesn't need to be more that 256Hz so we downsample to that. This reduces file size from here onwards, so this needs to be done early.  
+
+#### Filtering
+A lot of artifact go away after filtering, so this is next  
+  
+#### Deleting channels
+Deleting bad channels so we are only left with good data. First automatically, after that manually which is also the first time you can see the raw data. So this let's you get familiar with the data as soon as possible.  
+  
+#### re-referencing (optional)
+There is an option to re-reference to any external or channel or combination of mulitiple of these. This is not needed and depending on data collection criteria not always possible
+
+#### Interpolation
+This is done now, because it creates a better average reference, and allows the ICA weights to count for all channels including the ones that were deleted.
+
+#### average refererence 
+Then there will be an average reference. This is suggested to have the ICA run better
+
+#### PCA
+We calculate the PCA, which will dictate the amount of components for that the ICA creates. This is especially imporant because of the interpolation before the ICA. 
+  
+#### ICA
+We run an ICA  
+  
+#### Delete bad components
+We use IClabel to delete bad components. In this case we only call eyecomponents bad components. All the components will be plotted for each participant so we can see afterwards what was deleted and what not.  
+  
+#### Epoching
+Epoching after which every epoch that is to noisy gets deleted.
+
 
 [Back to top](#eeg-pipeline-using-eeglab)  
-<!-- ROADMAP -->
-## Pipeline roadmap
+
+## Pipeline extended
 Here you'll see what each script does and what variables you can change.
 
 ## Pre-processing

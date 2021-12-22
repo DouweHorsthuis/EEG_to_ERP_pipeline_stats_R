@@ -6,18 +6,20 @@
 % it can also record the RTs and put them in and excel, but it needs folder after the homepath called \All RT files\
 clear variables
 eeglab
+%% Subject info for each script
 % This defines the set of subjects
-subject_list = {'some sort of ID' 'a different id for a different particpant'}; 
+subject_list = {'some sort of ID' 'a different id for a different particpant'};
+% Path to the parent folder, which contains the data folders for all subjects
+home_path  = 'the main folder where you store your data';
+%% info needed for this script specific 
 name_paradigm = 'name'; % this is needed for saving the table at the end
 %participant_info_temp = []; % needed for creating matrix at the end
-% Path to the parent folder, which contains the data folders for all subjects
-home_path  = 'the main folder where you store your data\';
 binlist_location = 'the folder where you stored your binlist\'; %binlist should be named binlist.txt
 epoch_time = [-50 400];
 baseline_time = [-50 0];
 n_bins=3;% enter here the number of bins in your binlist
 participant_info_temp = string(zeros(length(subject_list), 2+n_bins)); %prealocationg space for speed
-% Loop through all subjects
+%% Loop through all subjects
 for s=1:length(subject_list)
     fprintf('\n******\nProcessing subject %s\n******\n\n', subject_list{s});
     clear data_subj
