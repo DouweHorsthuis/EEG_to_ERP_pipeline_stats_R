@@ -109,15 +109,15 @@ addpath(genpath('theplacewhereyouhavethefolder\eeglab2019_1\'));
   
 Here we describe the order of the scripts. The order is obvious sometimes (for example there is no way to do anything without the first script), but less so in other moments (for example, when do you interpolate channels). For more in-dept explanations see [Pipeline extended](#pipeline-extended), or click on the step you want to know more about. 
   
-<<<<<<< HEAD
+
 [merging and creating a set extention](#a_merge_sets)  
 [Downsampling](#downsampling)  
 [Filtering](#filtering)  
 [Adding channel info](#adding_channel_info)  
 [Deleting channels automatic](#deleting_channels) & [Deleting channels manual](#c_manual_check)  
 [re-referencing (optional)](#re-referencing)  
-[Interpolation](#interpolate)
-[average refererence](#average_reference)  
+[Interpolation](#interpolate)  
+[Average reference](#average_reference)  
 [PCA](#pca)  
 [ICA](#ica)  
 [Delete bad components IC](#iclabel)  
@@ -304,7 +304,7 @@ EEG = pop_interp(EEG, ALLEEG(1).chanlocs, 'spherical');%
 ```
 [Back to top](#eeg-pipeline-using-eeglab)  
 
-#### Average Reference
+#### Average reference
 After this we reference the data to the average, in preparation for Independent Component Analysis (ICA). 
 
 ### PCA
