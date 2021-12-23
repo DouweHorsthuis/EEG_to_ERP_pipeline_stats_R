@@ -305,7 +305,11 @@ EEG = pop_interp(EEG, ALLEEG(1).chanlocs, 'spherical');%
 [Back to top](#eeg-pipeline-using-eeglab)  
 
 #### Average reference
-After this we reference the data to the average, in preparation for Independent Component Analysis (ICA). 
+After this we reference the data to the average. There are mulitiple reasons to do this but we do it mainly for 2 reasons.  
+1, in preparation for Independent Component Analysis (ICA).  
+2, [The extra referencing step, will give you 40 dB extra CMRR (Common mode rejection ratio)](https://www.biosemi.com/faq/cms&drl.htm)
+
+We only do it now because we just interpolated, which minimizes potential bias in the average referencing stage. For example, if there are 64 channels, and 16 channels are identified as bad and rejected but only from the right hemisphere. Then, the number of channels in the left vs. right hemispheres are 32 vs. 16, with which average will be biased toward the left hemisphere. To avoid this bias, scalp electrodes may be interpolated. [See Makoto's pipeline for more info, the previouse text is his explanation](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#Interpolate_all_the_removed_channels_.2803.2F05.2F2021_updated.29)
 
 ### PCA
 The PCA is set to the amount of channels deleted -1 (for the average reference), the PCA will dictate how many components the ICA will create. This is especially important because we are interpolating and doing an average reference before the ICA. This could cause "ghost components", or just make the data go bad all together due to working with data that is rank deficiant. Setting the PCA preferents this rank issue. Another solution is to delete a channel (after the average ref). But this would still not solve the issue for the interpolated channels + we would lose a good channel.
