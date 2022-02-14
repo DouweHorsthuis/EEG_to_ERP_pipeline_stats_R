@@ -161,9 +161,25 @@ To optimize the ICA solutions, these are the suggested filters. However, if you 
 
 #### Adding channel info
 The fourth step is adding information to the channels. This is why you need to define the path to EEGlab or to the 'biosemi160' file. It will look for a file to import the channel information. The difference between the two paths has to do with that for 64channels we use a 10-20 layout for the BIOsemi caps, however for the 160channel caps we have a spherical layout. The first file is part of EEGlab, but this is not the case for the 160channel cap. 64channels is defined as 64 to 95, because a full extra ribbon would be 96 channels. In or lab we normally go up to 8 channels, but we have data that has more. This takes that in consideration. 
+**small update 2/14/2022**
+We were always using the ```standard-10-5-cap385.elp``` file. However we work with caps that have the 10-20 system. Because of this we are now using the ```standard_1020.ELC``` file. This is only the case for 64 channel data. When using 160channel data, we need to rely on the biosemi file, because 160 channel data has a spherical configuration and does not follow the 10-20 system. 
 
 #### Deleting channels
-Lastly, in step 5, it will reject channels based on a kurtosis threshold. It is set to 5, which is the standard. Channels with a kurtosis > 5 will be deleted.
+
+**2/14/2021 update**
+~~Lastly, in step 5, it will reject channels based on a kurtosis threshold. It is set to 5, which is the standard. Channels with a kurtosis > 5 will be deleted.~~
+We are using the ```pop_clean_rawdata``` function instead of the previously used ```pop_rejchan```. This new functions allows for more cleaning. Currently we are only use the parts of the function that focus on channel deletion.  
+  
+We delete a channel if  
+-  It's more than 5 seconds flat
+-  there is high frequency noise than is bigger 4 standard deviantionsof the rest of the signal
+-  if there is a minimal acceptable correlation with the nearby channels of 0.8
+
+All of these settings are the standard settings and result in clean data, without losing excessive amount of channels.  
+
+**imporant for now**  
+Even though for now we cannot exclude externals from the cleaning process, and thus we need to delete them beforehand. [The EEGLAB people have said that they are working on a fix base on my request](https://github.com/sccn/clean_rawdata/issues/28). Currently (when manually updating the function) there are still errors when excluding externals from this cleaning, but hopefully quick this will be solved. So if you need to use externals, use the old cleaning functions, this one is still in the code. 
+
 
 
 These are the variables you NEED to change:
