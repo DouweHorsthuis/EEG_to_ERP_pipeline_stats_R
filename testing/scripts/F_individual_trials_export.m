@@ -1,5 +1,5 @@
 % Created on 8/27/2018 By Douwe Horsthuis
-% Last update 4/27/2021
+% Last update 6/22/2021
 % Script will take the pre-proccesed and epoched data and transfer for each trial a mean for time window of interest to a non matlab file (to be loaded in different softwares (such as R studio)
 % 1)create the means of the epoched data, for a defined time window, for a selected channel
 % 2)asign a number to the condition (can have up to 3 conditions)
@@ -11,17 +11,17 @@ clear EEG
 eeglab
 close all
 
-group = 2; %Add here how many groups of participant you have, 4 is max
-load_path  = 'C:\Users\dohorsth\Documents\GitHub\EEG_to_ERP_pipeline_stats_R\testing\data\';
-save_path= 'C:\Users\dohorsth\Documents\GitHub\EEG_to_ERP_pipeline_stats_R\testing\data\';
+group = 1; %Add here how many groups of participant you have, 4 is max
+load_path  = 'C:\data\';
+save_path= 'C:\results\';
 typefile= '.xlsx';% final file can be saved as mat, txt, dat, csv, xls, xlsm, xlsx or xlsb
-time_window = [50 100];%specify the begin and end points of the time window of interest in ms either a specific point for N1/MMN/P2
-name_timewindow= 'P1';%name timewindow of intresset 
-chan = 'Cz'; %channel of interest 
+time_window = [];%specify the begin and end points of the time window of interest in ms either a specific point for N1/MMN/P2
+name_timewindow= '';%name timewindow of intresset 
+chan = ''; %channel of interest 
 name_file = '_epoched'; %the name after the IDnumber (excluding .set)
-events_in_epoch_cond1 = {'B1(75)' 'B1(76)'}; % what triggers need to be exported.
-events_in_epoch_cond2 = {'B2(85)' 'B2(86)'}; %
-events_in_epoch_cond3 = {'B3(75)' 'B3(76)'}; %
+events_in_epoch_cond1 = {}; % what bins you want see EEG.EVENTLIST.eventinfo.binlabel or EEG.EVENTLIST.eventinfo.code
+events_in_epoch_cond2 = {}; %
+events_in_epoch_cond3 = {}; %
 %% variables and matrices that need to exist %%
 prev_subjects = 0; %needs this to calculate how many subjects existed in previous groups
 data_subj = [];
@@ -36,13 +36,13 @@ for j=1:group %running it per group
         return
     end
     if j==1 %group 1
-        subj    =  {'11' };%
+        subj    =  {'subjID1' 'subjID2' };%
         if isempty(subj)
             disp('you forgot to input subject IDs for group 1');
             return
         end
     elseif j==2 %group 2
-        subj    = {'14'};
+        subj    = {'subjID1' 'subjID2'};
         if isempty(subj) && group > 1
             disp('you forgot to input subject IDs for group 2');
             return

@@ -6,18 +6,20 @@
 % it can also record the RTs and put them in and excel, but it needs folder after the homepath called \All RT files\
 clear variables
 eeglab
-close all
-subject_list = {'11' '14'};
-name_paradigm = 'testing'; % this is needed for saving the table at the end
-%participant_info_temp = []; % needed for creating matrix at the end
+%% Subject info for each script
+% This defines the set of subjects
+subject_list = {'some sort of ID' 'a different id for a different particpant'};
 % Path to the parent folder, which contains the data folders for all subjects
-home_path  = 'C:\Users\dohorsth\Documents\GitHub\EEG_to_ERP_pipeline_stats_R\testing\data\';
-binlist_location = 'C:\Users\dohorsth\Documents\GitHub\EEG_to_ERP_pipeline_stats_R\testing\scripts\'; %binlist should be named binlist.txt
+home_path  = 'the main folder where you store your data';
+%% info needed for this script specific 
+name_paradigm = 'name'; % this is needed for saving the table at the end
+%participant_info_temp = []; % needed for creating matrix at the end
+binlist_location = 'the folder where you stored your binlist\'; %binlist should be named binlist.txt
 epoch_time = [-50 400];
 baseline_time = [-50 0];
-n_bins=3;% number of bins in your binlist
+n_bins=3;% enter here the number of bins in your binlist
 participant_info_temp = string(zeros(length(subject_list), 2+n_bins)); %prealocationg space for speed
-% Loop through all subjects
+%% Loop through all subjects
 for s=1:length(subject_list)
     fprintf('\n******\nProcessing subject %s\n******\n\n', subject_list{s});
     clear data_subj
@@ -26,7 +28,7 @@ for s=1:length(subject_list)
     
     % Load original dataset
     fprintf('\n\n\n**** %s: Loading dataset ****\n\n\n', subject_list{s});
-    EEG = pop_loadset('filename', [subject_list{s} '_inter.set'], 'filepath', data_path);
+    EEG = pop_loadset('filename', [subject_list{s} '_excom.set'], 'filepath', data_path);
     %epoching
     EEG = eeg_checkset( EEG );
     EEG  = pop_creabasiceventlist( EEG , 'AlphanumericCleaning', 'on', 'BoundaryNumeric', { -99 }, 'BoundaryString', { 'boundary' } ); 
@@ -47,7 +49,7 @@ for s=1:length(subject_list)
     %values = pop_rt2text(ERP, 'eventlist',1, 'filename', [home_path '\All RT files\' subject_list{s} '_rt.xls'], 'header', 'on', 'listformat', 'basic' );
     
     ID                         = string(subject_list{s});
-    data_subj                  = [ID, percent_deleted, ERP.EVENTLIST.trialsperbin]; %ERP.EVENTLIST.trialsperbin gives all the trials per bin
+    data_subj                  = [ID, percent_deleted, ERP.ntrials.accepted  ]; %ERP.ntrials.accepted  gives all the trials per bin
     participant_info_temp(s,:)   = data_subj;
 end
 colNames                   = [{'ID','%data deleted'} ERP.bindescr]; %adding names for columns [ERP.bindescr] adds all the name of the bins
