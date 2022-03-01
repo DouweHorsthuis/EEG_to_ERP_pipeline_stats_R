@@ -1,7 +1,8 @@
-% Testing the scr code 6/21/2021
+% Plotting the raw data to see if there are remaining bad or flat channels
+% Created by Douwe Horsthuis last update 5/21/2021
 % ------------------------------------------------
-subject_list = {'11' '14'};
-home_path  = 'C:\Users\dohorsth\Documents\GitHub\EEG_to_ERP_pipeline_stats_R\testing\data\';
+subject_list = {'some sort of ID' 'a different id for a different particpant'};
+home_path  = 'the main folder where you store your data';
 for s=1:length(subject_list)
     clear bad_chan;
     fprintf('\n******\nProcessing subject %s\n******\n\n', subject_list{s});

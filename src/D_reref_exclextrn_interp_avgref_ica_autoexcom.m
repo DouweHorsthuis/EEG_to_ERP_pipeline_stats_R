@@ -4,20 +4,18 @@
 % uses runica to do an Independent Component Analysis
 % uses IClabel to define the eye component
 % Deletes these and the components also get printed.
-% by Douwe Horsthuis updated on 12/22/2021
+% last edits done on by Douwe 11/5/2021
 % ------------------------------------------------
+
 clear variables
-eeglab
-%% Subject info for each script
+
 % This defines the set of subjects
 subject_list = {'some sort of ID' 'a different id for a different particpant'};
 % Path to the parent folder, which contains the data folders for all subjects
-home_path  = 'the main folder where you store your data';
-%% info needed for this script specific
+home_path  = 'the main folder where you store all the data';
 figure_path = 'the main folder where you store all the ic figures';
 components = num2cell(zeros(length(subject_list), 8)); %prealocationg space for speed
 refchan = { }; %if you want to re-ref to a channel add the name of the channel here, if empty won't re-ref to any specific channel (for example {'EXG3' 'EXG4'} or {'Cz'})
-%% Loop through all subjects
 for s=1:length(subject_list)
     fprintf('\n******\nProcessing subject %s\n******\n\n', subject_list{s});
     % Path to the folder containing the current subject's data
