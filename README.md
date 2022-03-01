@@ -37,7 +37,8 @@ All plots are made using the average data of 38 controls participants while they
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
     - [Usage](#usage)
-3. [Pipeline roadmap](#pipeline-roadmap)
+3. [Pipeline order](#pipeline-order)
+3. [Pipeline extended](#pipeline-extended)
     - [Pre-processing](#pre-processing)
       - [A_merge_sets(Matlab)](#a_merge_sets)
       - [B_downs_filter_chaninfo_exclchan(Matlab)](#b_downs_filter_chaninfo_exclchan)
@@ -101,11 +102,32 @@ Or you can hard code this:
 
 ```matlab
 addpath(genpath('theplacewhereyouhavethefolder\eeglab2019_1\'));
-```
+```  
+[Back to top](#eeg-pipeline-using-eeglab)  
+
+## Pipeline order  
+  
+Here we describe the order of the scripts. The order is obvious sometimes (for example there is no way to do anything without the first script), but less so in other moments (for example, when do you interpolate channels). For more in-dept explanations see [Pipeline extended](#pipeline-extended), or click on the step you want to know more about. 
+  
+
+[merging and creating a set extention](#a_merge_sets)  
+[Downsampling](#downsampling)  
+[Filtering](#filtering)  
+[Adding channel info](#adding_channel_info)  
+[Deleting channels automatic](#deleting_channels) & [Deleting channels manual](#c_manual_check)  
+[re-referencing (optional)](#re-referencing)  
+[Interpolation](#interpolate)  
+[Average reference](#average_reference)  
+[PCA](#pca)  
+[ICA](#ica)  
+[Delete bad components IC](#iclabel)  
+[Epoching](#f_epoching)  
+
+
 
 [Back to top](#eeg-pipeline-using-eeglab)  
-<!-- ROADMAP -->
-## Pipeline roadmap
+
+## Pipeline extended
 Here you'll see what each script does and what variables you can change.
 
 ## Pre-processing
@@ -126,18 +148,38 @@ blocks = 5;
 ```
 [Back to top](#eeg-pipeline-using-eeglab)    
 ### B_downs_filter_chaninfo_exclchan
+#### Downsampling
 This script starts by loading the previously created .set file, so you need to set the home_path to where you saved the data and the new data will also be saved there. 
 The first thing the script does is down-sample to 256 Hz. We collect data at 512Hz, and there is no real reason to keep it at this high resolution, but it does take up more space and slows down the process when analyzing. 
 
+#### Filtering
 The second step is a 1Hz high-pass filter. To change this you need to also decide on the filter order. [See this for more info](https://github.com/widmann/firfilt/blob/master/pop_eegfiltnew.m)
 
-Same counts for the third step, which is a 45Hz high-pass filter. For more detailed info on filters see the ["What filter should I choose" chapter](#what-filter-should-I-choose).
+Same counts for the third step, which is a 45Hz high-pass filter. For more detailed info on filters see the ["More info on filtering " chapter](#more_info_on_filtering).
 
 To optimize the ICA solutions, these are the suggested filters. However, if you want to look at components that show up later in the data, 1Hz might be too high. [See this paper for more info on filters.](https://www.sciencedirect.com/science/article/pii/S0896627319301746)
 
+#### Adding channel info
 The fourth step is adding information to the channels. This is why you need to define the path to EEGlab or to the 'biosemi160' file. It will look for a file to import the channel information. The difference between the two paths has to do with that for 64channels we use a 10-20 layout for the BIOsemi caps, however for the 160channel caps we have a spherical layout. The first file is part of EEGlab, but this is not the case for the 160channel cap. 64channels is defined as 64 to 95, because a full extra ribbon would be 96 channels. In or lab we normally go up to 8 channels, but we have data that has more. This takes that in consideration. 
+**small update 2/14/2022**
+We were always using the ```standard-10-5-cap385.elp``` file. However we work with caps that have the 10-20 system. Because of this we are now using the ```standard_1020.ELC``` file. This is only the case for 64 channel data. When using 160channel data, we need to rely on the biosemi file, because 160 channel data has a spherical configuration and does not follow the 10-20 system. 
 
-Lastly, in step 5, it will reject channels based on a kurtosis threshold. It is set to 5, which is the standard. Channels with a kurtosis > 5 will be deleted.
+#### Deleting channels
+
+**2/14/2021 update**
+~~Lastly, in step 5, it will reject channels based on a kurtosis threshold. It is set to 5, which is the standard. Channels with a kurtosis > 5 will be deleted.~~
+We are using the ```pop_clean_rawdata``` function instead of the previously used ```pop_rejchan```. This new functions allows for more cleaning. Currently we are only use the parts of the function that focus on channel deletion.  
+  
+We delete a channel if  
+-  It's more than 5 seconds flat
+-  there is high frequency noise than is bigger 4 standard deviantionsof the rest of the signal
+-  if there is a minimal acceptable correlation with the nearby channels of 0.8
+
+All of these settings are the standard settings and result in clean data, without losing excessive amount of channels.  
+
+**imporant for now**  
+Even though for now we cannot exclude externals from the cleaning process, and thus we need to delete them beforehand. [The EEGLAB people have said that they are working on a fix base on my request](https://github.com/sccn/clean_rawdata/issues/28). Currently (when manually updating the function) there are still errors when excluding externals from this cleaning, but hopefully quick this will be solved. So if you need to use externals, use the old cleaning functions, this one is still in the code. 
+
 
 
 These are the variables you NEED to change:
@@ -159,7 +201,7 @@ EEG = pop_rejchan(EEG,'elec', [1:64],'threshold',5,'norm','on','measure','kurt')
 ```  
 [Back to top](#eeg-pipeline-using-eeglab)  
 
-#### Filtering 
+#### More info on filtering 
 You do not need to follow the filtering in this script. EEGlab makes it relatively easy to created/use new filters. 
 
 ##### Using a new filter in EEGlab
@@ -244,6 +286,7 @@ After figuring out which channels to delete, type their labels in the command wi
 
 ### D_reref_exclextrn_interp_avgref_ica_autoexcom
 
+#### re-referencing
 After realizing that re-referencing causes flat channels to have the data of the reference channel and thus making it impossible to see if it's flat, we only re-reference here (after having deleted all the channels that are noisy/flat).  
 You can choose a reference channel. [Biosemi explains why it matters for their system](https://www.biosemi.com/faq/cms&drl.htm) but that you should [delete flat channels first](https://www.biosemi.nl/forum/viewtopic.php?f=7&t=810&p=3871#p3871). [Brainproducts](https://pressrelease.brainproducts.com/referencing/) and [this paper](https://www.frontiersin.org/articles/10.3389/fnins.2017.00205/full) Also agree that mastoids are commonly used and good, the paper also talks about different options that could work. 
 
@@ -254,7 +297,7 @@ This is the impact it has on our data. Here we compare data referenced to the ma
 ![fa-ref](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/fa-fcz-ext-noext.jpg "fa-ref")  
 The first plot is the ERP after a Hit. The second one is after a False alarm. It is clear that the amplitudes increase significantly, however it does seem like the standard error also increases. 
 
-#### E_interpolate
+#### Interpolate
 
 After that we re-referencing we interpolate. We moved this up from where it was before (after the ICA), because this allows us to use the ICA weights and gives us all the channels. 
 
@@ -277,12 +320,20 @@ EEG = pop_interp(EEG, ALLEEG(1).chanlocs, 'spherical');%
 ```
 [Back to top](#eeg-pipeline-using-eeglab)  
 
+#### Average reference
+After this we reference the data to the average. There are mulitiple reasons to do this but we do it mainly for 2 reasons.  
+1, in preparation for Independent Component Analysis (ICA).  
+2, [The extra referencing step, will give you 40 dB extra CMRR (Common mode rejection ratio)](https://www.biosemi.com/faq/cms&drl.htm)
 
-After this we reference the data to the average, in preparation for Independent Component Analysis (ICA). The PCA is set to the amount of channels deleted -1 (for the average reference)
+We only do it now because we just interpolated, which minimizes potential bias in the average referencing stage. For example, if there are 64 channels, and 16 channels are identified as bad and rejected but only from the right hemisphere. Then, the number of channels in the left vs. right hemispheres are 32 vs. 16, with which average will be biased toward the left hemisphere. To avoid this bias, scalp electrodes may be interpolated. [See Makoto's pipeline for more info, the previouse text is his explanation](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#Interpolate_all_the_removed_channels_.2803.2F05.2F2021_updated.29)
 
+### PCA
+The PCA is set to the amount of channels deleted -1 (for the average reference), the PCA will dictate how many components the ICA will create. This is especially important because we are interpolating and doing an average reference before the ICA. This could cause "ghost components", or just make the data go bad all together due to working with data that is rank deficiant. Setting the PCA preferents this rank issue. Another solution is to delete a channel (after the average ref). But this would still not solve the issue for the interpolated channels + we would lose a good channel.
+
+### ICA
 We are using the pop_runica function, as suggested by EEGLab, but there are other options that might be quicker (this might, however, come at a cost). We do an ICA mainly to delete artifacts that are repeated, such as eye blinks, eye movement, muscle movement and electrical noise.  
-One of the issues cause by the re-referencing is that we created a rank-deficiency. This can potentially create a "ghost" ICA component (not that important, but it's a duplicate of an already existing one)and has the potential to make the data a lot noisier (if this happens there will be at least one really noisy channel in the data) which is very problematic. The solution is relatively easy, you can either delete a channel (after the average ref) or you can simply set the pca option for the run_ica function to n-total-channel minus 1. This last option is added to this pipeline.  
-
+   
+### IClabel
 We are using [IClable](https://www.sciencedirect.com/science/article/pii/S1053811919304185) as a function to automatically label the components. After that, we only delete the eye-components. We only focus on eye-blinks because we know they have a bad/strong impact on the data and as you can see in [the next part](#impact-of-ica-on-simple-erps) deleting more has a very strong impact on the data and we are not sure what gets deleted. In our case components will only get deleted if they are >80% eye and <10% brain. We decided on these criteria after comparing how many components experts in our lab would delete and what criteria would match this the closesed.
 
 Matlab will save a figure with the deleted Eye components and with all the remaining components grouped separately.

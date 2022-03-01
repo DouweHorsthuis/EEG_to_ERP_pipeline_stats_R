@@ -1,5 +1,5 @@
 % Combination of EEGLAB downsample and filter, and reject channel script by Ana on 2017-07-11
-% Combined and updated by Douwe Horsthuis last update 11/5/2021
+% Combined and updated by Douwe Horsthuis last update 3/1/2022
 % ------------------------------------------------
 
 % This defines the set of subjects
@@ -50,4 +50,3 @@ for s=1:length(subject_list)
     end
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_exchn.set'],'filepath', data_path);
 end
-

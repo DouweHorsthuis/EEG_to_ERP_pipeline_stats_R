@@ -1,10 +1,18 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 authors:
-- family-names: "Douwe John"
-  given-names: "Horsthuis"
-- family-names: "Ana Alves"
-  given-names: "Francisco"
+- family-names: "Horsthuis"
+  given-names: "Douwe J"
+  orcid: "https://orcid.org/0000-0002-9711-5423"
+- family-names: "Molholm"
+  given-names: "Sophie"
+  orcid: "https://orcid.org/0000-0003-1870-7306"
+- family-names: "Foxe"
+  given-names: "John J"
+  orcid: "https://orcid.org/0000-0002-4300-3098"
+- family-names: "Francisco"
+  given-names: "Ana A"
+  orcid: "https://orcid.org/0000-0003-4030-0297"
 title: "EEG_to_ERP_pipeline_stats_R"
 version: 2.02
 doi: 10.5281/zenodo.5584698
