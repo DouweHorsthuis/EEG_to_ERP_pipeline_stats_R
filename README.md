@@ -177,7 +177,7 @@ We delete a channel if
 
 All of these settings are the standard settings and result in clean data, without losing excessive amount of channels.  
 
-**imporant for now**  
+**important for now**  
 Even though for now we cannot exclude externals from the cleaning process, and thus we need to delete them beforehand. [The EEGLAB people have said that they are working on a fix base on my request](https://github.com/sccn/clean_rawdata/issues/28). Currently (when manually updating the function) there are still errors when excluding externals from this cleaning, but hopefully quick this will be solved. So if you need to use externals, use the old cleaning functions, this one is still in the code. 
 
 
@@ -185,19 +185,16 @@ Even though for now we cannot exclude externals from the cleaning process, and t
 These are the variables you NEED to change:
 ```matlab
 subject_list = {'some sort of ID' 'a different id for a different particpant'}; 
-eeglab_location = 'C:\Users\wherever\eeglab2019_1\'; %needed if using a 10-5-cap
+eeglab_location = 'C:\Users\wherever\eeglab2021.1\'; %needed if using a 10-5-cap
 scripts_location = 'C:\\Scripts\'; %needed if using 160channel data
 home_path  = 'the main folder where you store your data';
 ```
 
 These you can change if you want to change settings
 ```matlab
-EEG = pop_resample( EEG, 256); %downsampling
-EEG = pop_eegfiltnew(EEG, [],1,1690,1,[],1); % High pass filter
-EEG = pop_eegfiltnew(EEG, [],45,152,0,[],1); % Low  pass filter
-EEG = pop_chanedit(EEG, 'lookup',[eeglab_location 'plugins\dipfit\standard_BESA\standard-10-5-cap385.elp']); 
-EEG = pop_select( EEG,'nochannel',{'EXG1','EXG2','EXG3','EXG4','EXG5','EXG6','EXG7','EXG8'});% To delete different channels if needed 
-EEG = pop_rejchan(EEG,'elec', [1:64],'threshold',5,'norm','on','measure','kurt'); %the rejection threshold (standard is 5), [1:64 or 1:160 because you don't want to include the externals]
+downsample_to=256; % what is the sample rate you want to downsample to
+lowpass_filter_hz=45; %45hz filter
+highpass_filter_hz=1; %1hz filter
 ```  
 [Back to top](#eeg-pipeline-using-eeglab)  
 
@@ -216,7 +213,9 @@ This shows up in Matlab. Replace the filter number with the number 1. followed b
 ```matlab
 EEG = pop_eegfiltnew(EEG, [],0.01,168960,1,[],1); %this 0.01hz filter changes like this: 
 EEG = pop_eegfiltnew(EEG, [],1,1690,0,[],1); %into a 1 hz filter
-```
+```  
+  
+**3/1/2022 update, we won't need to add filter order anymore**. It is very important to know the filter order (which is [ the width of the sliding window in data points](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#Dependency_across_the_preprocessing_stages_.2807.2F05.2F2019_updated.29) or [see this EEGLAB information about this](https://eeglab.org/others/Firfilt_FAQ.html#q-what-is-the-difference-between-filter-length-and-filter-order))
 
 ##### What filter should I choose
 Choosing what filters to use will have a big impact on your data. There are a couple things to consider because filters will have impact in several different ways on your data. 
