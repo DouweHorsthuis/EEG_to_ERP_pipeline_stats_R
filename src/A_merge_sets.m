@@ -1,17 +1,10 @@
 % EEGLAB merge sets, and creates .set file
-% by Douwe Horsthuis updated on 12/22/2021
+% by Douwe Horsthuis updated on 6/21/2021
 % ------------------------------------------------
-clear variables
-eeglab
-%% Subject info for each script
-% This defines the set of subjects
-subject_list = {'some sort of ID' 'a different id for a different particpant'};
-% Path to the parent folder, which contains the data folders for all subjects
-home_path  = 'the main folder where you store your data';
-%% info needed for this script specific
+subject_list = {'some sort of ID' 'a different id for a different particpant'}; %all the IDs for the indivual particpants
 filename     = 'the_rest_of_the_file_name'; % if your bdf file has a name besides the ID of the participant (e.g. oddball_paradigm)
+home_path    = 'path_where_to_load_in_pc'; %place data is (something like 'C:\data\')
 blocks       = 5; % the amount of BDF files. if different participant have different amounts of blocks, run those participant separate
-%% Loop through all subjects
 for s = 1:length(subject_list)
     clear ALLEEG
     eeglab
