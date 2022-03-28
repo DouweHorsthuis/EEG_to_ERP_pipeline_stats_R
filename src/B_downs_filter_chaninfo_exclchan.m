@@ -4,7 +4,7 @@
 
 % This defines the set of subjects
 subject_list = {'some sort of ID' 'a different id for a different particpant'};
-eeglab_location = 'C:\Users\wherever\eeglab2021.1\'; %needed if using a 10-5-cap
+eeglab_location = fileparts(which('eeglab')); %needed if using a 10-5-cap
 scripts_location = 'C:\\Scripts\'; %needed if using 160channel data
 % Path to the parent folder, which contains the data folders for all subjects
 home_path  = 'the main folder where you store your data';
