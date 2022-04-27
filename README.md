@@ -115,12 +115,12 @@ Here we describe the order of the scripts. The order is obvious sometimes (for e
 [Filtering](#filtering)  
 [Adding channel info](#adding_channel_info)  
 [Deleting channels automatic](#deleting_channels) & [Deleting channels manual](#c_manual_check)  
-[re-referencing (optional)](#re-referencing)  
 [Interpolation](#interpolate)  
 [Average reference](#average_reference)  
 [PCA](#pca)  
 [ICA](#ica)  
-[Delete bad components IC](#iclabel)  
+[Delete bad components IC](#iclabel) 
+[re-referencing (optional)](#re-referencing) 
 [Epoching](#f_epoching)  
 
 
@@ -285,17 +285,6 @@ After figuring out which channels to delete, type their labels in the command wi
 
 ### D_reref_exclextrn_interp_avgref_ica_autoexcom
 
-#### re-referencing
-After realizing that re-referencing causes flat channels to have the data of the reference channel and thus making it impossible to see if it's flat, we only re-reference here (after having deleted all the channels that are noisy/flat).  
-You can choose a reference channel. [Biosemi explains why it matters for their system](https://www.biosemi.com/faq/cms&drl.htm) but that you should [delete flat channels first](https://www.biosemi.nl/forum/viewtopic.php?f=7&t=810&p=3871#p3871). [Brainproducts](https://pressrelease.brainproducts.com/referencing/) and [this paper](https://www.frontiersin.org/articles/10.3389/fnins.2017.00205/full) Also agree that mastoids are commonly used and good, the paper also talks about different options that could work. 
-
-In our case we use the average of both mastoids (channel 65/66 for us), but you can change this to a different channel or leave it empty if you don't want to do this.
-
-This is the impact it has on our data. Here we compare data referenced to the mastoid externals with data where we left the ref_chan variable empty.  
-![hit-ref](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/hit-po7-ext-noext.jpg "hit-ref")  
-![fa-ref](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/fa-fcz-ext-noext.jpg "fa-ref")  
-The first plot is the ERP after a Hit. The second one is after a False alarm. It is clear that the amplitudes increase significantly, however it does seem like the standard error also increases. 
-
 #### Interpolate
 
 After that we re-referencing we interpolate. We moved this up from where it was before (after the ICA), because this allows us to use the ICA weights and gives us all the channels. 
@@ -372,7 +361,17 @@ The second plot is an ERP after a False Alarm (button press when they were suppo
 \** We only use a sum of muscle, eye, Heart, Line Noise, channel noise to create bad components  
 \*** every label will always have something above 0%, this is why I didn't want to go lower then 3%  
 
+#### re-referencing
+Thanks to the suggestion of [Ana Francisco](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/issues/20) we moved this to after the ICA. Since the average reference would undo this part.  
+After realizing that re-referencing causes flat channels to have the data of the reference channel and thus making it impossible to see if it's flat, we only re-reference here (after having deleted all the channels that are noisy/flat).  
+You can choose a reference channel. [Biosemi explains why it matters for their system](https://www.biosemi.com/faq/cms&drl.htm) but that you should [delete flat channels first](https://www.biosemi.nl/forum/viewtopic.php?f=7&t=810&p=3871#p3871). [Brainproducts](https://pressrelease.brainproducts.com/referencing/) and [this paper](https://www.frontiersin.org/articles/10.3389/fnins.2017.00205/full) Also agree that mastoids are commonly used and good, the paper also talks about different options that could work. 
 
+In our case we use the average of both mastoids (channel 65/66 for us), but you can change this to a different channel or leave it empty if you don't want to do this.
+
+This is the impact it has on our data. Here we compare data referenced to the mastoid externals with data where we left the ref_chan variable empty.  
+![hit-ref](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/hit-po7-ext-noext.jpg "hit-ref")  
+![fa-ref](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/fa-fcz-ext-noext.jpg "fa-ref")  
+The first plot is the ERP after a Hit. The second one is after a False alarm. It is clear that the amplitudes increase significantly, however it does seem like the standard error also increases. 
 
 ### F_epoching
 This is the last file for pre-processing the data. In this script the interpolated data get epoched, cleaned, and transformed into an ERP. Some of these functions are ERPlab based. 
