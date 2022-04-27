@@ -26,7 +26,7 @@ for s=1:length(subject_list)
     
     % Load original dataset
     fprintf('\n\n\n**** %s: Loading dataset ****\n\n\n', subject_list{s});
-    EEG = pop_loadset('filename', [subject_list{s} '_excom.set'], 'filepath', data_path);
+    EEG = pop_loadset('filename', [subject_list{s} '_reref.set'], 'filepath', data_path);
     %epoching
     EEG = eeg_checkset( EEG );
     EEG  = pop_creabasiceventlist( EEG , 'AlphanumericCleaning', 'on', 'BoundaryNumeric', { -99 }, 'BoundaryString', { 'boundary' } ); 

@@ -22,25 +22,6 @@ for s=1:length(subject_list)
     data_path  = [home_path subject_list{s} '\\'];
     fprintf('\n\n\n**** %s: Loading dataset ****\n\n\n', subject_list{s});
     EEG = pop_loadset('filename', [subject_list{s} '_exchn.set'], 'filepath', data_path);
-    
-    %re-referencing, if refchan is empty this get's skipped
-    if isempty(refchan)~=1 %if no re-reference channels chose this gets skipped
-        for j=1:length(EEG.chanlocs)
-            if strcmp(refchan{1}, EEG.chanlocs(j).labels)
-                ref1=j; %stores here the index of the first ref channel
-            end
-        end
-        if length(refchan) ==1
-            EEG = pop_reref( EEG, ref1); % re-reference to the channel if there is only one input)
-        elseif length(refchan) ==2 %if 2 re-ref channels are chosen it needs to find the second one
-            for j=1:length(EEG.chanlocs)
-                if strcmp(refchan{2}, EEG.chanlocs(j).labels)
-                    ref2=j;
-                end
-            end
-            EEG = pop_reref( EEG, [ref1 ref2]); %re-references to the average of 2 channels
-        end
-    end
     EEG = eeg_checkset( EEG );
     %deleting externals
     EEG = pop_select( EEG,'nochannel',{'EXG1','EXG2','EXG3','EXG4','EXG5','EXG6','EXG7','EXG8' 'GSR1' 'GSR2' 'Erg1' 'Erg2' 'Resp' 'Plet' 'Temp'});
@@ -121,6 +102,25 @@ for s=1:length(subject_list)
     delete([figure_path subject_list{s} '_remaining_ICs_topos.png'])
     close all
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_excom.set'],'filepath', data_path);%save
+        %re-referencing, if refchan is empty this get's skipped
+    if isempty(refchan)~=1 %if no re-reference channels chose this gets skipped
+        for j=1:length(EEG.chanlocs)
+            if strcmp(refchan{1}, EEG.chanlocs(j).labels)
+                ref1=j; %stores here the index of the first ref channel
+            end
+        end
+        if length(refchan) ==1
+            EEG = pop_reref( EEG, ref1); % re-reference to the channel if there is only one input)
+        elseif length(refchan) ==2 %if 2 re-ref channels are chosen it needs to find the second one
+            for j=1:length(EEG.chanlocs)
+                if strcmp(refchan{2}, EEG.chanlocs(j).labels)
+                    ref2=j;
+                end
+            end
+            EEG = pop_reref( EEG, [ref1 ref2]); %re-references to the average of 2 channels
+        end
+    end
+    EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_reref.set'],'filepath', data_path);%save
     subj_comps=[subject_list(s), num2cell(brain_ic), num2cell(muscle_ic), num2cell(eye_ic), num2cell(hearth_ic), num2cell(line_noise_ic), num2cell(channel_ic), num2cell(other_ic)];
     components(s,:)=[subj_comps];
     %this part saves all the bad channels + ID numbers
