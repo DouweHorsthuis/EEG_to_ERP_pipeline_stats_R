@@ -31,6 +31,8 @@ All plots are made using the average data of 38 controls participants while they
   </p>
 </p>
 
+**if you have questions or suggestions please reach out**
+
 1. [About the project](#about-the-project) 
     - [Built With](#built-with)
 2. [Getting started](#getting-started)
@@ -166,7 +168,7 @@ We were always using the ```standard-10-5-cap385.elp``` file. However we work wi
 
 #### Deleting channels
 
-**2/14/2021 update**
+**5/31/2021 update**
 ~~Lastly, in step 5, it will reject channels based on a kurtosis threshold. It is set to 5, which is the standard. Channels with a kurtosis > 5 will be deleted.~~
 We are using the ```pop_clean_rawdata``` function instead of the previously used ```pop_rejchan```. This new functions allows for more cleaning. Currently we are only use the parts of the function that focus on channel deletion.  
   
@@ -174,6 +176,7 @@ We delete a channel if
 -  It's more than 5 seconds flat
 -  there is high frequency noise than is bigger 4 standard deviantionsof the rest of the signal
 -  if there is a minimal acceptable correlation with the nearby channels of 0.8
+-  data gets segmented in 0.5 second blocks and if the noise exceeds a set threshold these blocks are deleted. 
 
 All of these settings are the standard settings and result in clean data, without losing excessive amount of channels.  
 
