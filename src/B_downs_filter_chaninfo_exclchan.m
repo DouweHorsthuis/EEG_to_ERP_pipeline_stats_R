@@ -11,6 +11,7 @@ home_path  = 'the main folder where you store your data';
 downsample_to=256; % what is the sample rate you want to downsample to
 lowpass_filter_hz=45; %45hz filter
 highpass_filter_hz=1; %1hz filter
+avg_deleted_data=zeros(1, length(subject_list));
 % Loop through all subjects
 for s=1:length(subject_list)
     fprintf('\n******\nProcessing subject %s\n******\n\n', subject_list{s});
@@ -32,6 +33,8 @@ for s=1:length(subject_list)
     EEG = pop_eegfiltnew(EEG, 'hicutoff',lowpass_filter_hz);
     EEG = eeg_checkset( EEG );
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_downft.set'],'filepath', data_path);
+    EEG.old_n_chan = EEG.nbchan;
+    old_samples=EEG.pnts;
     %adding channel location
     if EEG.nbchan >63 && EEG.nbchan < 95 %64chan cap (can be a lot of externals, this makes sure that it includes a everything that is under 96 channels, which could be an extra ribbon)
         EEG=pop_chanedit(EEG, 'lookup',[eeglab_location 'plugins\dipfit\standard_BESA\standard-10-5-cap385.elp']); %make sure you put here the location of this file for your computer
@@ -39,19 +42,19 @@ for s=1:length(subject_list)
         %deleting bad channels
         %EEG = pop_rejchan(EEG,'elec', [1:64],'threshold',5,'norm','on','measure','kurt');
         EEG = pop_select( EEG, 'nochannel',{'EXG1','EXG2','EXG3','EXG4','EXG5','EXG6','EXG7','EXG8'});
-        EEG = pop_clean_rawdata(EEG, 'FlatlineCriterion',5,'ChannelCriterion',0.8,'LineNoiseCriterion',4,'Highpass','off','BurstCriterion','off','WindowCriterion','off','BurstRejection','off','Distance','Euclidian');
+        EEG = pop_clean_rawdata(EEG, 'FlatlineCriterion',5,'ChannelCriterion',0.8,'LineNoiseCriterion',4,'Highpass','off','BurstCriterion',35,'WindowCriterion','off','BurstRejection','on','Distance','Euclidian'); % deletes bad chns and bad periods
+        EEG.deleteddata_wboundries=100-EEG.pnts/old_samples*100;
     elseif EEG.nbchan >159 && EEG.nbchan < 191 %160chan cap
         EEG=pop_chanedit(EEG, 'lookup',[scripts_location 'BioSemi160.sfp']); %make sure you put here the location of this file for your computer
         EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_info.set'],'filepath', data_path);
         %deleting bad channels
         %EEG = pop_rejchan(EEG,'elec', [1:160],'threshold',5,'norm','on','measure','kurt');
         EEG = pop_select( EEG, 'nochannel',{'EXG1','EXG2','EXG3','EXG4','EXG5','EXG6','EXG7','EXG8'});
-        EEG = pop_clean_rawdata(EEG, 'FlatlineCriterion',5,'ChannelCriterion',0.8,'LineNoiseCriterion',4,'Highpass','off','BurstCriterion','off','WindowCriterion','off','BurstRejection','off','Distance','Euclidian');
+        EEG = pop_clean_rawdata(EEG, 'FlatlineCriterion',5,'ChannelCriterion',0.8,'LineNoiseCriterion',4,'Highpass','off','BurstCriterion',35,'WindowCriterion','off','BurstRejection','on','Distance','Euclidian'); % deletes bad chns and bad periods
+        EEG.deleteddata_wboundries=100-EEG.pnts/old_samples*100;
     end
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_exchn.set'],'filepath', data_path);
-    old_length=length(EEG.times);
-    EEG = pop_rejcont(EEG, 'elecrange',1:EEG.nbchan ,'freqlimit',[20 40] ,'threshold',10,'epochlength',0.5,'contiguous',4,'addlength',0.25,'taper','hamming');
-    deleted_data = 100-length(EEG.times)/old_length*100;
-    EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_cln.set'],'filepath', data_path);
+    disp([num2str(EEG.deleteddata_wboundries) '% of the data got deleted for this participant']);
+    avg_deleted_data(s)=EEG.deleteddata_wboundries;
 end
-
+disp(['on averages ' num2str(sum(avg_deleted_data)/length(subject_list)) ' % of the data got deleted']);
