@@ -176,7 +176,9 @@ We delete a channel if
 -  It's more than 5 seconds flat
 -  there is high frequency noise than is bigger 4 standard deviantionsof the rest of the signal
 -  if there is a minimal acceptable correlation with the nearby channels of 0.8
--  data gets segmented in 0.5 second blocks and if the noise exceeds a set threshold these blocks are deleted. 
+-  **If** you set `clean_data ={'y'}` data gets segmented in 0.5 second blocks and if the noise exceeds a set threshold these blocks are deleted. 
+  1.  It's worth it to note that when epoching we do reject noisy epochs, so this also takes care of noisy moments.
+  2.  The threshold for when to delete data is found in the line that calls `pop_clean_rawdata`. More specifically after 'burstCriterion'. 
 
 All of these settings are the standard settings and result in clean data, without losing excessive amount of channels.  
 
