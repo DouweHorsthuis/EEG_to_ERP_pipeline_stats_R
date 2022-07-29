@@ -3,13 +3,13 @@ EEG pipeline
 Douwe John Horsthuis
 2022-06-12
 
-[![Contributors](https://img.shields.io/github/contributors/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/graphs/contributors)
-[![Forks](https://img.shields.io/github/forks/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/network/members)
-[![Stargazers](https://img.shields.io/github/stars/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/stargazers)
-[![Downloads](https://img.shields.io/github/downloads/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/total)]()
+[![Contributors](https://img.shields.io/github/contributors/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=plastic)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/graphs/contributors)
+[![Forks](https://img.shields.io/github/forks/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=plastic)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/network/members)
+[![Stargazers](https://img.shields.io/github/stars/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=plastic)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/stargazers)
+[![Downloads](https://img.shields.io/github/downloads/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/total?style=plastic)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/releases/)
 [![MIT
-License](https://img.shields.io/github/license/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/master/LICENSE.txt)
-[![LinkedIn](https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555)](https://www.linkedin.com/in/douwe-horsthuis-725bb9188/)
+License](https://img.shields.io/github/license/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=plastic)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/master/LICENSE.txt)
+[![LinkedIn](https://img.shields.io/badge/-LinkedIn-black.svg?style=plastic&logo=linkedin&colorB=555)](https://www.linkedin.com/in/douwe-horsthuis-725bb9188/)
 
 <img src="images/CNL_logo_2.jpeg" alt="Logo" align="center" width="286"/>
 
