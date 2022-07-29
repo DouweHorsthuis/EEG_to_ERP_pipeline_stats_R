@@ -6,7 +6,7 @@ Douwe John Horsthuis
 [![Contributors](https://img.shields.io/github/contributors/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/graphs/contributors)
 [![Forks](https://img.shields.io/github/forks/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/network/members)
 [![Stargazers](https://img.shields.io/github/stars/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/stargazers)
-[![Github All Releases](https://img.shields.io/github/downloads/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg)]()
+[![Downloads](https://img.shields.io/github/downloads/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/total)]()
 [![MIT
 License](https://img.shields.io/github/license/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/master/LICENSE.txt)
 [![LinkedIn](https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555)](https://www.linkedin.com/in/douwe-horsthuis-725bb9188/)
