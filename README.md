@@ -215,6 +215,19 @@ home_path  = 'path_where_to_load_in_pc';
 save_path  = 'path_where_to_save_in_pc'; 
 blocks = 5; 
 ```
+10/14/2022 update
+We added some quality control functions here. Both are 100% optional they will be used if the following variable are `'yes'`:
+``` matlab
+readme_file  ='yes';
+eye_tracking ='yes';
+```
+
+These functions come originally from [this project](https://github.com/DouweHorsthuis/EEG-quality-analysis) that we created to test the data while one collects it. They are also explained in-dept in the readme file there. 
+
+In short: 
+The `readme_to_EEG` function searches for a readme file (.txt file) that we use in our lab to describe data collection. 
+  - this function can be addapted but currently is functioning only for the template of the readme files we use in our lab
+The `edf_to_figure` function uses edf files created by our eye-tracker (sr-research eyelink 1000plus) and creates a gaze plot so you can see where the participant looked throughout the experiment.
 
 [Back to top](#eeg-pipeline-using-eeglab)
 
@@ -319,6 +332,22 @@ downsample_to=256; % what is the sample rate you want to downsample to
 lowpass_filter_hz=45; %45hz filter
 highpass_filter_hz=1; %1hz filter
 ```
+10/14/2022 update
+### plotting_bridged_channels
+We added this function, which uses `eBridge`. This is a function that uses the EEG structure and checks if there
+are channels that are bridged. The full explanation can be found
+[here](https://psychophysiology.cpmc.columbia.edu/software/eBridge/index.html).
+Or in [this
+paper](https://psychophysiology.cpmc.columbia.edu/pdf/alschuler2013a.pdf)
+that was written and resulted in the function. `bridge=eBridge(EEG)`
+gives us a structure in which `bridge.Bridged.Labels` gives us the
+labels of all the bridged channels. Later we use this to plot a figure
+of the location of bridged channels. **note that bridged channels are
+not deleted**. In the `plotting_bridged_channels` function we use `eBridge` and plot the locations of the bridged channels. 
+  
+### plot_deleted_chan_location
+This function uses the locations of the deleted channels and creates a scalp map with these locations so one can see if too many channels close to each other are deleted.
+
 
 [Back to top](#eeg-pipeline-using-eeglab)
 
@@ -780,6 +809,8 @@ with flat channels not being flat anymore.
 6/17/2021- updating
 [D_reref_exclextrn_avgref_ica_autoexcom](#D_reref_exclextrn_avgref_ica_autoexcom),
 only deleting eye-components from now on.
+10/17/2022
+Working on a QA dashboard that will show you both individual subject and group related information to see without hassle how your data look
 
 [Back to top](#eeg-pipeline-using-eeglab)
 

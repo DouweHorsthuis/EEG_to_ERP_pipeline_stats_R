@@ -7,33 +7,41 @@
 clear variables
 eeglab
 %% Subject info for each script
-% This defines the set of subjects
-subject_list = {'some sort of ID' 'a different id for a different particpant'};
-% Path to the parent folder, which contains the data folders for all subjects
-home_path  = 'the main folder where you store your data';
+subject_list = {'6209' '6239' '8103' '8110' '8110-01' '8113' '8117' '8119' '8121' '8121-01' '8128' '8128-01'}; %all the IDs for the indivual particpants
+home_path    = 'C:\Users\dohorsth\Desktop\cued-boss\'; %place data is (something like 'C:\data\')
 %% info needed for this script specific 
-name_paradigm = 'name'; % this is needed for saving the table at the end
+name_paradigm = 'cued_boss'; % this is needed for saving the table at the end
 %participant_info_temp = []; % needed for creating matrix at the end
-binlist_location = 'the folder where you stored your binlist\'; %binlist should be named binlist.txt
-epoch_time = [-50 400];
+binlist_location = 'C:\Users\dohorsth\Documents\GitHub\EEG_to_ERP_pipeline_stats_R\testing\scripts\'; %binlist should be named binlist.txt
+binlist_name='binlist_main_rts.txt';
+epoch_time = [-50 800];
 baseline_time = [-50 0];
-n_bins=3;% enter here the number of bins in your binlist
-participant_info_temp = string(zeros(length(subject_list), 2+n_bins)); %prealocationg space for speed
+n_bins=9;% enter here the number of bins in your binlist
+load([home_path 'participant_info'], 'participant_badchan');
+participant_info_temp = string(zeros(length(subject_list), 3+n_bins)); %prealocationg space for speed
 %% Loop through all subjects
 for s=1:length(subject_list)
     fprintf('\n******\nProcessing subject %s\n******\n\n', subject_list{s});
-    clear data_subj
     % Path to the folder containing the current subject's data
     data_path  = [home_path subject_list{s} '/'];
-    
     % Load original dataset
     fprintf('\n\n\n**** %s: Loading dataset ****\n\n\n', subject_list{s});
     EEG = pop_loadset('filename', [subject_list{s} '_excom.set'], 'filepath', data_path);
     %epoching
+     for i =1:length(EEG.event)%something odd, where eeg.event is irregular
+        if contains(EEG.event(i).type, 'boundary') %skipping the boundary events
+            continue
+        elseif ~isempty(EEG.event(i).edftype)
+            EEG.event(i).type = char(num2str(EEG.event(i).edftype)); %making sure that the edf are fixed first
+        else
+            new=EEG.event(i).type;
+            EEG.event(i).edftype=str2double(new); %fixing edftype
+         end
+     end
     EEG = eeg_checkset( EEG );
     EEG  = pop_creabasiceventlist( EEG , 'AlphanumericCleaning', 'on', 'BoundaryNumeric', { -99 }, 'BoundaryString', { 'boundary' } ); 
     EEG = eeg_checkset( EEG );
-    EEG  = pop_binlister( EEG , 'BDF', [binlist_location '\binlist.txt'], 'IndexEL',  1, 'SendEL2', 'EEG', 'Voutput', 'EEG' ); 
+    EEG  = pop_binlister( EEG , 'BDF', [binlist_location binlist_name], 'IndexEL',  1, 'SendEL2', 'EEG', 'Voutput', 'EEG' ); 
     EEG = eeg_checkset( EEG );
     EEG = pop_epochbin( EEG , epoch_time,  baseline_time); %epoch size and baseline size
     EEG = eeg_checkset( EEG );
@@ -46,15 +54,16 @@ for s=1:length(subject_list)
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_epoched.set'],'filepath', data_path);
     ERP = pop_savemyerp(ERP, 'erpname', [subject_list{s} '.erp'], 'filename', [subject_list{s} '.erp'], 'filepath', data_path); %saving a.ERP file
     %the following line creates an excel with RTs. For this to be possible make sure you have the right events in your eventlist.
-    %values = pop_rt2text(ERP, 'eventlist',1, 'filename', [home_path '\All RT files\' subject_list{s} '_rt.xls'], 'header', 'on', 'listformat', 'basic' );
-    
-    ID                         = string(subject_list{s});
-    data_subj                  = [ID, percent_deleted, ERP.ntrials.accepted  ]; %ERP.ntrials.accepted  gives all the trials per bin
-    participant_info_temp(s,:)   = data_subj;
+    RT = pop_rt2text(ERP, 'eventlist',1, 'filename', [data_path subject_list{s} '_rt.xls'], 'header', 'on', 'listformat', 'basic' );
+    for i=1:length(participant_badchan)
+      if strcmpi(participant_badchan(i,1),subject_list{s}) 
+         participant_info_temp(i,:)= [participant_badchan(i,:),percent_deleted, ERP.ntrials.accepted  ];
+      end
+    end
 end
-colNames                   = [{'ID','%data deleted'} ERP.bindescr]; %adding names for columns [ERP.bindescr] adds all the name of the bins
+colNames                   = [{'ID','Deleted channels', '%data deleted'} ERP.bindescr]; %adding names for columns [ERP.bindescr] adds all the name of the bins
 participant_info = array2table( participant_info_temp,'VariableNames',colNames); %creating table with column names
-save([home_path name_paradigm '_participant_epoching_cleaing_bin_info'], 'participant_info');
+save([home_path name_paradigm '_participant_info'], 'participant_info');
 
 
 
