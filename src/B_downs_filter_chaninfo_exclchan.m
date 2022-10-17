@@ -4,15 +4,16 @@
 
 % This defines the set of subjects
 subject_list = {'some sort of ID' 'a different id for a different particpant'};
-eeglab_location = fileparts(which('eeglab')); %needed if using a 10-5-cap
-scripts_location = 'C:\\Scripts\'; %needed if using 160channel data
-% Path to the parent folder, which contains the data folders for all subjects
 home_path  = 'the main folder where you store your data';
+scripts_location = 'C:\\Scripts\'; %needed if using 160channel data
 downsample_to=256; % what is the sample rate you want to downsample to
 lowpass_filter_hz=45; %45hz filter
 highpass_filter_hz=1; %1hz filter
-avg_deleted_data=zeros(1, length(subject_list));
 clean_data={'y'}; % if 'y' not only channels but also noisy moments in thedata get cleaned
+individual_plots='yes';
+%% variables that need to be created
+eeglab_location = fileparts(which('eeglab')); %needed if using a 10-5-cap
+avg_deleted_data=zeros(1, length(subject_list));
 % Loop through all subjects
 for s=1:length(subject_list)
     fprintf('\n******\nProcessing subject %s\n******\n\n', subject_list{s});
@@ -34,11 +35,16 @@ for s=1:length(subject_list)
     EEG = pop_eegfiltnew(EEG, 'hicutoff',lowpass_filter_hz);
     EEG = eeg_checkset( EEG );
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_downft.set'],'filepath', data_path);
+    %looking for bridged channels
+    if strcmpi(individual_plots,'yes')
+      EEG=plotting_bridged_channels(EEG, data_path); %plotting the location of bridged chan
+    end
+    close all
     EEG.old_n_chan = EEG.nbchan;
     old_samples=EEG.pnts;
     %adding channel location
     if EEG.nbchan >63 && EEG.nbchan < 95 %64chan cap (can be a lot of externals, this makes sure that it includes a everything that is under 96 channels, which could be an extra ribbon)
-        EEG=pop_chanedit(EEG, 'lookup',[eeglab_location 'plugins\dipfit\standard_BESA\standard-10-5-cap385.elp']); %make sure you put here the location of this file for your computer
+        EEG=pop_chanedit(EEG, 'lookup',[eeglab_location '\plugins\dipfit\standard_BESA\standard-10-5-cap385.elp'],'rplurchanloc',[1]); %make sure you put here the location of this file for your computer
         EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_info.set'],'filepath', data_path);
         %deleting bad channels
         %EEG = pop_rejchan(EEG,'elec', [1:64],'threshold',5,'norm','on','measure','kurt');
@@ -62,8 +68,15 @@ for s=1:length(subject_list)
         end
         EEG.deleteddata_wboundries=100-EEG.pnts/old_samples*100;
     end
-    EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_exchn.set'],'filepath', data_path);
-    disp([num2str(EEG.deleteddata_wboundries) '% of the data got deleted for this participant']);
+      disp([num2str(EEG.deleteddata_wboundries) '% of the data got deleted for this participant']);
     avg_deleted_data(s)=EEG.deleteddata_wboundries;
+    
+
+     %% creating figures with deleted and bridged channels
+     if strcmpi(individual_plots,'yes')
+      EEG=plot_deleted_chan_location(EEG,data_path); %plotting the location of deleted chan
+     end
+     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_exchn.set'],'filepath', data_path);
+     
 end
 disp(['on averages ' num2str(sum(avg_deleted_data)/length(subject_list)) ' % of the data got deleted']);
