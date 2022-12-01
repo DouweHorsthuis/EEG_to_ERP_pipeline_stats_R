@@ -7,8 +7,8 @@
 clear variables
 eeglab
 %% Subject info for each script
-subject_list = {'6209' '6239' '8103' '8110' '8110-01' '8113' '8117' '8119' '8121' '8121-01' '8128' '8128-01'}; %all the IDs for the indivual particpants
-home_path    = 'C:\Users\dohorsth\Desktop\cued-boss\'; %place data is (something like 'C:\data\')
+subject_list = {'some sort of ID' 'a different id for a different particpant'};
+home_path  = 'the main folder where you store your data'; %place data is (something like 'C:\data\')
 %% info needed for this script specific 
 name_paradigm = 'cued_boss'; % this is needed for saving the table at the end
 %participant_info_temp = []; % needed for creating matrix at the end

@@ -1,13 +1,10 @@
 % Combination of EEGLAB downsample and filter, and reject channel script by Ana on 2017-07-11
 % Combined and updated by Douwe Horsthuis last update 11/5/2021
 % ------------------------------------------------
-clear variables 
+clear variables
 % This defines the set of subjects
 subject_list = {'6209' '6239' '8103' '8110' '8110-01' '8113' '8117' '8119' '8121' '8121-01' '8128' '8128-01'}; %all the IDs for the indivual particpants
 home_path    = 'C:\Users\dohorsth\Desktop\cued-boss\'; %place data is (something like 'C:\data\')
-
-eeglab_location = fileparts(which('eeglab')); %needed if using a 10-5-cap
-scripts_location = 'C:\\Scripts\'; %needed if using 160channel data
 downsample_to=256; % what is the sample rate you want to downsample to
 lowpass_filter_hz=45; %45hz filter
 highpass_filter_hz=1; %1hz filter
@@ -34,18 +31,20 @@ for s=1:length(subject_list)
     EEG = eeg_checkset( EEG );
     EEG = pop_eegfiltnew(EEG, 'hicutoff',lowpass_filter_hz);
     EEG = eeg_checkset( EEG );
-    EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_downft.set'],'filepath', data_path);
-    %looking for bridged channels
-    if strcmpi(individual_plots,'yes')
-      EEG=plotting_bridged_channels(EEG, data_path); %plotting the location of bridged chan
-    end
     close all
+    EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_downft.set'],'filepath', data_path);
+
     EEG.old_n_chan = EEG.nbchan;
     old_samples=EEG.pnts;
     %adding channel location
     if EEG.nbchan >63 && EEG.nbchan < 95 %64chan cap (can be a lot of externals, this makes sure that it includes a everything that is under 96 channels, which could be an extra ribbon)
-        EEG=pop_chanedit(EEG, 'lookup',[eeglab_location '\plugins\dipfit\standard_BESA\standard-10-5-cap385.elp'],'rplurchanloc',[1]); %make sure you put here the location of this file for your computer
+        EEG=pop_chanedit(EEG, 'lookup',[fileparts(which('eeglab')) '\plugins\dipfit\standard_BESA\standard-10-5-cap385.elp'],'rplurchanloc',[1]); %make sure you put here the location of this file for your computer
         EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_info.set'],'filepath', data_path);
+        %looking for bridged channel
+        if strcmpi(individual_plots,'yes')
+            EEG=plotting_bridged_channels(EEG, data_path); %plotting the location of bridged chan
+        end
+        close all
         %deleting bad channels
         %EEG = pop_rejchan(EEG,'elec', [1:64],'threshold',5,'norm','on','measure','kurt');
         EEG = pop_select( EEG, 'nochannel',{'EXG1','EXG2','EXG3','EXG4','EXG5','EXG6','EXG7','EXG8'});
@@ -56,7 +55,7 @@ for s=1:length(subject_list)
         end
         EEG.deleteddata_wboundries=100-EEG.pnts/old_samples*100;
     elseif EEG.nbchan >159 && EEG.nbchan < 191 %160chan cap
-        EEG=pop_chanedit(EEG, 'lookup',[scripts_location 'BioSemi160.sfp']); %make sure you put here the location of this file for your computer
+        EEG=pop_chanedit(EEG, 'lookup',[[fileparts(matlab.desktop.editor.getActiveFilename),filesep] 'BioSemi160.sfp']); %make sure you put here the location of this file for your computer
         EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_info.set'],'filepath', data_path);
         %deleting bad channels
         %EEG = pop_rejchan(EEG,'elec', [1:160],'threshold',5,'norm','on','measure','kurt');
@@ -68,15 +67,8 @@ for s=1:length(subject_list)
         end
         EEG.deleteddata_wboundries=100-EEG.pnts/old_samples*100;
     end
-      disp([num2str(EEG.deleteddata_wboundries) '% of the data got deleted for this participant']);
+    disp([num2str(EEG.deleteddata_wboundries) '% of the data got deleted for this participant']);
     avg_deleted_data(s)=EEG.deleteddata_wboundries;
-    
-
-     %% creating figures with deleted and bridged channels
-     if strcmpi(individual_plots,'yes')
-      EEG=plot_deleted_chan_location(EEG,data_path); %plotting the location of deleted chan
-     end
-     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_exchn.set'],'filepath', data_path);
-     
+    EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_exchn.set'],'filepath', data_path);
 end
 disp(['on averages ' num2str(sum(avg_deleted_data)/length(subject_list)) ' % of the data got deleted']);
