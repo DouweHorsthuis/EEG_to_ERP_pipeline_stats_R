@@ -9,8 +9,8 @@
 clear variables
 eeglab
 %% Subject info for each script
-subject_list = {'some sort of ID' 'a different id for a different particpant'};% This defines the set of subjects
-home_path  = 'the main folder where you store your data';% Path to the parent folder, which contains the data folders for all subjects
+subject_list = {'some sort of ID' 'a different id for a different particpant'};
+home_path  = 'the main folder where you store your data';
 %% info needed for this script specific
 components = num2cell(zeros(length(subject_list), 8)); %prealocationg space for speed
 refchan = { }; %if you want to re-ref to a channel add the name of the channel here, if empty won't re-ref to any specific channel (for example {'EXG3' 'EXG4'} or {'Cz'})
@@ -94,27 +94,6 @@ for s=1:length(subject_list)
     title(subject_list{s});
     pop_topoplot(EEG, 0, 1:size(EEG.icaweights,1) ,subject_list{s},[ceil(sqrt(size(EEG.icaweights,1))) ceil(sqrt(size(EEG.icaweights,1)))] ,0,'electrodes','on');
     print([data_path subject_list{s} '_remaining_ICs_topos'], '-dpng' ,'-r300');
-    close all
-    %putting both figures in 1 plot saving it, deleting the other 2.
-    figure('units','normalized','outerposition',[0 0 1 1])
-    if EEG.nbchan<65
-        subplot(1,5,1);
-    else
-        subplot(1,10,1);
-    end
-    imshow([data_path subject_list{s} '_Bad_ICs_topos.png']);
-    title('Deleted components')
-    if EEG.nbchan<65
-        subplot(1,5,2:5);
-    else
-        subplot(1,10,2:10);
-    end
-    imshow([data_path subject_list{s} '_remaining_ICs_topos.png']);
-    title('Remaining components')
-    print([data_path subject_list{s} '_ICs_topos'], '-dpng' ,'-r300');
-    %deleting two original files
-    delete([data_path subject_list{s} '_Bad_ICs_topos.png'])
-    delete([data_path subject_list{s} '_remaining_ICs_topos.png'])
     close all
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_excom.set'],'filepath', data_path);%save
     %this part saves all the bad channels + ID numbers

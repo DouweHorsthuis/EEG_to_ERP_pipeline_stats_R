@@ -1,0 +1,35 @@
+bin 1
+hit
+{2}{101}{102}{1}{2}{101}.{102}{1:rt<"hit">}
+
+bin 2
+correct rejection active
+{2}{101}{102}{1}{2}{111}.{112}{~1}
+
+bin 3
+correct rejection o-o
+{2}{101}{102}{1}{2}{121}.{122}{~1}
+
+bin 4
+correct rejection o-a
+{2}{101}{102}{1}{2}{131}.{132}{~1}
+
+bin 5
+correct rejection both passive
+{2}{101}{102}{1}{2}{121;131}.{122;132}{~1}
+
+bin6 
+miss
+{2}.{101}{102}{~1}
+
+bin7
+False alarm active
+{2}{101}{102}{1}{2}{111}.{112}{1:rt<"fa active">}
+
+bin 8
+False alarm o-a
+{2}{101}{102}{1}{2}{131}.{132}{1:rt<"fa o-a">}
+
+bin 9
+False alarm both passive
+{2}{101}{102}{1}{2}{121;131}.{122;132}{1:rt<"fa passive">}
