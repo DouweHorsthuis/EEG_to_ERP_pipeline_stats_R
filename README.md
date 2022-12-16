@@ -172,7 +172,7 @@ extended](#pipeline-extended), or click on the step you want to know
 more about.
 
 [merging and creating a set extention](#a_merge_sets)  
-[Cleaning Optional](#cleaning_optional)
+[Cleaning Optional](#cleaning_optional)  
 [Downsampling](#downsampling)  
 [Filtering](#filtering)  
 [Adding channel info](#adding_channel_info)  
