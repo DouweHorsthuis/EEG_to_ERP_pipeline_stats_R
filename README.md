@@ -41,6 +41,7 @@ douwehorsthuis@gmail.com**
 4.  [Pipeline extended](#pipeline-extended)
     -   [Pre-processing](#pre-processing)
         -   [A_merge_sets(Matlab)](#a_merge_sets)
+        -   [cleaning_optional](#cleaning_optional)
         -   [B_downs_filter_chaninfo_exclchan(Matlab)](#b_downs_filter_chaninfo_exclchan)
             -   [Filtering](#filtering)
         -   [C_manual_check(Matlab)](#c_manual_check)
@@ -171,6 +172,7 @@ extended](#pipeline-extended), or click on the step you want to know
 more about.
 
 [merging and creating a set extention](#a_merge_sets)  
+[Cleaning Optional](#cleaning_optional)
 [Downsampling](#downsampling)  
 [Filtering](#filtering)  
 [Adding channel info](#adding_channel_info)  
@@ -214,7 +216,9 @@ filename= 'the_rest_of_the_file_name';
 home_path  = 'path_where_to_load_in_pc'; 
 save_path  = 'path_where_to_save_in_pc'; 
 blocks = 5; 
-```
+```  
+**Special note for `save_path`; If you set this to a general folder, individual subject folders with the ID will be created so that everyone's data is in their own folder.**  
+
 10/14/2022 update
 We added some quality control functions here. Both are 100% optional they will be used if the following variable are `'yes'`:
 ``` matlab
@@ -228,6 +232,17 @@ In short:
 The `readme_to_EEG` function searches for a readme file (.txt file) that we use in our lab to describe data collection. 
   - this function can be addapted but currently is functioning only for the template of the readme files we use in our lab
 The `edf_to_figure` function uses edf files created by our eye-tracker (sr-research eyelink 1000plus) and creates a gaze plot so you can see where the participant looked throughout the experiment.
+
+[Back to top](#eeg-pipeline-using-eeglab)  
+
+### cleaning_optional  
+When using the `pop_clean_rawdata` different filters and settings for the function it self impact the data heavily, specially since this function deletes both channels and continues data. This **optional script** will plot for you how much data and channels get rejected based on the settings you choose. 
+As an example, while the default settings are 0.8 for channel correlation, and 20 for burst rejection. Using a 0.1hz and 45hz filter made us decide to set them to 0.75 and 45. The 0.05 difference cause us to loose 7 less participant and the as you can see in the plot below, the difference between 20 and 45 for the burst rejection "saves" us 36 participants. While this obviously comes at a cost related to cleanliness of the data, visualizing this might make the decision worth it.  
+![cleaning data](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_optional.PNG)  
+![Cleaning channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_Channels.PNG)  
+  
+**For more information on the `pop_clean_rawdata` function see [their github](https://github.com/sccn/clean_rawdata) or read more [in this document](#deleting_channels)
+
 
 [Back to top](#eeg-pipeline-using-eeglab)
 
@@ -343,11 +358,7 @@ that was written and resulted in the function. `bridge=eBridge(EEG)`
 gives us a structure in which `bridge.Bridged.Labels` gives us the
 labels of all the bridged channels. Later we use this to plot a figure
 of the location of bridged channels. **note that bridged channels are
-not deleted**. In the `plotting_bridged_channels` function we use `eBridge` and plot the locations of the bridged channels. 
-  
-### plot_deleted_chan_location
-This function uses the locations of the deleted channels and creates a scalp map with these locations so one can see if too many channels close to each other are deleted.
-
+not deleted**. In the `plotting_bridged_channels` function we use `eBridge` and plot the locations of the bridged channels.  
 
 [Back to top](#eeg-pipeline-using-eeglab)
 
@@ -511,7 +522,16 @@ structure:
 ```
 
 **Be critical, but if you delete too many channels (\>10) you should
-consider whether that data set should be included.**
+consider whether that data set should be included.**  
+  
+### plot_deleted_chan_location
+This function uses the locations of the deleted channels and creates a scalp map with these locations so one can see if too many channels close to each other are deleted.
+
+### plot_group_deleted_chan_location
+This function plot on a group level how often a channel is deleted. This means that if a channel is deleted, on the location of that channel in the headmap you will see a number. That number indicates how often that channel is deleted. This is saved as one figure.  
+
+### quality
+This is a variable that will store the ID, % deleted data, seconds of data left and N - deleted channels of each participants. When all the individual subjects are run, we load `participant_info` and include this variable and save it again.
 
 [Back to top](#eeg-pipeline-using-eeglab)
 
