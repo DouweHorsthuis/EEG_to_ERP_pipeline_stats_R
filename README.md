@@ -238,8 +238,8 @@ The `edf_to_figure` function uses edf files created by our eye-tracker (sr-resea
 ### cleaning_optional  
 When using the `pop_clean_rawdata` different filters and settings for the function it self impact the data heavily, specially since this function deletes both channels and continues data. This **optional script** will plot for you how much data and channels get rejected based on the settings you choose. 
 As an example, while the default settings are 0.8 for channel correlation, and 20 for burst rejection. Using a 0.1hz and 45hz filter made us decide to set them to 0.75 and 45. The 0.05 difference cause us to loose 7 less participant and the as you can see in the plot below, the difference between 20 and 45 for the burst rejection "saves" us 36 participants. While this obviously comes at a cost related to cleanliness of the data, visualizing this might make the decision worth it.  
-![cleaning data](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_optional.PNG)  
-![Cleaning channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_Channels.PNG)  
+![cleaning data](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_optional.png?raw=true)  
+![Cleaning channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_Channels.png?raw=true)  
   
 **For more information on the `pop_clean_rawdata` function see [their github](https://github.com/sccn/clean_rawdata) or read more [in this document](#deleting_channels)
 
