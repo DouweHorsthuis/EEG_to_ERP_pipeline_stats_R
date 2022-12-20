@@ -1,7 +1,7 @@
 EEG pipeline
 ================
 Douwe John Horsthuis
-2022-06-12
+2022-12-20
 
 [![Contributors](https://img.shields.io/github/contributors/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=plastic)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/graphs/contributors)
 [![Forks](https://img.shields.io/github/forks/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=plastic)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/network/members)
@@ -28,7 +28,7 @@ All plots are made using the average data of 38 controls participants
 while they are doing a go-no-go task.
 
 **If you have questions or suggestions please reach out to
-douwehorsthuis@gmail.com**
+<douwehorsthuis@gmail.com>**
 
 1.  [About the project](#about-the-project)
     -   [Built With](#built-with)
@@ -216,22 +216,35 @@ filename= 'the_rest_of_the_file_name';
 home_path  = 'path_where_to_load_in_pc'; 
 save_path  = 'path_where_to_save_in_pc'; 
 blocks = 5; 
-```  
-**Special note for `save_path`; If you set this to a general folder, individual subject folders with the ID will be created so that everyone's data is in their own folder.**  
+```
 
-10/14/2022 update
-We added some quality control functions here. Both are 100% optional they will be used if the following variable are `'yes'`:
+**Special note for `save_path`; If you set this to a general folder,
+individual subject folders with the ID will be created so that
+everyone’s data is in their own folder.**
+
+10/14/2022 update We added some quality control functions here. Both are
+100% optional they will be used if the following variable are `'yes'`:
+
 ``` matlab
 readme_file  ='yes';
 eye_tracking ='yes';
 ```
 
-These functions come originally from [this project](https://github.com/DouweHorsthuis/EEG-quality-analysis) that we created to test the data while one collects it. They are also explained in-dept in the readme file there. 
+These functions come originally from [this
+project](https://github.com/DouweHorsthuis/EEG-quality-analysis) that we
+created to test the data while one collects it. They are also explained
+in-dept in the readme file there.
 
-In short: 
-The `readme_to_EEG` function searches for a readme file (.txt file) that we use in our lab to describe data collection. 
-  - this function can be addapted but currently is functioning only for the template of the readme files we use in our lab
-The `edf_to_figure` function uses edf files created by our eye-tracker (sr-research eyelink 1000plus) and creates a gaze plot so you can see where the participant looked throughout the experiment.
+In short: The `readme_to_EEG` function searches for a readme file (.txt
+file) that we use in our lab to describe data collection. - this
+function can be addapted but currently is functioning only for the
+template of the readme files we use in our lab The `edf_to_figure`
+function uses edf files created by our eye-tracker (sr-research eyelink
+1000plus) and creates a gaze plot so you can see where the participant
+looked throughout the experiment.
+  
+
+[Back to top](#eeg-pipeline-using-eeglab)
 
 [Back to top](#eeg-pipeline-using-eeglab)  
 
@@ -243,6 +256,31 @@ As an example, while the default settings are 0.8 for channel correlation, and 2
   
 **For more information on the `pop_clean_rawdata` function see [their github](https://github.com/sccn/clean_rawdata) or read more [in this document](#deleting_channels)
 
+
+### cleaning_optional
+
+This script is explained in depth
+[here](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/Readme-optional_cleaning.md)
+When using the `pop_clean_rawdata` different filters and settings for
+the function it self impact the data heavily, specially since this
+function deletes both channels and continues data. This **optional
+script** will plot for you how much data and channels get rejected based
+on the settings you choose. As an example, while the default settings
+are 0.8 for channel correlation, and 20 for burst rejection. Using a
+0.1hz and 45hz filter made us decide to set them to 0.75 and 45. The
+0.05 difference cause us to loose 7 less participant and the as you can
+see in the plot below, the difference between 20 and 45 for the burst
+rejection “saves” us 36 participants. While this obviously comes at a
+cost related to cleanliness of the data, visualizing this might make the
+decision worth it.  
+![cleaning
+data](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_optional.PNG)  
+![Cleaning
+channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_Channels.PNG)
+
+\*\*For more information on the `pop_clean_rawdata` function see [their
+github](https://github.com/sccn/clean_rawdata) or read more [in this
+document](#deleting_channels)
 
 [Back to top](#eeg-pipeline-using-eeglab)
 
@@ -347,10 +385,11 @@ downsample_to=256; % what is the sample rate you want to downsample to
 lowpass_filter_hz=45; %45hz filter
 highpass_filter_hz=1; %1hz filter
 ```
-10/14/2022 update
-### plotting_bridged_channels
-We added this function, which uses `eBridge`. This is a function that uses the EEG structure and checks if there
-are channels that are bridged. The full explanation can be found
+
+10/14/2022 update \### plotting_bridged_channels We added this function,
+which uses `eBridge`. This is a function that uses the EEG structure and
+checks if there are channels that are bridged. The full explanation can
+be found
 [here](https://psychophysiology.cpmc.columbia.edu/software/eBridge/index.html).
 Or in [this
 paper](https://psychophysiology.cpmc.columbia.edu/pdf/alschuler2013a.pdf)
@@ -358,7 +397,8 @@ that was written and resulted in the function. `bridge=eBridge(EEG)`
 gives us a structure in which `bridge.Bridged.Labels` gives us the
 labels of all the bridged channels. Later we use this to plot a figure
 of the location of bridged channels. **note that bridged channels are
-not deleted**. In the `plotting_bridged_channels` function we use `eBridge` and plot the locations of the bridged channels.  
+not deleted**. In the `plotting_bridged_channels` function we use
+`eBridge` and plot the locations of the bridged channels.
 
 [Back to top](#eeg-pipeline-using-eeglab)
 
@@ -390,8 +430,11 @@ figure 2. hit “ok”
 figure 3.
 
 This shows up in Matlab. Replace the filter number with the number 1.
-followed by the number “preforming \[number\] point high-pass filter” -1
-as the filter order.
+followed by the number “preforming
+
+![number](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;number "number")
+
+point high-pass filter” -1 as the filter order.
 
 ``` matlab
 EEG = pop_eegfiltnew(EEG, 'locutoff',1);
@@ -522,16 +565,27 @@ structure:
 ```
 
 **Be critical, but if you delete too many channels (\>10) you should
-consider whether that data set should be included.**  
-  
+consider whether that data set should be included.**
+
 ### plot_deleted_chan_location
-This function uses the locations of the deleted channels and creates a scalp map with these locations so one can see if too many channels close to each other are deleted.
+
+This function uses the locations of the deleted channels and creates a
+scalp map with these locations so one can see if too many channels close
+to each other are deleted.
 
 ### plot_group_deleted_chan_location
-This function plot on a group level how often a channel is deleted. This means that if a channel is deleted, on the location of that channel in the headmap you will see a number. That number indicates how often that channel is deleted. This is saved as one figure.  
+
+This function plot on a group level how often a channel is deleted. This
+means that if a channel is deleted, on the location of that channel in
+the headmap you will see a number. That number indicates how often that
+channel is deleted. This is saved as one figure.
 
 ### quality
-This is a variable that will store the ID, % deleted data, seconds of data left and N - deleted channels of each participants. When all the individual subjects are run, we load `participant_info` and include this variable and save it again.
+
+This is a variable that will store the ID, % deleted data, seconds of
+data left and N - deleted channels of each participants. When all the
+individual subjects are run, we load `participant_info` and include this
+variable and save it again.
 
 [Back to top](#eeg-pipeline-using-eeglab)
 
@@ -678,7 +732,10 @@ were supposed to inhibit)
 ![ERP-ICA-vs-no-ICA-fa](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/iclabledifferences_fa.jpg)
 
 \* IClabel labels for each component how much % they are made up out of
-\[Brain, muscle, eye, Heart, Line Noise, channel noise and other\]  
+
+![Brain, muscle, eye, Heart, Line Noise, channel noise and other](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;Brain%2C%20muscle%2C%20eye%2C%20Heart%2C%20Line%20Noise%2C%20channel%20noise%20and%20other "Brain, muscle, eye, Heart, Line Noise, channel noise and other")
+
+  
 \*\* We only use a sum of muscle, eye, Heart, Line Noise, channel noise
 to create bad components  
 \*\*\* every label will always have something above 0%, this is why I
@@ -824,13 +881,16 @@ could be improved. I’m always looking to improve the pipeline!
 5/7/2021 - adding [C_manual_check script](#C_manual_check) +
 [biosemi160sfp file](#B_downs_filter_chaninfo_exclchan)  
 6/17/2021- updating the re-referencing situation. We used to do this in
-the first script when loading the BDF file, but this caused problems
-with flat channels not being flat anymore.  
-6/17/2021- updating
-[D_reref_exclextrn_avgref_ica_autoexcom](#D_reref_exclextrn_avgref_ica_autoexcom),
-only deleting eye-components from now on.
-10/17/2022
-Working on a QA dashboard that will show you both individual subject and group related information to see without hassle how your data look
+the first script when loading the BDF file, but this caused problems with flat channels not being flat anymore.  
+6/17/2021 - updating  
+[D_reref_exclextrn_avgref_ica_autoexcom](#D_reref_exclextrn_avgref_ica_autoexcom),only
+deleting eye-components from now on.  
+10/17/2022 - Working on a QA dashboard that will show you both
+individual subject and group related information to see without hassle
+how your data look  
+12/20/2022 - Added a script that is optional so that you can see how
+much data get’s deleted when you clean your data and what would be the
+best settings for your data.
 
 [Back to top](#eeg-pipeline-using-eeglab)
 
