@@ -84,15 +84,15 @@ getting rejected.
 Here are 3 examples, where for the first 2 we used a 1Hz filter and for
 the last one we used a 0.1Hz filter.  
 ![1Hz strict
-criteria](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/CleaningBurstcriteria1hz_new.PNG)  
+criteria](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/CleaningBurstcriteria1hz_new.png?raw=true)  
 *We used a 1Hz highpass and a 45Hz lowpass filter and use relatively
 strict burst criteria*  
 ![1Hz liberal
-criteria](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/CleaningBurstcriteria1hz_old.PNG)  
+criteria](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/CleaningBurstcriteria1hz_old.png?raw=true)  
 *We used a 1Hz highpass and a 45Hz lowpass filter and use a more liberal
 burst criteria*  
 ![0.1Hz liberal
-criteria](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/CleaningBurstcriteria0.1hz_old.PNG)  
+criteria](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/CleaningBurstcriteria0.1hz_old.png?raw=true)  
 *We used a 0.1Hz highpass and a 45Hz lowpass filter and use a more
 liberal burst criteria*
 
@@ -102,14 +102,14 @@ different settings.
 
 Next there are 3 more plot that show the same data in a different way.  
 ![1Hz strict
-criteria](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaningChannels1hz_new.PNG)  
+criteria](github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/CleaningBurstcriteria1hz_new.png?raw=true)  
 *We used a 1Hz highpass and a 45Hz lowpass filter and use relatively
 strict burst criteria*  
 ![1Hz liberal
-criteria](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaningChannels1hz_old.PNG)  
+criteria](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaningChannels1hz_old.png?raw=true)  
 *We used a 1Hz highpass and a 45Hz lowpass filter and use a more liberal
 burst criteria*  
 ![0.1Hz liberal
-criteria](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaningChannels0.1hz_old.PNG)  
+criteria](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaningChannels0.1hz_old.png?raw=true)  
 *We used a 0.1Hz highpass and a 45Hz lowpass filter and use a more
 liberal burst criteria*
