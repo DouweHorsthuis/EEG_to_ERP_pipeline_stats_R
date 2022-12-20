@@ -1,0 +1,115 @@
+Cleaning optional script
+================
+Douwe John Horsthuis
+2022-12-20
+
+<!-- [![Contributors](https://img.shields.io/github/contributors/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/graphs/contributors) -->
+<!-- [![Forks](https://img.shields.io/github/forks/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/network/members) -->
+<!-- [![Stargazers](https://img.shields.io/github/stars/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/stargazers) -->
+<!-- [![Issues](https://img.shields.io/github/issues/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/issues) -->
+<!-- [![MIT -->
+<!-- License](https://img.shields.io/github/license/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/master/LICENSE.txt) -->
+<!-- [![LinkedIn](https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555)](https://www.linkedin.com/in/douwe-horsthuis-725bb9188/) -->
+
+<img src="images/CNL_logo_2.jpeg" alt="Logo" align="center" width="286"/>
+
+# General intro
+
+The pop_clean_raw function to clean data in EEGLAB lets you use several
+settings that determin how much data will be deleted. This script is
+created so one can run it and find out how much data can be deleted
+without losing too much participants. Since it is a part of the [EEG
+pipeline](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R)
+we will only focus on what the script does and why it might be useful to
+run it before you clean your data.
+
+*If you have questions or suggestions please reach out to
+douwehorsthuis@gmail.com*
+
+**Disclaimer, do check out the EEGLAB tutorials etc. there might be
+reasons why data behaves as it they do that should be adressed instead
+of the cleaning functions**
+
+## What is pop_clean_raw
+
+Pop_clean_raw is the suggested cleaning method for data by [the EEGLAB
+creators](https://eeglab.org/tutorials/06_RejectArtifacts/cleanrawdata.html).
+This function allows you to delete bad channels based on flatlines,
+noise, and correlation between channels. It also allows you to deleted
+bad portions of the data where many channels get noisy without deleting
+the channels. Lastly it is possible to reconstruct noisy data, so it
+becomes usable, this is not something that we use. \*\*If you have
+experience with the Artifact Subspace Reconstruction (ASR) algorithm,
+and feel like this should be a part of this script somehow, please let
+us know either in the issues part or email me at
+<douwehorsthuis@gmail.com>
+
+[Back to top](#cleaning-optional-script)
+
+## What does the script do
+
+The script will either load the data, and pre-process it
+(downsample/high and low pass filter/adding channel info), or if you
+already have your data ready for the cleaning part, you can just load
+that data. It then runs the `pop_clean_rawdata` function on a loop.  
+Every Loop the `ChannelCriterion` and the `BurstCriterion` get changed.
+And stores how many channels and how much % data got deleted. After this
+is done for all the participants you have a variable called `quality`.
+This will be used to create figures that show how much the different
+settings impacted the data.
+
+[Back to top](#cleaning-optional-script)
+
+## What settings can be changed
+
+Of course everything can be changed, but the main things that are easy
+and quick are and maybe required:  
+`subject_list` This is where you store all the Unique ID numbers of your
+participants.  
+`home_path` This is where you set the path to the main folder of the
+data. All data is expected to be in individual subject folders.  
+`Burst_criteria` This is requires a start point a step size and end
+point of what you want to use for the threshold for how much data get’s
+deleted. The higher the number the more std the data is allowed to be
+different, so high number equals less deleted data.  
+`Channel_criteria` This is requires a start point a step size and end
+point of what you want to use for the threshold for how much the
+channels can be correlated, the higher the number equals less channels
+getting rejected.
+
+[Back to top](#cleaning-optional-script)
+
+## examples
+
+Here are 3 examples, where for the first 2 we used a 1Hz filter and for
+the last one we used a 0.1Hz filter.  
+![1Hz strict
+criteria](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/CleaningBurstcriteria1hz_new.PNG)  
+*We used a 1Hz highpass and a 45Hz lowpass filter and use relatively
+strict burst criteria*  
+![1Hz liberal
+criteria](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/CleaningBurstcriteria1hz_old.PNG)  
+*We used a 1Hz highpass and a 45Hz lowpass filter and use a more liberal
+burst criteria*  
+![0.1Hz liberal
+criteria](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/CleaningBurstcriteria0.1hz_old.PNG)  
+*We used a 0.1Hz highpass and a 45Hz lowpass filter and use a more
+liberal burst criteria*
+
+It is clean, and probably expected that lowering the highpass filter
+means that more data will be deleted, because of this is you need
+different settings.
+
+Next there are 3 more plot that show the same data in a different way.  
+![1Hz strict
+criteria](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaningChannels1hz_new.PNG)  
+*We used a 1Hz highpass and a 45Hz lowpass filter and use relatively
+strict burst criteria*  
+![1Hz liberal
+criteria](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaningChannels1hz_old.PNG)  
+*We used a 1Hz highpass and a 45Hz lowpass filter and use a more liberal
+burst criteria*  
+![0.1Hz liberal
+criteria](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaningChannels0.1hz_old.PNG)  
+*We used a 0.1Hz highpass and a 45Hz lowpass filter and use a more
+liberal burst criteria*

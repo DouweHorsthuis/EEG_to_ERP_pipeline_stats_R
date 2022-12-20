@@ -17,13 +17,12 @@ knitr::opts_chunk$set(
 knitr::opts_chunk$set(fig.align = 'center')
 ```
 
-[![Contributors](https://img.shields.io/github/contributors/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/graphs/contributors)
-[![Forks](https://img.shields.io/github/forks/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/network/members)
-[![Stargazers](https://img.shields.io/github/stars/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/stargazers)
-[![Issues](https://img.shields.io/github/issues/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/issues)
+[![Contributors](https://img.shields.io/github/contributors/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=plastic)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/graphs/contributors)
+[![Forks](https://img.shields.io/github/forks/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=plastic)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/network/members)
+[![Stargazers](https://img.shields.io/github/stars/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=plastic)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/stargazers)
 [![MIT
-License](https://img.shields.io/github/license/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=for-the-badge)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/master/LICENSE.txt)
-[![LinkedIn](https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555)](https://www.linkedin.com/in/douwe-horsthuis-725bb9188/)
+License](https://img.shields.io/github/license/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=plastic)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/master/LICENSE.txt)
+[![LinkedIn](https://img.shields.io/badge/-LinkedIn-black.svg?style=plastic&logo=linkedin&colorB=555)](https://www.linkedin.com/in/douwe-horsthuis-725bb9188/)
 
 <img src="images/CNL_logo_2.jpeg" alt="Logo" align="center" width="286"/>
 
@@ -31,7 +30,7 @@ License](https://img.shields.io/github/license/DouweHorsthuis/EEG_to_ERP_pipelin
 
 This EEG pipeline is made to analyze data collected with a biosemi
 system, using however many channels you want. There are several cleaning
-steps (e.g. channel rejection, ICA, epoch rejection) after which stats
+steps (e.g. channel rejection, ICA, epoch rejection) after which stats
 can be done using R studio. This pipeline contains several scripts,
 organized alphabetically. Each script runs a loop on all the
 participants, making sure that the same steps are taken for each
@@ -43,7 +42,7 @@ All plots are made using the average data of 38 controls participants
 while they are doing a go-no-go task.
 
 **If you have questions or suggestions please reach out to
-douwehorsthuis\@gmail.com**
+douwehorsthuis@gmail.com**
 
 1.  [About the project](#about-the-project)
     -   [Built With](#built-with)
@@ -56,6 +55,7 @@ douwehorsthuis\@gmail.com**
 4.  [Pipeline extended](#pipeline-extended)
     -   [Pre-processing](#pre-processing)
         -   [A_merge_sets(Matlab)](#a_merge_sets)
+        -   [cleaning_optional](#cleaning_optional)
         -   [B_downs_filter_chaninfo_exclchan(Matlab)](#b_downs_filter_chaninfo_exclchan)
             -   [Filtering](#filtering)
         -   [C_manual_check(Matlab)](#c_manual_check)
@@ -78,7 +78,7 @@ douwehorsthuis\@gmail.com**
 
 This EEG pipeline is made to analyze data collected with a biosemi
 system, using however many channels you want. There are several cleaning
-steps (e.g. channel rejection, ICA, epoch rejection) after which stats
+steps (e.g. channel rejection, ICA, epoch rejection) after which stats
 can be done using R studio. It is scalable to multiple groups and
 variables such as filter strength, and rejection thresholds are
 changeable, but are pre-tested and worked for multiple publications.
@@ -95,17 +95,7 @@ changeable, but are pre-tested and worked for multiple publications.
 ### Publications
 
 The following are the papers that we published using this pipeline.
-  
-[Francisco, A. A., Foxe, J. J., Horsthuis, D. J., & Molholm, S. (2022). Early visual processing and adaptation as markers of disease, not vulnerability: EEG evidence from 22q11. 2 deletion syndrome, a population at high risk for schizophrenia. Schizophrenia, 8(1), 1-12](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8938446/)(unique settings: epochs are −50 to 400ms using a baseline of −50 to 0ms.)  
-  
-[Francisco, A. A., Berruti, A. S., Kaskel, F. J., Foxe, J. J., &
-Molholm, S. (2021). Assessing the integrity of auditory processing and
-sensory memory in adults with cystinosis (CTNS gene mutations). Orphanet
-Journal of Rare Diseases, 16(1),
-1-10.](https://link.springer.com/article/10.1186/s13023-021-01818-0)
-(unique settings: re-referenced to TP8 and epochs are −100 to 400ms
-using a baseline of −50 to 0ms.)  
-  
+
 [Francisco, A. A., Foxe, J. J., Horsthuis, D. J., DeMaio, D., & Molholm,
 S. (2020). Assessing auditory processing endophenotypes associated with
 Schizophrenia in individuals with 22q11. 2 deletion syndrome.
@@ -131,7 +121,13 @@ negativity (MMN). NeuroImage: Clinical, 25,
 (unique settings: re-referenced to TP8 and epochs are −100ms to 400ms
 using a baseline of −100ms to 0ms)
 
-
+[Francisco, A. A., Berruti, A. S., Kaskel, F. J., Foxe, J. J., &
+Molholm, S. (2021). Assessing the integrity of auditory processing and
+sensory memory in adults with cystinosis (CTNS gene mutations). Orphanet
+Journal of Rare Diseases, 16(1),
+1-10.](https://link.springer.com/article/10.1186/s13023-021-01818-0)
+(unique settings: re-referenced to TP8 and epochs are −100 to 400ms
+using a baseline of −50 to 0ms.)
 
 [Back to top](#eeg-pipeline-using-eeglab)
 
@@ -157,8 +153,8 @@ Download a copy of [EEGlab](https://sccn.ucsd.edu/eeglab/download.php).
 
 To install the ERPlab, either download it from
 [Github](https://github.com/lucklab/erplab/releases) and save it in the
-"Plugins" folder in EEGlab, or open EEGlab and download it via
-File--\>Manage EEGLAB extension and look for ERPlab.
+“Plugins” folder in EEGlab, or open EEGlab and download it via
+File–\>Manage EEGLAB extension and look for ERPlab.
 
 [Back to top](#eeg-pipeline-using-eeglab)
 
@@ -169,8 +165,8 @@ File--\>Manage EEGLAB extension and look for ERPlab.
 To use EEGlab you need to set the path to include this folder and all
 its sub folders:
 
-[In matlab, set path --\> add with Subfolders... --\>the main eeglab
-folder --\>
+[In matlab, set path –\> add with Subfolders… –\>the main eeglab folder
+–\>
 close](https://github.com/DouweHorsthuis/trial_by_trial_data_export_eeglab/blob/main/images/screenshot_add_path.PNG)
 Or you can hard code this:
 
@@ -190,6 +186,7 @@ extended](#pipeline-extended), or click on the step you want to know
 more about.
 
 [merging and creating a set extention](#a_merge_sets)  
+[Cleaning Optional](#cleaning_optional)
 [Downsampling](#downsampling)  
 [Filtering](#filtering)  
 [Adding channel info](#adding_channel_info)  
@@ -206,7 +203,7 @@ manual](#c_manual_check)
 
 ## Pipeline extended
 
-Here you'll see what each script does and what variables you can change.
+Here you’ll see what each script does and what variables you can change.
 
 ## Pre-processing
 
@@ -222,7 +219,7 @@ same for everyone, but if not, you need to run that participant
 separately.
 
 We used to re-reference the data here (to the mastoids most of the
-time), but after realizing that it's impossible to spot flat channels
+time), but after realizing that it’s impossible to spot flat channels
 after this we pushed this to later in the script.
 
 These are the variables to change:
@@ -233,7 +230,34 @@ filename= 'the_rest_of_the_file_name';
 home_path  = 'path_where_to_load_in_pc'; 
 save_path  = 'path_where_to_save_in_pc'; 
 blocks = 5; 
+```  
+**Special note for `save_path`; If you set this to a general folder, individual subject folders with the ID will be created so that everyone's data is in their own folder.**  
+
+10/14/2022 update
+We added some quality control functions here. Both are 100% optional they will be used if the following variable are `'yes'`:
+``` matlab
+readme_file  ='yes';
+eye_tracking ='yes';
 ```
+
+These functions come originally from [this project](https://github.com/DouweHorsthuis/EEG-quality-analysis) that we created to test the data while one collects it. They are also explained in-dept in the readme file there. 
+
+In short: 
+The `readme_to_EEG` function searches for a readme file (.txt file) that we use in our lab to describe data collection. 
+  - this function can be addapted but currently is functioning only for the template of the readme files we use in our lab
+The `edf_to_figure` function uses edf files created by our eye-tracker (sr-research eyelink 1000plus) and creates a gaze plot so you can see where the participant looked throughout the experiment.
+
+[Back to top](#eeg-pipeline-using-eeglab)  
+
+### cleaning_optional  
+This script is explained in depth [here](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/Readme-optional_cleaning.md)
+When using the `pop_clean_rawdata` different filters and settings for the function it self impact the data heavily, specially since this function deletes both channels and continues data. This **optional script** will plot for you how much data and channels get rejected based on the settings you choose. 
+As an example, while the default settings are 0.8 for channel correlation, and 20 for burst rejection. Using a 0.1hz and 45hz filter made us decide to set them to 0.75 and 45. The 0.05 difference cause us to loose 7 less participant and the as you can see in the plot below, the difference between 20 and 45 for the burst rejection "saves" us 36 participants. While this obviously comes at a cost related to cleanliness of the data, visualizing this might make the decision worth it.  
+![cleaning data](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_optional.PNG)  
+![Cleaning channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_Channels.PNG)  
+  
+**For more information on the `pop_clean_rawdata` function see [their github](https://github.com/sccn/clean_rawdata) or read more [in this document](#deleting_channels)
+
 
 [Back to top](#eeg-pipeline-using-eeglab)
 
@@ -255,7 +279,7 @@ also decide on the filter order. [See this for more
 info](https://github.com/widmann/firfilt/blob/master/pop_eegfiltnew.m)
 
 Same counts for the third step, which is a 45Hz high-pass filter. For
-more detailed info on filters see the ["More info on filtering "
+more detailed info on filters see the [“More info on filtering”
 chapter](#more_info_on_filtering).
 
 To optimize the ICA solutions, these are the suggested filters. However,
@@ -266,7 +290,7 @@ filters.](https://www.sciencedirect.com/science/article/pii/S0896627319301746)
 #### Adding channel info
 
 The fourth step is adding information to the channels. This is why you
-need to define the path to EEGlab or to the 'biosemi160' file. It will
+need to define the path to EEGlab or to the ‘biosemi160’ file. It will
 look for a file to import the channel information. The difference
 between the two paths has to do with that for 64channels we use a 10-20
 layout for the BIOsemi caps, however for the 160channel caps we have a
@@ -292,7 +316,7 @@ are only use the parts of the function that focus on channel deletion.
 
 We delete a channel if
 
--   It's more than 5 seconds flat
+-   It’s more than 5 seconds flat
 -   there is high frequency noise than is bigger 4 standard
     deviantionsof the rest of the signal
 -   if there is a minimal acceptable correlation with the nearby
@@ -304,10 +328,10 @@ We delete a channel if
         this will need to be adjusted depending on how clean the data
         is.
 
-1.  It's worth it to note that when we epoch the data, we reject noisy
+1.  It’s worth it to note that when we epoch the data, we reject noisy
     epochs, so this also takes care of noisy moments.
 2.  The threshold for when to delete data is found in the line that
-    calls `pop_clean_rawdata`. More specifically after 'burstCriterion'.
+    calls `pop_clean_rawdata`. More specifically after ‘burstCriterion’.
 
 All of these settings are the standard settings and result in clean
 data, without losing excessive amount of channels.
@@ -338,6 +362,18 @@ downsample_to=256; % what is the sample rate you want to downsample to
 lowpass_filter_hz=45; %45hz filter
 highpass_filter_hz=1; %1hz filter
 ```
+10/14/2022 update
+### plotting_bridged_channels
+We added this function, which uses `eBridge`. This is a function that uses the EEG structure and checks if there
+are channels that are bridged. The full explanation can be found
+[here](https://psychophysiology.cpmc.columbia.edu/software/eBridge/index.html).
+Or in [this
+paper](https://psychophysiology.cpmc.columbia.edu/pdf/alschuler2013a.pdf)
+that was written and resulted in the function. `bridge=eBridge(EEG)`
+gives us a structure in which `bridge.Bridged.Labels` gives us the
+labels of all the bridged channels. Later we use this to plot a figure
+of the location of bridged channels. **note that bridged channels are
+not deleted**. In the `plotting_bridged_channels` function we use `eBridge` and plot the locations of the bridged channels.  
 
 [Back to top](#eeg-pipeline-using-eeglab)
 
@@ -348,7 +384,7 @@ relatively easy to created/use new filters.
 
 ##### Using a new filter in EEGlab
 
-**3/1/2022 update, we won't need to add filter order anymore**. It is
+**3/1/2022 update, we won’t need to add filter order anymore**. It is
 very important to know the filter order (which is [the width of the
 sliding window in data
 points](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#Dependency_across_the_preprocessing_stages_.2807.2F05.2F2019_updated.29)
@@ -364,12 +400,12 @@ command window. as seen in figure3.
 ![step1](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Open_filter.PNG "open")  
 figure 1.
 ![step2](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/filter%20inputs.PNG "input")  
-figure 2. hit "ok"  
+figure 2. hit “ok”  
 ![step3](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/figure%20out%20filter%20order.PNG "output")
 figure 3.
 
 This shows up in Matlab. Replace the filter number with the number 1.
-followed by the number "preforming [number] point high-pass filter" -1
+followed by the number “preforming \[number\] point high-pass filter” -1
 as the filter order.
 
 ``` matlab
@@ -402,7 +438,7 @@ might be worth it to think this through.
 We usually use a low-pass filter to get rid of high frequency noise that
 cannot be caused by the brain. By using a 45Hz filter this can be
 solved.Unless you are interested in specific frequencies that go above
-40Hz it's normally safe to use it. This is what the filter will do to
+40Hz it’s normally safe to use it. This is what the filter will do to
 data:  
 ![45hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-45hz.jpg "45Hz")  
 The black line is down-sampled like the Red line + a 45Hz filter is ran
@@ -420,7 +456,7 @@ When looking at early components, one can usually use a 1Hz filter. This
 filter might however cause issues if you look at later components
 (starting at P2 and onward). This is what a 1 Hz filter does
 ![1hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-1hz.jpg "1Hz_hit")
-It's interesting to point out that the impact of the filter is more
+It’s interesting to point out that the impact of the filter is more
 strongly seen the later you look at the ERP. Since we are interested in
 the P1 (90-130ms) which is early, we can use this filter. The impact is
 not big enough to say that it distorts the data.
@@ -435,7 +471,7 @@ filter.
 
 It is very important that you know what the impact of your filter can
 be. One of the things to think of is what frequency you expect in the
-ERP. If it's in the higher Range you could go for a 0.5Hz or maybe a 1Hz
+ERP. If it’s in the higher Range you could go for a 0.5Hz or maybe a 1Hz
 filter (1Hz might be too much according to some).
 ![1-01-001hzfilters](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-1-01-001hz.jpg)
 As you can see here, the filters seem to have more or less the same
@@ -454,7 +490,7 @@ a 0.1Hz filter has a suggested order of 16895). We chose 846 as filter
 order because this is the smallest filter order that can be chosen for
 this filter. If you would choose a different filter the minimum is
 different. There is no max filter order, but when we tested 100000000 as
-an order, after 2 days EEGlab hadn't completed 5%.
+an order, after 2 days EEGlab hadn’t completed 5%.
 
 ![hit-filteroder](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/filterorder_hit.jpg)
 ![fa-filteroder](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/filterorder_fa.jpg)
@@ -468,7 +504,7 @@ This is the combination of a 1Hz and a 45Hz filter
 
 ### C_manual_check
 
-In this script each subject's data gets loaded, externals get deleted
+In this script each subject’s data gets loaded, externals get deleted
 and the data gets plotted in the EEGlab GUI. Make sure you always set
 the scale to the same number, since EEGLAB bases it on the noise level
 of the data. In the GUI set the scale to 5, so you can see if there are
@@ -501,7 +537,16 @@ structure:
 ```
 
 **Be critical, but if you delete too many channels (\>10) you should
-consider whether that data set should be included.**
+consider whether that data set should be included.**  
+  
+### plot_deleted_chan_location
+This function uses the locations of the deleted channels and creates a scalp map with these locations so one can see if too many channels close to each other are deleted.
+
+### plot_group_deleted_chan_location
+This function plot on a group level how often a channel is deleted. This means that if a channel is deleted, on the location of that channel in the headmap you will see a number. That number indicates how often that channel is deleted. This is saved as one figure.  
+
+### quality
+This is a variable that will store the ID, % deleted data, seconds of data left and N - deleted channels of each participants. When all the individual subjects are run, we load `participant_info` and include this variable and save it again.
 
 [Back to top](#eeg-pipeline-using-eeglab)
 
@@ -516,7 +561,7 @@ weights and gives us all the channels.
 Here we interpolates all the channels that got deleted before. It does
 this using the pop_interp function. It loads first the \_info.set file
 (that was created in B script) to see how many channels there were
-originally (it deletes the externals because you don't want these in
+originally (it deletes the externals because you don’t want these in
 your new data). Then we use the pop_interp to do a spherical
 interpolation for all channels that were rejected.
 
@@ -555,9 +600,9 @@ We only do it now because we just interpolated, which minimizes
 potential bias in the average referencing stage. For example, if there
 are 64 channels, and 16 channels are identified as bad and rejected but
 only from the right hemisphere. Then, the number of channels in the left
-vs. right hemispheres are 32 vs. 16, with which average will be biased
+vs. right hemispheres are 32 vs. 16, with which average will be biased
 toward the left hemisphere. To avoid this bias, scalp electrodes may be
-interpolated. [See Makoto's pipeline for more info, the previouse text
+interpolated. [See Makoto’s pipeline for more info, the previouse text
 is his
 explanation](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#Interpolate_all_the_removed_channels_.2803.2F05.2F2021_updated.29)
 
@@ -566,8 +611,8 @@ explanation](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#Interpol
 The PCA is set to the amount of channels deleted -1 (for the average
 reference), the PCA will dictate how many components the ICA will
 create. This is especially important because we are interpolating and
-doing an average reference before the ICA. This could cause "ghost
-components", or just make the data go bad all together due to working
+doing an average reference before the ICA. This could cause “ghost
+components”, or just make the data go bad all together due to working
 with data that is rank deficiant. Setting the PCA preferents this rank
 issue. Another solution is to delete a channel (after the average ref).
 But this would still not solve the issue for the interpolated channels +
@@ -627,7 +672,7 @@ should. Doing it manually takes a lot of practice and understanding of
 the data and a lot of time. This is why we currently prefer the more
 objective [IClabel](https://github.com/sccn/ICLabel) function in EEGlab
 
-To make more sense of the impact of deleting components I've plotted 4
+To make more sense of the impact of deleting components I’ve plotted 4
 different ERPs.
 
 -   For the first ERP I deleted for each participant every component if
@@ -648,11 +693,11 @@ were supposed to inhibit)
 ![ERP-ICA-vs-no-ICA-fa](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/iclabledifferences_fa.jpg)
 
 \* IClabel labels for each component how much % they are made up out of
-[Brain, muscle, eye, Heart, Line Noise, channel noise and other]  
+\[Brain, muscle, eye, Heart, Line Noise, channel noise and other\]  
 \*\* We only use a sum of muscle, eye, Heart, Line Noise, channel noise
 to create bad components  
 \*\*\* every label will always have something above 0%, this is why I
-didn't want to go lower then 3%
+didn’t want to go lower then 3%
 
 #### re-referencing
 
@@ -662,7 +707,7 @@ we moved this to after the ICA. Since the average reference would undo
 this part.  
 After realizing that re-referencing causes flat channels to have the
 data of the reference channel and thus making it impossible to see if
-it's flat, we only re-reference here (after having deleted all the
+it’s flat, we only re-reference here (after having deleted all the
 channels that are noisy/flat).  
 You can choose a reference channel. [Biosemi explains why it matters for
 their system](https://www.biosemi.com/faq/cms&drl.htm) but that you
@@ -676,7 +721,7 @@ talks about different options that could work.
 
 In our case we use the average of both mastoids (channel 65/66 for us),
 but you can change this to a different channel or leave it empty if you
-don't want to do this.
+don’t want to do this.
 
 This is the impact it has on our data. Here we compare data referenced
 to the mastoid externals with data where we left the ref_chan variable
@@ -722,7 +767,7 @@ choose to only include the bin you want to (or multiple if that is what
 you want). This is not the case if you use EEGlab V2021.1 **bug when
 using EEGlab V2019_1** Lastly we create the ERPs and save the data as a
 final .set file. You will also have a file at the end with each
-participant's ID number and the percentage of data that got deleted.
+participant’s ID number and the percentage of data that got deleted.
 
 You can choose to use the pop_binlister function (see line 35).
 
@@ -753,7 +798,7 @@ EEG = pop_interp(EEG, ALLEEG(1).chanlocs, 'spherical');%
 
 ### F_individual_trials_export
 
-If you want to do stats in R or any program that doesn't read .mat
+If you want to do stats in R or any program that doesn’t read .mat
 files, you need to export your data. This happens in the F script. [For
 detailed info see its own
 repo](https://github.com/DouweHorsthuis/trial_by_trial_data_export_eeglab).
@@ -786,7 +831,7 @@ for a list of proposed features (and known issues).
 ## Contributing
 
 Please contact me if you see anything in this pipeline that you think
-could be improved. I'm always looking to improve the pipeline!  
+could be improved. I’m always looking to improve the pipeline!  
 [Back to top](#eeg-pipeline-using-eeglab)
 
 ## Updates
@@ -799,6 +844,8 @@ with flat channels not being flat anymore.
 6/17/2021- updating
 [D_reref_exclextrn_avgref_ica_autoexcom](#D_reref_exclextrn_avgref_ica_autoexcom),
 only deleting eye-components from now on.
+10/17/2022
+Working on a QA dashboard that will show you both individual subject and group related information to see without hassle how your data look
 
 [Back to top](#eeg-pipeline-using-eeglab)
 
@@ -817,8 +864,8 @@ for more information.
 ## Contact
 
 Douwe John Horsthuis -
-[\@douwejhorsthuis](https://twitter.com/douwejhorsthuis) -
-[douwehorsthuis\@gmail.com](mailto:douwehorsthuis@gmail.com)
+[@douwejhorsthuis](https://twitter.com/douwejhorsthuis) -
+<douwehorsthuis@gmail.com>
 
 Project Link:
 <https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R>
