@@ -15,6 +15,6 @@ authors:
   orcid: "https://orcid.org/0000-0003-4030-0297"
 title: "EEG_to_ERP_pipeline_stats_R"
 version: 2.02
-doi: 10.5281/zenodo.5584698
+doi: 10.5281/zenodo.7388199
 date-released: 2021-10-20
 url: "https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R"
