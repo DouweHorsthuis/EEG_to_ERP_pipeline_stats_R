@@ -102,7 +102,7 @@ different settings.
 
 Next there are 3 more plot that show the same data in a different way.  
 ![1Hz strict
-criteria](github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/CleaningBurstcriteria1hz_new.png?raw=true)  
+criteria](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/CleaningBurstcriteria1hz_new.png?raw=true)  
 *We used a 1Hz highpass and a 45Hz lowpass filter and use relatively
 strict burst criteria*  
 ![1Hz liberal
