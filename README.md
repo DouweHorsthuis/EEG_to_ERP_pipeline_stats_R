@@ -869,7 +869,7 @@ could be improved. I’m always looking to improve the pipeline!
 [biosemi160sfp file](#B_downs_filter_chaninfo_exclchan)  
 6/17/2021- updating the re-referencing situation. We used to do this in
 the first script when loading the BDF file, but this caused problems
-with flat channels not being flat anymore.  
+\<\<\<\<\<\<\< HEAD with flat channels not being flat anymore.  
 6/17/2021 - updating  
 [D_reref_exclextrn_avgref_ica_autoexcom](#D_reref_exclextrn_avgref_ica_autoexcom),only
 deleting eye-components from now on.  
