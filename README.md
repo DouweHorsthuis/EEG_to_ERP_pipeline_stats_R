@@ -172,8 +172,7 @@ extended](#pipeline-extended), or click on the step you want to know
 more about.
 
 [merging and creating a set extention](#a_merge_sets)  
-[Cleaning Optional](#cleaning_optional)  
-[Downsampling](#downsampling)  
+[Cleaning Optional](#cleaning_optional) [Downsampling](#downsampling)  
 [Filtering](#filtering)  
 [Adding channel info](#adding_channel_info)  
 [Deleting channels automatic](#deleting_channels) & [Deleting channels
@@ -242,25 +241,13 @@ template of the readme files we use in our lab The `edf_to_figure`
 function uses edf files created by our eye-tracker (sr-research eyelink
 1000plus) and creates a gaze plot so you can see where the participant
 looked throughout the experiment.
-  
 
 [Back to top](#eeg-pipeline-using-eeglab)
-
-[Back to top](#eeg-pipeline-using-eeglab)  
-
-### cleaning_optional  
-When using the `pop_clean_rawdata` different filters and settings for the function it self impact the data heavily, specially since this function deletes both channels and continues data. This **optional script** will plot for you how much data and channels get rejected based on the settings you choose. 
-As an example, while the default settings are 0.8 for channel correlation, and 20 for burst rejection. Using a 0.1hz and 45hz filter made us decide to set them to 0.75 and 45. The 0.05 difference cause us to loose 7 less participant and the as you can see in the plot below, the difference between 20 and 45 for the burst rejection "saves" us 36 participants. While this obviously comes at a cost related to cleanliness of the data, visualizing this might make the decision worth it.  
-![cleaning data](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_optional.png?raw=true)  
-![Cleaning channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_Channels.png?raw=true)  
-  
-**For more information on the `pop_clean_rawdata` function see [their github](https://github.com/sccn/clean_rawdata) or read more [in this document](#deleting_channels)
-
 
 ### cleaning_optional
 
 This script is explained in depth
-[here](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/Readme-optional_cleaning.md)
+[here](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/Readme-optional_cleaning.md).
 When using the `pop_clean_rawdata` different filters and settings for
 the function it self impact the data heavily, specially since this
 function deletes both channels and continues data. This **optional
@@ -881,7 +868,8 @@ could be improved. I’m always looking to improve the pipeline!
 5/7/2021 - adding [C_manual_check script](#C_manual_check) +
 [biosemi160sfp file](#B_downs_filter_chaninfo_exclchan)  
 6/17/2021- updating the re-referencing situation. We used to do this in
-the first script when loading the BDF file, but this caused problems with flat channels not being flat anymore.  
+the first script when loading the BDF file, but this caused problems
+\<\<\<\<\<\<\< HEAD with flat channels not being flat anymore.  
 6/17/2021 - updating  
 [D_reref_exclextrn_avgref_ica_autoexcom](#D_reref_exclextrn_avgref_ica_autoexcom),only
 deleting eye-components from now on.  
