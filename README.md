@@ -261,9 +261,10 @@ rejection “saves” us 36 participants. While this obviously comes at a
 cost related to cleanliness of the data, visualizing this might make the
 decision worth it.  
 ![cleaning
-data](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_optional.PNG)  
+data](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_optional.png?raw=true)  
 ![Cleaning
-channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_Channels.PNG)
+channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_Channels.png?raw=true)
+
 
 \*\*For more information on the `pop_clean_rawdata` function see [their
 github](https://github.com/sccn/clean_rawdata) or read more [in this
