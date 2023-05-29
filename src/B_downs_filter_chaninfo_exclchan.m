@@ -2,6 +2,7 @@
 % Combined and updated by Douwe Horsthuis last update 11/5/2021
 % ------------------------------------------------
 clear variables
+eeglab
 % This defines the set of subjects
 subject_list = {'6209' '6239' '8103' '8110' '8110-01' '8113' '8117' '8119' '8121' '8121-01' '8128' '8128-01'}; %all the IDs for the indivual particpants
 home_path    = 'C:\Users\dohorsth\Desktop\cued-boss\'; %place data is (something like 'C:\data\')
@@ -11,6 +12,10 @@ highpass_filter_hz=1; %1hz filter
 avg_deleted_data=zeros(1, length(subject_list));
 clean_data={'y'}; % if 'y' not only channels but also noisy moments in thedata get cleaned
 individual_plots='yes';
+if strcmpi(individual_plots,'yes')% if yes we need to add the functions to the file path
+file_loc=[fileparts(matlab.desktop.editor.getActiveFilename),filesep];
+addpath(genpath(file_loc));%adding path to your scripts so that the functions are found
+end
 % Loop through all subjects
 for s=1:length(subject_list)
     fprintf('\n******\nProcessing subject %s\n******\n\n', subject_list{s});
