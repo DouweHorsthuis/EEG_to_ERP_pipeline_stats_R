@@ -4,17 +4,16 @@
 % uses runica to do an Independent Component Analysis
 % uses IClabel to define the eye component
 % Deletes these and the components also get printed.
-% by Douwe Horsthuis updated on 12/22/2021
+% by Douwe Horsthuis updated on 5/29/2023
 % ------------------------------------------------
 clear variables
 eeglab
 %% Subject info for each script
-subject_list = {'some sort of ID' 'a different id for a different particpant'};
-home_path  = 'the main folder where you store your data';
+subject_list = {'ID_1' 'ID_2'};
+home_path    = 'D:\cystinosis visual adaptation\Data\'; %place data is (something like 'C:\data\')
 %% info needed for this script specific
-components = num2cell(zeros(length(subject_list), 8)); %prealocationg space for speed
 refchan = { }; %if you want to re-ref to a channel add the name of the channel here, if empty won't re-ref to any specific channel (for example {'EXG3' 'EXG4'} or {'Cz'})
-only_eye_ic='yes'; %'yes' or 'no' : if you want to delete only eye components 'yes' if you want more 'no' see line 73 for more info
+only_eye_ic='No'; %'yes' or 'no' : if you want to delete only eye components 'yes' if you want more 'no' see line 73 for more info
 %% Loop through all subjects
 for s=1:length(subject_list)
     fprintf('\n******\nProcessing subject %s\n******\n\n', subject_list{s});
@@ -71,8 +70,8 @@ for s=1:length(subject_list)
     ICA_components(:,8) = ICA_components(:,3); %row 1 = Brain row 2 = muscle row 3= eye row 4 = Heart Row 5 = Line Noise row 6 = channel noise row 7 = other, combining this makes sure that the component also gets deleted if its a combination of all.
     bad_components = find(ICA_components(:,8)>0.80 & ICA_components(:,1)<0.10); %if the new row is over 80% of the component and the component has less the 5% brain
     elseif strcmpi(only_eye_ic,'no')
-    ICA_components(:,8) = sum(ICA_components(:,[2 3 4 5 6]),2);;
-    bad_components = (find((ICA_components(:,3)>0.70 | ICA_components(:,2)>0.80 | ICA_components(:,6)>0.70) & ICA_components(:,1)<0.10)); 
+    ICA_components(:,8) = sum(ICA_components(:,[2 3 4 5 6]),2);
+    bad_components = (find((ICA_components(:,8)>0.70) & ICA_components(:,1)<0.10)); %if the sum of all the potential bad compontens is >70 % and brain component makes up < 10 of the componenten, mark it as bad
     else
     error('not correctly selected how many ICs should be deleted')
     end
@@ -81,11 +80,11 @@ for s=1:length(subject_list)
         if ceil(sqrt(length(bad_components))) == 1
             pop_topoplot(EEG, 0, [bad_components bad_components] ,subject_list{s} ,0,'electrodes','on');
         else
-            pop_topoplot(EEG, 0, [bad_components] ,subject_list{s},[ceil(sqrt(length(bad_components))) ceil(sqrt(length(bad_components)))] ,0,'electrodes','on');
+            pop_topoplot(EEG, 0, bad_components ,subject_list{s},[ceil(sqrt(length(bad_components))) ceil(sqrt(length(bad_components)))] ,0,'electrodes','on');
         end
         title(subject_list{s});
         print([data_path subject_list{s} '_Bad_ICs_topos'], '-dpng' ,'-r300');
-        EEG = pop_subcomp( EEG, [bad_components], 0); %excluding the bad components
+        EEG = pop_subcomp( EEG, bad_components, 0); %excluding the bad components
         close all
     else %instead of only plotting bad components it will plot all components
         title(subject_list{s}); text( 0.2,0.5, 'there are no eye-components found')
@@ -103,4 +102,4 @@ for s=1:length(subject_list)
     data_subj                  = [ID, All_bad_chan]; %combines IDs and Bad channels
     participant_badchan(s,:)     = data_subj;%combine new data with old data
 end
-save([home_path 'participant_info'], 'participant_badchan');
+save([home_path 'participant_badchan'], 'participant_badchan');
