@@ -10,7 +10,7 @@ clear variables
 eeglab
 %% Subject info for each script
 subject_list = {'ID_1' 'ID_2'};
-home_path    = 'D:\cystinosis visual adaptation\Data\'; %place data is (something like 'C:\data\')
+home_path    = 'D:\whereisthedata\'; %place data is (something like 'C:\data\')
 %% info needed for this script specific
 refchan = { }; %if you want to re-ref to a channel add the name of the channel here, if empty won't re-ref to any specific channel (for example {'EXG3' 'EXG4'} or {'Cz'})
 only_eye_ic='No'; %'yes' or 'no' : if you want to delete only eye components 'yes' if you want more 'no' see line 73 for more info

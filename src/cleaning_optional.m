@@ -1,7 +1,7 @@
 clear variables
 eeglab
-subject_list = {'12429' '12156' '12124' '12011' '10862' '10853' '10641' '10583' '10567' '10376' '10373' '10085' '12889' '12737' '12716' '12682' '12434' '12392' '12338' '10951' '10935' '10780' '10769' '10641' '10555' '10553' '10486' '10400' '10281' '10214' '10135' '10066' '10056' '9189' '9183' '9180' '9176' '9155' '9146' '9119' '9109' '9179' '8261' '9102' '8608' '8190' '8176'   '8161' '8159' '8158' '8150'  '8136'  '8128' '8121' '8119' '8117' '8113' '8110' '8187' '8148' '8145' '8129' '9150' '8177' '8169' '8157' '8103'};
-home_path    = 'C:\Users\dohorsth\Desktop\cystinosis\cued boss\data\'; %place data is (something like 'C:\data\')
+subject_list = {'ID_1' 'ID_2'};
+home_path    = 'D:\whereisthedata\'; %place data is (something like 'C:\data\')
 %% Settings for the script 
 Burst_criteria=0.70:0.05:0.80;%start point, step size, end point
 Channel_criteria=20:5:50;%start point, step size, end point

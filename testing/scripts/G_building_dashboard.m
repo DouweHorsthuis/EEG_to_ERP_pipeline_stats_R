@@ -1,25 +1,43 @@
-home_path    = 'E:\Processed\Visual Adaptation\'; %place data is (something like 'C:\data\')
-subject_list = {'9102' '9155' '6167' '6169' '6179' '6201' '6209' '6237' '6238' '6239' '6285' '6287' '6288' '6292' '8103' '8103-01' '8110' '8110-01' '8113' '8114' '8114-01' '8117' '8119' '8121' '8121-01'  '8128-01' '8129' '8136' '8145' '8148' '8150' '8157' '8158' '8159' '8161' '8161-01' '8161-02' '8169' '8176' '8176-01' '8177' '8187' '8187-01' '8187-02' '8190' '8261' '8261-01' '8608' '9109' '9109-01' '9119' '9146' '9150' '9176' '9179' '9179-01' '9180' '9182' '9182-01' '9183' '9183-01' '9189' '9193' '10056' '10066' '10085' '10135' '10214' '10260' '10281' '10373' '10400' '10400-01' '10463' '10486' '10486' '10553' '10555' '10567' '10583' '10641' '10769' '10780' '10853' '10862' '10912' '10935' '10951' '10956' '12011' '12067' '12090' '12124' '12156' '12338' '12341' '12351' '12392' '12429' '12434' '12437' '12542' '12543' '12682' '12686' '12709' '12716' '12737' '12762' '12812' '12824' '12840' '12883' '12889'}; %all the IDs for the indivual particpants
-channels_names={'O2' 'Oz', 'O1'}; %channels that you want ERP plots for
+clear all
+home_path    = 'D:\cystinosis visual adaptation\Data\'; %place data is (something like 'C:\data\')
+Group_list={'Control_young', 'Control_adult', 'Cystinosis_young', 'Cystinosis_adult', 'Cystinosis_parent', 'CKD'};
+for gr=1:length(Group_list)
+    if strcmpi(Group_list{gr},'Control_young')
+        subject_list = {'10056' '10066' '10085' '10135' '10214' '10260' '10281' '10373' '10376' '10400' '10400-01' '10463' '10486' '10553' '10555' '10567' '10583' '10641' '10769' '10780' '10853' '10862' '10912' '10935' '10951' '10956'};
+    elseif strcmpi(Group_list{gr},'Control_adult')
+        subject_list = {'12011' '12067' '12090' '12091' '12124' '12156' '12338' '12341' '12351' '12392' '12429' '12434' '12437' '12542' '12543' '12682' '12686' '12709' '12716' '12737' '12762' '12812' '12824' '12840' '12883' '12889'};
+    elseif strcmpi(Group_list{gr},'CKD')
+        subject_list= {'6167' '6169' '6179' '6201' '6209' '6237' '6238' '6239' '6285' '6287' '6288' '6292'};
+    elseif strcmpi(Group_list{gr},'Cystinosis_young')
+        subject_list={'8103'  '8110' '8113' '8114'  '8117' '8119' '8121'  '8128'  '8129' '8136' '8145' '8148' '8150' '8157' '8158' '8159' '8161'  '8169' '8176'  '8177' '8187' '8190' '8261'  '8608'};
+    elseif strcmpi(Group_list{gr},'Cystinosis_adult')
+        subject_list={'9102' '9109'  '9119' '9146' '9150' '9155' '9176' '9179'  '9180' '9182' '9182-01' '9183' '9189' '9193'}; %all the IDs for the indivual particpants
+    elseif strcmpi(Group_list{gr},'Cystinosis_parent')
+        subject_list={'8103-01' '8110-01' '8114-01' '8121-01' '8128-01'  '8161-01' '8161-02' '8176-01' '8187-01' '8187-02' '8261-01' '9109-01' '9179-01' '9183-01'};
+    else
+        disp('not possible')
+        pause()
+    end
+    channels_names={'O2' 'Oz', 'O1'}; %channels that you want ERP plots for
 plotting_bins=[1:5];
 colors={'b-' 'm-' 'g-' 'r-' 'k-'};
 epoch_time = [-50 400];
-load([home_path 'Visual_Gating_participant_info']);
+load([home_path 'participant_info_' Group_list{gr}]);
 participant_info_full=participant_info;
-load([home_path 'Visual_Gating_participant_info_RT']);
+%load([home_path 'Visual_Gating_participant_info_RT']);
 
 %i messed up teh figures of '8128'
 for s=1:length(subject_list)
     for i=1:height(participant_info_full)
-        if strcmpi(participant_info_full.('ID')(2),subject_list{s})
-            badchan=  participant_info.('Deleted channels')(i);
+        if strcmpi(participant_info_full.('ID')(i),subject_list{s})
+            badchan=  participant_info_full.('Deleted channels')(i);
             b145=  participant_info_full.('b145')(i);
             b245=  participant_info_full.('b245')(i);
             b495=  participant_info_full.('b495')(i);
             b995=  participant_info_full.('b995')(i);
             b2495=  participant_info_full.('b2495 ')(i);
             hit= participant_info.('hit ')(i);
-            miss= participant_info.('miss')(i);
+            miss= participant_info.('misses')(i);
         end
     end
     data_path  = [home_path subject_list{s} '/'];
@@ -76,7 +94,7 @@ for s=1:length(subject_list)
         "Bad chan: " + badchan;...
         "Amount bridged chan: " + string(length(EEG.bridged));...
         ]);
-    annotation('textbox', [0.40, 0.30, 0.1, 0.1], 'String',EEG.notes)
+    annotation('textbox', [0.10, 0.30, 0.1, 0.1], 'String',EEG.notes)
     annotation('textbox', [0.40, 0.20, 0.1, 0.1], 'String',[...
         "Amount of hits " + hit...
         "Amount of misses " + miss...
@@ -113,5 +131,7 @@ for s=1:length(subject_list)
     sgtitle(['Quality of ' subject_list{s} 's data while doing visual gating']);
     set(gcf, 'PaperSize', [16 10]);
     print(fig,[data_path subject_list{s} '_data_quality'],'-dpdf') % then print it
+    print(fig,['D:\cystinosis visual adaptation\Quality Check\' subject_list{s} '_data_quality'], '-dpdf');
     close all
+end
 end
