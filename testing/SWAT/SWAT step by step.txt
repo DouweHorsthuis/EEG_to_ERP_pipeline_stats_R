@@ -1,0 +1,63 @@
+SWAT step by step
+Step 1 - check the readme files before loading data, in this case al the 6 randomly selected people seemed 
+to have decent/good data. so continue. 
+
+Step 2 - script A 
+
+Fill out ID's hompath and savepath 
+set eye_tracking to 'yes'
+set Pausing_yn to 'no'  
+
+Step 3 - script B 
+copy paste subjectlist from script a to b
+copy past savepath in script a to hompath in script b
+first analysis so 1 hz and 45hz filter, if everything is good redo it all with a stronger filter. 
+i leave the clean data option as is (so 'y'), but if you want less cleaning you can set it to 2. itll only
+delete chanels not delete moments of noisy data. 
+
+once the script has run itll give you a last line : in this case "on averages 35.2469 % of the data got deleted"
+So pretty okay, maybe a bit much depending on who you talk to. I'd say that this will be more if you filter less. so 
+that is something to think about. I'd rather delete more bad data than keep garbage. The way we collect data normally
+is that the recording stops based on triggers, so there shouldn't be any "non data" where someone is just sitting
+and waiting. But this is something for you to decide how much cleaning is needed. 
+
+Step 4 - script C 
+~~~odly enough the grouping of the bad channels (on a group level) is not working since it's not critical only
+informational i commented it out ~~~~
+
+This is the first time we get to see the actual data. 
+in this case you can run in in groups, so I put the 3 patiens (9### numbers) in one group and the adult controls
+(12####) in the other. - this is because when you have 100 people in total it might be nice to not be forced to
+do all your work in a row. 
+
+I make up some names for the groups (cystinosis / adult controls)
+add a home path
+once you hit run you get a plot that is rather meaningless. I usually set the scale to 50. It's important that you 
+always put it to the same scale. if it's at 50 you shoulnd't see too much noise. It's tiring but worth it to 
+go through as much data for each participant as possible. But for sure the start and the end. This is the moment 
+where you can add single channels that are still messy. 
+Also very important, you see triggers. Makes sure to check they are there, oddly enough there are some that are
+called "condition xxx'  and some just a number. This gets fixed later on in another script. 
+
+when there are no bad channels you can just hit enter after clicking on the control panel.
+
+following things are of intrest. The total amount of time varries a lot. So that's something to look into
+the other thing is thet particpant 9182 and 9182 has a ton of " bounndaries in their data. This means that the cleaning
+function in script B (that I set to 'y') deleted a lot of data. If you lose too many people like that you could
+choose to turn it off. 
+
+Step 5 - script D
+this script does the ICA and a bunch of other important stuff. While not everyone might agree with ICA. John does, 
+since we just published again using it (my first first author paper yay). so i'd say 100% do it. 
+it'll also give you insight in the data quality. Because if you and up with hardly any brain components that would
+mean that there is too much noise. 
+
+you can choose to select only_eye_ic. this is because when we didnt have fancy models doing this for us, it was
+one of the only an noisyest component that is easly recognized and manually deleted. However we don't need to rely on humans so you can just set it to 'no' and clean as much as possible. 
+
+
+
+Then i just let it run over night. 
+
+
+
