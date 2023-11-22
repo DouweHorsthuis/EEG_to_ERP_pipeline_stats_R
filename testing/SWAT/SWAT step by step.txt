@@ -9,6 +9,9 @@ set eye_tracking to 'yes'
 set Pausing_yn to 'no'  
 
 Step 3 - script B 
+
+First a note on the skipping of the optional cleaning script. This script takes a long time to run. Itll run the filtering on many different levels and doesn't save data but creates plots. This is so that you can see what are the ideal settings for the cleaning in the this script 
+
 copy paste subjectlist from script a to b
 copy past savepath in script a to hompath in script b
 first analysis so 1 hz and 45hz filter, if everything is good redo it all with a stronger filter. 
@@ -22,13 +25,14 @@ is that the recording stops based on triggers, so there shouldn't be any "non da
 and waiting. But this is something for you to decide how much cleaning is needed. 
 
 Step 4 - script C 
+
+
 ~~~odly enough the grouping of the bad channels (on a group level) is not working since it's not critical only
 informational i commented it out ~~~~
 
 This is the first time we get to see the actual data. 
 in this case you can run in in groups, so I put the 3 patiens (9### numbers) in one group and the adult controls
-(12####) in the other. - this is because when you have 100 people in total it might be nice to not be forced to
-do all your work in a row. 
+(12####) in the other. - this is because the group info is saved with the group name in a matlab file. This will be used again in script E. 
 
 I make up some names for the groups (cystinosis / adult controls)
 add a home path
@@ -55,9 +59,25 @@ mean that there is too much noise.
 you can choose to select only_eye_ic. this is because when we didnt have fancy models doing this for us, it was
 one of the only an noisyest component that is easly recognized and manually deleted. However we don't need to rely on humans so you can just set it to 'no' and clean as much as possible. 
 
+Then i just let it run over night. But it took less than an hour to complete for 6 participants.
 
+Step 6 - script E
+This is done per group so you get info per group.
 
-Then i just let it run over night. 
+I copy the group info from script C. When you run it for everyone, you just need to create more group lists. I only use 2 so I can leave one empty, but I believe that I build it in a way that you can add as many groups as you like. 
 
+You need to add the location of your binlist. In the github page I descript how to fill it with triggers. So I'm not writing that down here. But the file is now availible on github in the SWAT folder of the pipeline. I only will look at hits. I do make 3 groups (hits after green, hits after red and all hits combined.) you should really do a lot of messing around here. It leads to super intresting insights as to where you want to look at what are the best groups. You can get reaction times false alarms etc. But for now just the basic hits.
+
+This is a tricky paradigm, not just for participants. Because the first trigger indicates which version they are playing. So we need to use 2 binlist files because the task is oposite between the 2. You can find a loop for this in line 43-53. Where it assigns for each particpant the right binlist. 
+
+~~~~BIG NOTE~~~~
+I made a jugdement error. So definitly do not delete parts of the data in script B. Set it to 'N' . All 2/3 cystinosis participants lost a trigger that I couldn't find back because of this. 
+So from here on we wil only look at the 3 adult controls. 
+
+Step 7 - script F
+Skipping this for now it's something I really like, but is not meaningful for seeing of there are issues in the data/script. Once you have everyone analysed its perfect for seeing if you have odd partiicpants.
+
+Step 8 - script G
+Just added the basics like in the other script and ran it. Then decided to change the scale. Which can be done by playing around with parameters in line 31.
 
 
