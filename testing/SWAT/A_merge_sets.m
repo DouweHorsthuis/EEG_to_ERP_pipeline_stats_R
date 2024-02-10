@@ -45,6 +45,7 @@ for s = 1:length(subject_list)
     if strcmpi(eye_tracking,'yes')
         edf_to_figure(data_path);
         saveas(gcf,[save_path_indv subject_list{s} '_ET'])
+        print([save_path_indv subject_list{s} '_ET'], '-dpng' ,'-r300');
         close all
     end
     %save the bdf as a .set file
