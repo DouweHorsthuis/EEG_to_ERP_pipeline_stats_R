@@ -82,7 +82,7 @@ elseif length(group_del_channel)==1
     plot_chan_labels_2=plot_chan_labels_2(1);
 else
     figure; topoplot([],plot_chan_labels_2, 'style', 'map',  'electrodes','labels', 'chaninfo', EEG.chaninfo,'maplimits' , [-2000 2000] );
-    title(groupname,['Numbers represent how often that channel is deleted in ' total_participants ' participants', 'Interpreter', 'none')
+    title(groupname,['Numbers represent how often that channel is deleted in ' num2str(total_participants) ' participants'], 'Interpreter', 'none')
 end
 print([save_path groupname '_deleted_channels'], '-dpng' ,'-r300');
 close all
