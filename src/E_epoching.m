@@ -3,31 +3,33 @@
 % it deletes the noisy epochs.
 % it creates ERPs
 % It creates a matrix with how much data it deletes at the end.
-% it can also record the RTs and put them in and excel, but it needs folder after the homepath called \All RT files\
 clear variables
 eeglab
-%% Subject info for each script
-Group_list={'gr1' 'gr2' 'grn'};
+%% info needed for this script specific
+name_paradigm = 'nameofyourparadigm'; % this is needed for saving the table at the end
+%participant_info_temp = []; % needed for creating matrix at the end
+binlist_location = 'D:\whereisthebinlisttextfile\'; %binlist should be named binlist.txt
+binlist_name='binlist.txt';
+epoch_time = [startime endtime]; %time in ms e.g. [-50 100]
+baseline_time = [startbasline endbasline]; %time in ms e.g. [-50 0]
+n_bins=number;% enter here the number of bins in your binlist
+
+%add here all the names of your groups, this script can give you group plots
+Group_list={'Name_grp1' 'Name_grp2'};
 for gr=1:length(Group_list)
-    if strcmpi(Group_list{gr},'gr1')
-        subject_list = {'id_1' 'id_2'};
-    elseif strcmpi(Group_list{gr},'gr2')
-        subject_list = {'id_1' 'id_2'};
-    elseif strcmpi(Group_list{gr},'grn')
-        subject_list = {'id_1' 'id_2'};
+    if strcmpi(Group_list{gr},'Name_grp1')
+        subject_list = {'ID_1' 'ID_2'};
+    elseif strcmpi(Group_list{gr},'Name_grp2')
+        subject_list = {'ID_3' 'ID_4'};
     else
         disp('not possible')
         pause()
     end
     home_path    = 'D:\whereisthedata\'; %place data is (something like 'C:\data\')
-    %% info needed for this script specific
-    name_paradigm = 'nameofyourparadigm'; % this is needed for saving the table at the end
-    %participant_info_temp = []; % needed for creating matrix at the end
-    binlist_location = 'D:\whereisthebinlisttextfile\'; %binlist should be named binlist.txt
-    binlist_name='binlist.txt';
-    epoch_time = [startime endtime]; %time in ms e.g. [-50 100]
-    baseline_time = [startbasline endbasline]; %time in ms e.g. [-50 0]
-    n_bins=number;% enter here the number of bins in your binlist
+    %need to add the folder with the functions
+    file_loc=[fileparts(matlab.desktop.editor.getActiveFilename),filesep];
+    addpath(genpath(file_loc));%adding path to your scripts so that the functions are found
+
     load([home_path 'participant_info_' Group_list{gr} '.mat']);
     participant_info_temp = string(zeros(length(subject_list), 4+n_bins)); %prealocationg space for speed
     %% Loop through all subjects
@@ -85,19 +87,16 @@ for gr=1:length(Group_list)
         ERP = pop_averager( EEG , 'Criterion', 1, 'DSindex',1, 'ExcludeBoundary', 'on', 'SEM', 'on' );
         EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_epoched.set'],'filepath', data_path);
         ERP = pop_savemyerp(ERP, 'erpname', [subject_list{s} '.erp'], 'filename', [subject_list{s} '.erp'], 'filepath', data_path); %saving a.ERP file
-        %the following line creates an excel with RTs. For this to be possible make sure you have the right events in your eventlist.
-        %RT = pop_rt2text(ERP, 'eventlist',1, 'filename', [data_path subject_list{s} '_rt.xls'], 'header', 'on', 'listformat', 'basic' );
-        for i=1:length(quality)
+        for i=1:size(quality,1)
             if strcmpi(num2str(quality(i,1)),subject_list{s})
                 participant_info_temp(i,:)= [quality(i,:),percent_deleted, ERP.ntrials.accepted  ];
             end
         end
     end
-    participant_info_temp(:,14)=num2str(str2double(participant_info_temp(:,13))- str2double(participant_info_temp(:,12)));
     participant_info_temp(:,2)=Group_list{gr};
     colNames                   = [{'ID','Group','% auto deleted', 'Length dataset (sec)', 'Deleted channels', '%data deleted ERP'} ERP.bindescr, {'misses'}]; %adding names for columns [ERP.bindescr] adds all the name of the bins
     participant_info = array2table( participant_info_temp,'VariableNames',colNames); %creating table with column names
-    save([home_path 'participant_info_' Group_list{gr}], 'participant_info');
+    save([home_path 'participant_info_' Group_list{gr}], 'participant_info', 'quality');
 end
 
 

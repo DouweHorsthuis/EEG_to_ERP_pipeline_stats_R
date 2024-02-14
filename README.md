@@ -43,14 +43,18 @@ while they are doing a go-no-go task.
 4.  [Pipeline extended](#pipeline-extended)
     - [Pre-processing](#pre-processing)
       - [A_merge_sets(Matlab)](#a_merge_sets)
-      - [cleaning_optional](#cleaning_optional)
-      - [B_downs_filter_chaninfo_exclchan(Matlab)](#b_downs_filter_chaninfo_exclchan)
+      - [Ba_cleaning_optional](#ba_cleaning_optional)
+      - [Bb_downs_filter_chaninfo_exclchan(Matlab)](#bb_downs_filter_chaninfo_exclchan)
         - [Filtering](#filtering)
       - [C_manual_check(Matlab)](#c_manual_check)
       - [D_reref_exclextrn_interp_avgref_ica_autoexcom(Matlab)](#d_reref_exclextrn_interp_avgref_ica_autoexcom)
-      - [F_epoching(Matlab)](#f_epoching)
+      - [E_epoching(Matlab)](#e_epoching)
+      - [F_RT(Matlab)](#f_rt)
+    - [Visualizing](#visualizing)
+      - [G_building_dashboard_group(Matlab)](#g_building_dashboard_group)
+      - [H_grandmeans(Matlab)](#h_grandmeans)
     - [exporting](#exporting)
-      - [F_individual_trials_export(Matlab)](#f_individual_trials_export)
+      - [I_individual_trials_export(Matlab)](#i_individual_trials_export)
     - [Statistics](#statistics)
       - [Loading and setting up the
         structure(Rstudio)](#loading-and-setting-up-the-structure)
@@ -281,7 +285,7 @@ looked throughout the experiment.
 
 [Back to top](#eeg-pipeline-using-eeglab)
 
-### cleaning_optional
+### Ba_cleaning_optional
 
 This script is explained in depth
 [here](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/Readme-optional_cleaning.md).
@@ -298,9 +302,9 @@ rejection “saves” us 36 participants. While this obviously comes at a
 cost related to cleanliness of the data, visualizing this might make the
 decision worth it.  
 ![cleaning
-data](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_optional.PNG)  
+data](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_optional.png)  
 ![Cleaning
-channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_Channels.PNG)
+channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_Channels.png)
 
 \*\*For more information on the `pop_clean_rawdata` function see [their
 github](https://github.com/sccn/clean_rawdata) or read more [in this
@@ -308,7 +312,7 @@ document](#deleting_channels)
 
 [Back to top](#eeg-pipeline-using-eeglab)
 
-### B_downs_filter_chaninfo_exclchan
+### Bb_downs_filter_chaninfo_exclchan
 
 #### Downsampling
 
@@ -557,7 +561,10 @@ In this script each subject’s data gets loaded, externals get deleted
 and the data gets plotted in the EEGlab GUI. Make sure you always set
 the scale to the same number, since EEGLAB bases it on the noise level
 of the data. In the GUI set the scale to 5, so you can see if there are
-flat channels
+flat channels. **to clarify, this is not an optional script, the
+pipeline does not work without it. This is on purpose since looking at
+the data is a very (or maybe the most) important step in pre-processing
+the data.**
 
 (example)
 
@@ -674,6 +681,8 @@ interpolated. [See Makoto’s pipeline for more info, the previouse text
 is his
 explanation](https://sccn.ucsd.edu/wiki/Makoto's_preprocessing_pipeline#Interpolate_all_the_removed_channels_.2803.2F05.2F2021_updated.29)
 
+[Back to top](#eeg-pipeline-using-eeglab)
+
 ### PCA
 
 The PCA is set to the amount of channels deleted -1 (for the average
@@ -686,12 +695,16 @@ issue. Another solution is to delete a channel (after the average ref).
 But this would still not solve the issue for the interpolated channels +
 we would lose a good channel.
 
+[Back to top](#eeg-pipeline-using-eeglab)
+
 ### ICA
 
 We are using the pop_runica function, as suggested by EEGLab, but there
 are other options that might be quicker (this might, however, come at a
 cost). We do an ICA mainly to delete artifacts that are repeated, such
 as eye blinks, eye movement, muscle movement and electrical noise.
+
+[Back to top](#eeg-pipeline-using-eeglab)
 
 ### IClabel
 
@@ -725,6 +738,8 @@ These you can change if you want to change settings
 EEG = pop_runica(EEG, 'extended',1,'interupt','on'); % you can choose a different ICA function, or command it out if you don't want to use it (you will also need to command out the IClable part)
 bad_components = find(ICA_components(:,3)>0.80 & ICA_components(:,1)<0.05);% look for >80% eye and <5% brain
 ```
+
+[Back to top](#eeg-pipeline-using-eeglab)
 
 #### Impact of ICA on simple ERPs
 
@@ -799,7 +814,9 @@ The first plot is the ERP after a Hit. The second one is after a False
 alarm. It is clear that the amplitudes increase significantly, however
 it does seem like the standard error also increases.
 
-### F_epoching
+[Back to top](#eeg-pipeline-using-eeglab)
+
+### E_epoching
 
 This is the last file for pre-processing the data. In this script the
 interpolated data get epoched, cleaned, and transformed into an ERP.
@@ -838,10 +855,12 @@ participant’s ID number and the percentage of data that got deleted.
 
 You can choose to use the pop_binlister function (see line 35).
 
-If you end up wanting Reaction time for the ERPs, consider including the
+~~If you end up wanting Reaction time for the ERPs, consider including
+the
 [pop_rt2text](https://github.com/lucklab/erplab/blob/master/pop_functions/pop_rt2text.m)
 function. For this to work you need to define the event that reflects
-the reaction you want to measure in the eventlist.
+the reaction you want to measure in the eventlist.~~ We created a
+different script for this
 
 These are the variables you NEED to change:
 
@@ -863,12 +882,45 @@ EEG = pop_interp(EEG, ALLEEG(1).chanlocs, 'spherical');%
 
 [Back to top](#eeg-pipeline-using-eeglab)
 
-### F_individual_trials_export
+### F_RT
+
+This script continues where the previouse one left in case you want
+reaction times. We adds all the RTs together in an excel file and a
+matlab file. This file Contains 4 columns with the
+IDs,group,Condition,RTs of each particpant. The script requires that the
+.erp file has been created using a binlist that stores reaction times.
+
+[Back to top](#eeg-pipeline-using-eeglab)
+
+## Visualizing
+
+The next 2 script focus on visualizing the final data. Both on a group
+level and on a individual level. We will focus on quality and ERPs.
+
+[Back to top](#eeg-pipeline-using-eeglab)
+
+### G_building_dashboard_group
+
+This is running tested and gives you a nice quality focused dashboard
+(PDF.) per participant and on a group level Will add more info later.
+
+[Back to top](#eeg-pipeline-using-eeglab)
+
+### H_grandmeans
+
+Here you can plot grandmeans and modify how you want to look at your
+data, which channels you want to see etc. Will add more info later.
+
+[Back to top](#eeg-pipeline-using-eeglab)
+
+### I_individual_trials_export
 
 If you want to do stats in R or any program that doesn’t read .mat
 files, you need to export your data. This happens in the F script. [For
 detailed info see its own
 repo](https://github.com/DouweHorsthuis/trial_by_trial_data_export_eeglab).
+
+[Back to top](#eeg-pipeline-using-eeglab)
 
 ## Statistics
 
