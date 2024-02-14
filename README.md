@@ -1,7 +1,7 @@
 EEG pipeline
 ================
 Douwe John Horsthuis
-2022-12-20
+2024-02-14
 
 [![Contributors](https://img.shields.io/github/contributors/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=plastic)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/graphs/contributors)
 [![Forks](https://img.shields.io/github/forks/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R.svg?style=plastic)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/network/members)
@@ -31,29 +31,31 @@ while they are doing a go-no-go task.
 <douwehorsthuis@gmail.com>**
 
 1.  [About the project](#about-the-project)
-    -   [Built With](#built-with)
-    -   [Publications](#used-for)
+    - [Built With](#built-with)
+    - [Visual representation of the
+      pipeline](#visual-representation-of-the-pipeline)
+    - [Publications](#used-for)
 2.  [Getting started](#getting-started)
-    -   [Prerequisites](#prerequisites)
-    -   [Installation](#installation)
-    -   [Usage](#usage)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+    - [Usage](#usage)
 3.  [Pipeline order](#pipeline-order)
 4.  [Pipeline extended](#pipeline-extended)
-    -   [Pre-processing](#pre-processing)
-        -   [A_merge_sets(Matlab)](#a_merge_sets)
-        -   [cleaning_optional](#cleaning_optional)
-        -   [B_downs_filter_chaninfo_exclchan(Matlab)](#b_downs_filter_chaninfo_exclchan)
-            -   [Filtering](#filtering)
-        -   [C_manual_check(Matlab)](#c_manual_check)
-        -   [D_reref_exclextrn_interp_avgref_ica_autoexcom(Matlab)](#d_reref_exclextrn_interp_avgref_ica_autoexcom)
-        -   [F_epoching(Matlab)](#f_epoching)
-    -   [exporting](#exporting)
-        -   [F_individual_trials_export(Matlab)](#f_individual_trials_export)
-    -   [Statistics](#statistics)
-        -   [Loading and setting up the
-            structure(Rstudio)](#loading-and-setting-up-the-structure)
-        -   [Statistics (including mixed-effects
-            models)(Rstudio)](#statistics-including-mixed-effects-models)
+    - [Pre-processing](#pre-processing)
+      - [A_merge_sets(Matlab)](#a_merge_sets)
+      - [cleaning_optional](#cleaning_optional)
+      - [B_downs_filter_chaninfo_exclchan(Matlab)](#b_downs_filter_chaninfo_exclchan)
+        - [Filtering](#filtering)
+      - [C_manual_check(Matlab)](#c_manual_check)
+      - [D_reref_exclextrn_interp_avgref_ica_autoexcom(Matlab)](#d_reref_exclextrn_interp_avgref_ica_autoexcom)
+      - [F_epoching(Matlab)](#f_epoching)
+    - [exporting](#exporting)
+      - [F_individual_trials_export(Matlab)](#f_individual_trials_export)
+    - [Statistics](#statistics)
+      - [Loading and setting up the
+        structure(Rstudio)](#loading-and-setting-up-the-structure)
+      - [Statistics (including mixed-effects
+        models)(Rstudio)](#statistics-including-mixed-effects-models)
 5.  [Contributing](#contributing)
 6.  [Updates](#updates)
 7.  [License](#license)
@@ -71,12 +73,21 @@ changeable, but are pre-tested and worked for multiple publications.
 
 ### Built With
 
--   [Matlab](https://www.mathworks.com/)
--   [EEGlab](https://sccn.ucsd.edu/eeglab/index.php)
--   [ERPlab](https://github.com/lucklab/erplab) (EEGlab plugin)
--   [Rstudio](https://www.rstudio.com/)
+- [Matlab](https://www.mathworks.com/)
+- [EEGlab](https://sccn.ucsd.edu/eeglab/index.php)
+- [ERPlab](https://github.com/lucklab/erplab) (EEGlab plugin)
+- [Rstudio](https://www.rstudio.com/)
 
 [Back to top](#eeg-pipeline-using-eeglab)
+
+### Visual representation of the pipeline
+
+<figure>
+<img
+src="https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/Procesflow.png"
+alt="cleaning data" />
+<figcaption aria-hidden="true">cleaning data</figcaption>
+</figure>
 
 ### Publications
 
@@ -203,18 +214,44 @@ Normally everyone does the same amount of blocks so this would be the
 same for everyone, but if not, you need to run that participant
 separately.
 
-We used to re-reference the data here (to the mastoids most of the
-time), but after realizing that it’s impossible to spot flat channels
-after this we pushed this to later in the script.
+**It is critical that you know what files you load**, this means that
+it’s probably a good idea to first read the readme files or other
+information you have of each participant. This is the place where
+everything becomes one big file, so it is significantly more difficult
+to get rid of data that shouldn’t be used to begin with.
+
+You can optionally choose to pause after reading in the first file if
+it’s uncommon that there are multiple files. This will cause a pause in
+reading in the following file, to give you time to figure it out. After
+that hit a key while selecting the Matlab command console should
+continue everything.
+
+**Optional files:**
+
+1.  Highly recommended to load readme files. In our lab we used to
+    format these in a standard way, which allows us to read them here
+    and add them to the EEG files. This is excelent for quality control.
+    Which we will do by building dashboards per participant.
+
+2.  EDF files, or eyetracking files. The script comes with a function
+    that will create an average gaze map per participant, combing all
+    EDF files it can find in the participant folder. These become PNG
+    files. They can be used for the dashboard, or simply visually
+    inspected to see if the participant was looking where they should.
+
+*Note: we used to re-reference the data here (to the mastoids most of
+the time), but after realizing that it’s impossible to spot flat
+channels after this we pushed this to later in the script.*
 
 These are the variables to change:
 
 ``` matlab
-subject_list = {'some sort of ID' 'a different id for a different particpant'}; 
-filename= 'the_rest_of_the_file_name';  
-home_path  = 'path_where_to_load_in_pc'; 
-save_path  = 'path_where_to_save_in_pc'; 
-blocks = 5; 
+subject_list = {'Participant_1_ID' 'Participant_2_ID'};
+home_path    = 'C:\Users\whereisyourdata\'; 
+save_path    = 'D:\wheretosaveyourdatat\';  
+readme_file  ='yes or no'; 
+eye_tracking ='yes or no';
+Pausing_yn='yes or no';
 ```
 
 **Special note for `save_path`; If you set this to a general folder,
@@ -261,10 +298,9 @@ rejection “saves” us 36 participants. While this obviously comes at a
 cost related to cleanliness of the data, visualizing this might make the
 decision worth it.  
 ![cleaning
-data](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_optional.png?raw=true)  
+data](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_optional.PNG)  
 ![Cleaning
-channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_Channels.png?raw=true)
-
+channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/cleaning_Channels.PNG)
 
 \*\*For more information on the `pop_clean_rawdata` function see [their
 github](https://github.com/sccn/clean_rawdata) or read more [in this
@@ -327,17 +363,16 @@ are only use the parts of the function that focus on channel deletion.
 
 We delete a channel if
 
--   It’s more than 5 seconds flat
--   there is high frequency noise than is bigger 4 standard
-    deviantionsof the rest of the signal
--   if there is a minimal acceptable correlation with the nearby
-    channels of 0.8
--   **If** you set `clean_data ={'y'}` data gets segmented in 0.5 second
-    blocks and if the noise exceeds a set threshold these blocks are
-    deleted.
-    -   This threshold is currently set to 5 standard deviations, but
-        this will need to be adjusted depending on how clean the data
-        is.
+- It’s more than 5 seconds flat
+- there is high frequency noise than is bigger 4 standard deviantionsof
+  the rest of the signal
+- if there is a minimal acceptable correlation with the nearby channels
+  of 0.8
+- **If** you set `clean_data ={'y'}` data gets segmented in 0.5 second
+  blocks and if the noise exceeds a set threshold these blocks are
+  deleted.
+  - This threshold is currently set to 5 standard deviations, but this
+    will need to be adjusted depending on how clean the data is.
 
 1.  It’s worth it to note that when we epoch the data, we reject noisy
     epochs, so this also takes care of noisy moments.
@@ -418,11 +453,8 @@ figure 2. hit “ok”
 figure 3.
 
 This shows up in Matlab. Replace the filter number with the number 1.
-followed by the number “preforming
-
-![number](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;number "number")
-
-point high-pass filter” -1 as the filter order.
+followed by the number “preforming $$number$$ point high-pass filter” -1
+as the filter order.
 
 ``` matlab
 EEG = pop_eegfiltnew(EEG, 'locutoff',1);
@@ -455,7 +487,8 @@ We usually use a low-pass filter to get rid of high frequency noise that
 cannot be caused by the brain. By using a 45Hz filter this can be
 solved.Unless you are interested in specific frequencies that go above
 40Hz it’s normally safe to use it. This is what the filter will do to
-data:  
+<a href="%5Bdata:%5D(data:)%7B.uri%7D"
+class="uri">[data:\\](data:){.uri}</a>
 ![45hzfilter](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/filtering/Hit-Po7-downs-45hz.jpg "45Hz")  
 The black line is down-sampled like the Red line + a 45Hz filter is ran
 on it. If you look at the zoomed in parts it is clear the this smooths
@@ -534,15 +567,23 @@ After that Change the scale to 50 (this value will be automatically set
 and different for each data set). It is important to always set it to
 the same scale, so that you can compare noise between data sets.
 
-![Noisy
-channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/very%20noisy.PNG "noisy channel")
+<figure>
+<img
+src="https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/very%20noisy.PNG"
+title="noisy channel" alt="Noisy channels" />
+<figcaption aria-hidden="true">Noisy channels</figcaption>
+</figure>
 
 When looking at 160 channel data, be sure to check in settings how many
 channels you want to see. Because it is clear that there are bad
 channels, but their label is hard to spot.
 
-![160
-channels](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/160-badchan.PNG "160 noisy channel")
+<figure>
+<img
+src="https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/160-badchan.PNG"
+title="160 noisy channel" alt="160 channels" />
+<figcaption aria-hidden="true">160 channels</figcaption>
+</figure>
 
 After figuring out which channels to delete, type their labels in the
 command window of Matlab. They need to be entered in the following
@@ -702,16 +743,15 @@ objective [IClabel](https://github.com/sccn/ICLabel) function in EEGlab
 To make more sense of the impact of deleting components I’ve plotted 4
 different ERPs.
 
--   For the first ERP I deleted for each participant every component if
-    the labels\* of the sum of bad\*\* components \>90 and the brain
-    label \<3%\*\*\*
--   For the second ERP I only deleted a component if the eye label would
-    be \>80% and the brain label \<5%
--   For the third ERP I deleted for each participant every component if
-    the labels of the sum of bad components \>80 and the brain label
-    \<5%
--   For the fourth ERP I did not delete any component, this is the ERP
-    before IClabel is ran.
+- For the first ERP I deleted for each participant every component if
+  the labels\* of the sum of bad\*\* components \>90 and the brain label
+  \<3%\*\*\*
+- For the second ERP I only deleted a component if the eye label would
+  be \>80% and the brain label \<5%
+- For the third ERP I deleted for each participant every component if
+  the labels of the sum of bad components \>80 and the brain label \<5%
+- For the fourth ERP I did not delete any component, this is the ERP
+  before IClabel is ran.
 
 The first plot is an VEP directly after seeing a stimulus  
 ![ERP-ICA-vs-no-ICA-hit](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/iclabledifferences_hit.jpg)  
@@ -720,10 +760,7 @@ were supposed to inhibit)
 ![ERP-ICA-vs-no-ICA-fa](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/blob/main/images/iclabledifferences_fa.jpg)
 
 \* IClabel labels for each component how much % they are made up out of
-
-![Brain, muscle, eye, Heart, Line Noise, channel noise and other](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;Brain%2C%20muscle%2C%20eye%2C%20Heart%2C%20Line%20Noise%2C%20channel%20noise%20and%20other "Brain, muscle, eye, Heart, Line Noise, channel noise and other")
-
-  
+$$Brain, muscle, eye, Heart, Line Noise, channel noise and other$$  
 \*\* We only use a sum of muscle, eye, Heart, Line Noise, channel noise
 to create bad components  
 \*\*\* every label will always have something above 0%, this is why I
@@ -910,11 +947,10 @@ Project Link:
 
 ## Acknowledgements
 
--   [Ana Francisco](https://github.com/anafrancisco) Who created the
-    basis for this pipeline and took the time to explain everything in
-    detail.
--   [Filip De Sanctis](https://github.com/pdesanctis)
--   [Sophie
-    Molholm](https://www.einsteinmed.edu/faculty/12028/sophie-molholm/)
+- [Ana Francisco](https://github.com/anafrancisco) Who created the basis
+  for this pipeline and took the time to explain everything in detail.
+- [Filip De Sanctis](https://github.com/pdesanctis)
+- [Sophie
+  Molholm](https://www.einsteinmed.edu/faculty/12028/sophie-molholm/)
 
 [Back to top](#eeg-pipeline-using-eeglab)
