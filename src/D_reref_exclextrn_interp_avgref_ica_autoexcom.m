@@ -8,9 +8,9 @@
 % ------------------------------------------------
 clear variables
 eeglab
-%% Subject info for each script
-subject_list = {'ID_1' 'ID_2'};
-home_path    = 'D:\whereisthedata\'; %place data is (something like 'C:\data\')
+% This defines the set of subjects
+subject_list = {'Participant_1_ID' 'Participant_2_ID'};
+home_path    = 'C:\Users\whereisyourdata\'; %place data is (something like 'C:\data\')
 %% info needed for this script specific
 refchan = { }; %if you want to re-ref to a channel add the name of the channel here, if empty won't re-ref to any specific channel (for example {'EXG3' 'EXG4'} or {'Cz'})
 only_eye_ic='No'; %'yes' or 'no' : if you want to delete only eye components 'yes' if you want more 'no' see line 73 for more info
@@ -95,11 +95,11 @@ for s=1:length(subject_list)
     print([data_path subject_list{s} '_remaining_ICs_topos'], '-dpng' ,'-r300');
     close all
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_excom.set'],'filepath', data_path);%save
-    %this part saves all the bad channels + ID numbers
-    lables_del = setdiff(labels_all,labels_good); %only stores the deleted channels
-    All_bad_chan               = strjoin(lables_del); %puts them in one string rather than individual strings
-    ID                         = string(subject_list{s});%keeps all the IDs
-    data_subj                  = [ID, All_bad_chan]; %combines IDs and Bad channels
-    participant_badchan(s,:)     = data_subj;%combine new data with old data
+%     %this part saves all the bad channels + ID numbers
+%     lables_del = setdiff(labels_all,labels_good); %only stores the deleted channels
+%     All_bad_chan               = strjoin(lables_del); %puts them in one string rather than individual strings
+%     ID                         = string(subject_list{s});%keeps all the IDs
+%     data_subj                  = [ID, All_bad_chan]; %combines IDs and Bad channels
+%     participant_badchan(s,:)     = data_subj;%combine new data with old data
 end
-save([home_path 'participant_badchan'], 'participant_badchan');
+%save([home_path 'participant_badchan'], 'participant_badchan');

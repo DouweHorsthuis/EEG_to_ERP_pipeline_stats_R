@@ -1,7 +1,14 @@
+% This is optional, because this will check how high/low are the ideal
+% settings for your data set to clean as much as needed but also to not
+% delete too much data. You can opt for the standard settings. This takes a
+% while to run. 
+% Created by Douwe Horsthuis last update 2/14/2024
+% ------------------------------------------------
 clear variables
 eeglab
-subject_list = {'ID_1' 'ID_2'};
-home_path    = 'D:\whereisthedata\'; %place data is (something like 'C:\data\')
+% This defines the set of subjects
+subject_list = {'Participant_1_ID' 'Participant_2_ID'};
+home_path    = 'C:\Users\whereisyourdata\'; %place data is (something like 'C:\data\')
 %% Settings for the script 
 Burst_criteria=0.70:0.05:0.80;%start point, step size, end point
 Channel_criteria=20:5:50;%start point, step size, end point
@@ -75,35 +82,6 @@ for i=2:3:size(quality,2)
     end
     del_data(i)=too_much_cont_data_del;del_data(i+1)=too_much_chan_del;del_data(i+2)= bad_part;
 end
-
-
-% %channel vs burst 
-% figure('units','normalized','outerposition',[0 0 1 1])
-% fig=tiledlayout(4,4);
-% first=2; second=23; third=44;
-% for i = 20:5:50 % 7 thresholds
-%     nexttile
-%     boxplot(quality(:,[first,second,third]))
-%     ylim([0 101])
-%     title(['BurstCriterion @ ' num2str(i)])
-%     xlabel('channel criteria')
-%     ylabel('% deleted data')
-%     xticklabels({'0.70', '0.75','0.80'})
-%     nexttile
-%     b=bar(del_data(1,first:first+2));
-%     xtips1 = b(1).XEndPoints;
-%     ytips1 = b(1).YEndPoints;
-%     labels1 = string(b(1).YData);
-%     text(xtips1,ytips1,labels1,'HorizontalAlignment','center',...
-%         'VerticalAlignment','bottom')
-%     xticklabels({'>30% data deleted', '>10% chan deleted','Both too much'})
-%     ylim([0 max(ytips1)*1.2]) %giving some space for the biggest number to fit
-%     first=first+3; second=second+3; third=third+3;
-% end
-% 
-% title(fig,'Channel criteria vs burstcriteria')
-% print([home_path 'cleaning - Deleted continues data vs channel criteria'], '-dpng' ,'-r300');
-% close all
 
 %burst vs channel
 figure('units','normalized','outerposition',[0 0 1 1])
@@ -180,24 +158,6 @@ leg.Layout.Tile = 16;
 title(fig3,'Deleted channels vs channel threshold')
 print([home_path 'cleaning - Channels'], '-dpng' ,'-r300');
 close all
-
-% %burst vs channel
-% figure('units','normalized','outerposition',[0 0 1 1])
-% fig4=tiledlayout(3,1);
-% first=4; sec=7; thrd=10;fourth=13; fifth=16; sixth=19; seventh=22;
-% for i=0.70:0.05:0.80 % this is the same as the channel criteria
-%     nexttile
-%     boxplot(quality(:,[first,sec,thrd,fourth,fifth, sixth,seventh]))
-%     ylim([0 20])
-%     title(['Channel crit @ ' num2str(i)])
-%     xticklabels({'20', '25','30','35','40','45','50'})
-%     xlabel('Burst criteria')
-%     ylabel('N deleted channels')
-%     first=first+21; sec=sec+21; thrd=thrd+21; fourth=fourth+21; fifth=fifth+21; sixth=sixth+21; seventh=seventh+21;
-% end
-% title(fig4,'Deleted channels VS Burstcriteria')
-% print([home_path 'cleaning - Chns vs Burstcriteria'], '-dpng' ,'-r300');
-% close all
 
 
 

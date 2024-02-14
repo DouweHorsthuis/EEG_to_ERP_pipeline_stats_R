@@ -1,18 +1,18 @@
 % Combination of EEGLAB downsample and filter, and reject channel script by Ana on 2017-07-11
-% Combined and updated by Douwe Horsthuis last update 11/5/2021
+% Combined and updated by Douwe Horsthuis last update 2-14-2024
 % ------------------------------------------------
 clear variables
 eeglab
 % This defines the set of subjects
-subject_list = {'6209' '6239' '8103' '8110' '8110-01' '8113' '8117' '8119' '8121' '8121-01' '8128' '8128-01'}; %all the IDs for the indivual particpants
-home_path    = 'C:\Users\dohorsth\Desktop\cued-boss\'; %place data is (something like 'C:\data\')
+subject_list = {'Participant_1_ID' 'Participant_2_ID'};
+home_path    = 'C:\Users\whereisyourdata\'; %place data is (something like 'C:\data\')
 downsample_to=256; % what is the sample rate you want to downsample to
 lowpass_filter_hz=45; %45hz filter
 highpass_filter_hz=1; %1hz filter
 avg_deleted_data=zeros(1, length(subject_list));
-clean_data={'y'}; % if 'y' not only channels but also noisy moments in thedata get cleaned
+clean_data={'no'}; % if 'y' not only channels but also noisy moments in thedata get cleaned
 individual_plots='yes';
-if strcmpi(individual_plots,'yes')% if yes we need to add the functions to the file path
+if strcmpi(individual_plots,'yes')% if yes we need to add the functions to the file path this is quite aggresive at times
 file_loc=[fileparts(matlab.desktop.editor.getActiveFilename),filesep];
 addpath(genpath(file_loc));%adding path to your scripts so that the functions are found
 end
@@ -32,14 +32,17 @@ for s=1:length(subject_list)
     EEG = eeg_checkset( EEG );
     %filtering
     EEG.filter=table(lowpass_filter_hz,highpass_filter_hz); %adding it to subject EEG file
+    %highpass filter
     EEG = pop_eegfiltnew(EEG, 'locutoff',highpass_filter_hz);
     EEG = eeg_checkset( EEG );
+    %lowpass filter
     EEG = pop_eegfiltnew(EEG, 'hicutoff',lowpass_filter_hz);
     EEG = eeg_checkset( EEG );
     close all
     EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_downft.set'],'filepath', data_path);
-
+    %saving total amount of channels before cleaning
     EEG.old_n_chan = EEG.nbchan;
+    %saving total amount of samples before cleaning
     old_samples=EEG.pnts;
     %adding channel location
     if EEG.nbchan >63 && EEG.nbchan < 95 %64chan cap (can be a lot of externals, this makes sure that it includes a everything that is under 96 channels, which could be an extra ribbon)
@@ -51,9 +54,8 @@ for s=1:length(subject_list)
         end
         close all
         %deleting bad channels
-        %EEG = pop_rejchan(EEG,'elec', [1:64],'threshold',5,'norm','on','measure','kurt');
         EEG = pop_select( EEG, 'nochannel',{'EXG1','EXG2','EXG3','EXG4','EXG5','EXG6','EXG7','EXG8'});
-        if strcmp(clean_data, 'y')
+        if strcmpi(clean_data, 'yes')
             EEG = pop_clean_rawdata(EEG, 'FlatlineCriterion',5,'ChannelCriterion',0.8,'LineNoiseCriterion',4,'Highpass','off','BurstCriterion',35,'WindowCriterion','off','BurstRejection','on','Distance','Euclidian'); % deletes bad chns and bad periods
         else
             EEG = pop_clean_rawdata(EEG, 'FlatlineCriterion',5,'ChannelCriterion',0.8,'LineNoiseCriterion',4,'Highpass','off','BurstCriterion','off','WindowCriterion','off','BurstRejection','on','Distance','Euclidian'); % deletes bad chns and bad periods
@@ -65,7 +67,7 @@ for s=1:length(subject_list)
         %deleting bad channels
         %EEG = pop_rejchan(EEG,'elec', [1:160],'threshold',5,'norm','on','measure','kurt');
         EEG = pop_select( EEG, 'nochannel',{'EXG1','EXG2','EXG3','EXG4','EXG5','EXG6','EXG7','EXG8'});
-        if strcmp(clean_data, 'y')
+        if strcmpi(clean_data, 'yes')
             EEG = pop_clean_rawdata(EEG, 'FlatlineCriterion',5,'ChannelCriterion',0.8,'LineNoiseCriterion',4,'Highpass','off','BurstCriterion',5,'WindowCriterion','off','BurstRejection','on','Distance','Euclidian'); % deletes bad chns and bad periods
         else
             EEG = pop_clean_rawdata(EEG, 'FlatlineCriterion',5,'ChannelCriterion',0.8,'LineNoiseCriterion',4,'Highpass','off','BurstCriterion','off','WindowCriterion','off','BurstRejection','on','Distance','Euclidian'); % deletes bad chns and bad periods
