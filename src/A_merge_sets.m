@@ -2,8 +2,8 @@
 % by Douwe Horsthuis updated on 2/14/2024
 % ------------------------------------------------
 subject_list = {'Participant_1_ID' 'Participant_2_ID'};
-home_path    = 'C:\Users\whereisyourdata\'; %place data is (something like 'C:\data\')
-save_path    = 'D:\wheretosaveyourdatat\'; %only for the first script, in case you load your data from somewhere special but want to save it somewhere else
+home_path    = 'C:\Users\whereisyourdata\'; %this will be teh homepath where the data will be stored and this will be used in each script onwards
+home_path_bdf    = 'D:\wheretosaveyourdatat\'; %only for the first script, in case you load your data from somewhere special but want to save it somewhere else
 readme_file  ='yes';%'yes' or 'no', if yes using [EEG]= readme_to_EEG(EEG, data_path) to read  readme file
 eye_tracking ='no';%'yes' or 'no', if yes using edf_to_figure(data_path)to create a figure with avg gaze
 Pausing_yn='no';%'yes' or 'no'; if you want to first only run people with one block, which is how data is usually collected in our lab, it'll pause if it finds more files
@@ -17,7 +17,7 @@ for s = 1:length(subject_list)
     eeglab
     close all
     data_path  = [home_path subject_list{s} '\'];
-    save_path_indv=[save_path subject_list{s} '\'];
+    save_path_indv=[home_path_bdf subject_list{s} '\'];
     %% loading particpant bdf files.
     %if participants have only 1 block, load only this one file
     filename_quick=dir([data_path '/*.BDF']);
