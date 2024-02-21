@@ -40,37 +40,6 @@ for gr=1:length(Group_list)
         % Load original dataset
         fprintf('\n\n\n**** %s: Loading dataset ****\n\n\n', subject_list{s});
         EEG = pop_loadset('filename', [subject_list{s} '_excom.set'], 'filepath', data_path);
-        %wrong triggers and stuff.
-        wrong_trigger='no';
-        for i = 1:30 %checking the first 30 triggers, to make sure we don't check boundries and other things only by mistake
-            if contains(EEG.event(i).type, 'boundary') %skipping the boundary events
-                continue
-            elseif str2double(EEG.event(i).type) > 1000  %there are triggers with 63488 added to them
-                wrong_trigger='yes';
-
-            end
-        end
-        if strcmp(wrong_trigger,'yes') %there are wrong triggers
-            for i=1:length(EEG.event) %go over all the events
-                if contains(EEG.event(i).type, 'boundary') %skipping the boundary events
-                    continue
-                else
-                    EEG.event(i).type = num2str(str2double(EEG.event(i).type)-63488); %subtrackt the number that has been added by mistake
-                end
-            end
-        else
-
-            for i =1:length(EEG.event)%something odd, where eeg.event is irregular
-                if contains(EEG.event(i).type, 'boundary') %skipping the boundary events
-                    continue
-                elseif ~isempty(EEG.event(i).edftype)
-                    EEG.event(i).type = char(num2str(EEG.event(i).edftype)); %making sure that the edf are fixed first
-                else
-                    new=EEG.event(i).type;
-                    EEG.event(i).edftype=str2double(new); %fixing edftype
-                end
-            end
-        end
         %epoching
         EEG = eeg_checkset( EEG );
         EEG  = pop_creabasiceventlist( EEG , 'AlphanumericCleaning', 'on', 'BoundaryNumeric', { -99 }, 'BoundaryString', { 'boundary' } );
@@ -94,7 +63,7 @@ for gr=1:length(Group_list)
         end
     end
     participant_info_temp(:,2)=Group_list{gr};
-    colNames                   = [{'ID','Group','% auto deleted', 'Length dataset (sec)', 'Deleted channels', '%data deleted ERP'} ERP.bindescr, {'misses'}]; %adding names for columns [ERP.bindescr] adds all the name of the bins
+    colNames                   = [{'ID','Group','% auto deleted', 'Length dataset (sec)', 'Deleted channels', '%data deleted ERP'} ERP.bindescr]; %adding names for columns [ERP.bindescr] adds all the name of the bins
     participant_info = array2table( participant_info_temp,'VariableNames',colNames); %creating table with column names
     save([home_path 'participant_info_' Group_list{gr}], 'participant_info', 'quality');
 end
