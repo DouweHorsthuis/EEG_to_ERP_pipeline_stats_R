@@ -69,6 +69,26 @@ changeable, but are pre-tested and worked for multiple publications.
 
 The following are the papers that we published using this pipeline.
 
+[Horsthuis, D. J., Molholm, S.,Foxe, J. J., & Francisco, A. A.(2023)
+Event-related potential (ERP) evidence for visual processing differences
+in children and adults with cystinosis (CTNS gene mutations)Orphanet
+Journal of Rare Diseases 18 (1),
+389](https://link.springer.com/article/10.1186/s13023-023-02985-y)
+
+[Francisco, A. A., Foxe, J. J., Horsthuis, D. J., & Molholm, S. (2022).
+Early visual processing and adaptation as markers of disease, not
+vulnerability: EEG evidence from 22q11.2 deletion syndrome, a population
+at high risk for schizophrenia. Schizophr 8,
+28.](https://www.nature.com/articles/s41537-022-00240-0)
+
+[Francisco, A. A., Berruti, A. S., Kaskel, F. J., Foxe, J. J., &
+Molholm, S. (2021). Assessing the integrity of auditory processing and
+sensory memory in adults with cystinosis (CTNS gene mutations). Orphanet
+Journal of Rare Diseases, 16(1),
+1-10.](https://link.springer.com/article/10.1186/s13023-021-01818-0)
+(unique settings: re-referenced to TP8 and epochs are −100 to 400ms
+using a baseline of −50 to 0ms.)
+
 [Francisco, A. A., Foxe, J. J., Horsthuis, D. J., DeMaio, D., & Molholm,
 S. (2020). Assessing auditory processing endophenotypes associated with
 Schizophrenia in individuals with 22q11. 2 deletion syndrome.
@@ -93,16 +113,6 @@ negativity (MMN). NeuroImage: Clinical, 25,
 102170.](https://www.sciencedirect.com/science/article/pii/S2213158220300097)
 (unique settings: re-referenced to TP8 and epochs are −100ms to 400ms
 using a baseline of −100ms to 0ms)
-
-[Francisco, A. A., Berruti, A. S., Kaskel, F. J., Foxe, J. J., &
-Molholm, S. (2021). Assessing the integrity of auditory processing and
-sensory memory in adults with cystinosis (CTNS gene mutations). Orphanet
-Journal of Rare Diseases, 16(1),
-1-10.](https://link.springer.com/article/10.1186/s13023-021-01818-0)
-(unique settings: re-referenced to TP8 and epochs are −100 to 400ms
-using a baseline of −50 to 0ms.)
-
-**This list is not complete**
 
 [Back to top](#eeg-pipeline-using-eeglab)
 
