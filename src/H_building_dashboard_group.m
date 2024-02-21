@@ -4,7 +4,7 @@
 % it wil then proceed to create one on a group level
 clear all
 home_path    = 'C:\Users\douwe\Desktop\processed\'; %place data is (something like 'C:\data\')
-Group_list={'adult_controls'};
+Group_list={'controls'};
 %if the Eye tracking (ET) files were not saved as PGN add here the path to
 %the edf files:
 edf_path = 'C:\Users\douwe\Desktop\DATA\' ;
@@ -12,7 +12,7 @@ task_name = 'SWAT';
 for gr=1:length(Group_list)
     if strcmpi(Group_list{gr},'cystinosis' )
         subject_list = { '9182' '9182' '9109'};
-    elseif strcmpi(Group_list{gr},'adult_controls')
+    elseif strcmpi(Group_list{gr},'controls')
         subject_list = {'12709' '12091'  '12883'};
     elseif strcmpi(Group_list{gr},'grn')
         subject_list = {'id_1' 'id_2'};
@@ -203,5 +203,6 @@ for gr=1:length(Group_list)
     sgtitle(['Quality of the ' full_group_name ' group data while doing the ' task_name ' task']);
     set(gcf, 'PaperSize', [16 10]);
     print(fig,[home_path Group_list{gr} '_data_quality'],'-dpdf') % then print it
-    print(fig,['D:\cystinosis\Flanker\Quality Check\' Group_list{gr} '_data_quality'], '-dpdf');
+    print(fig,['C:\Users\douwe\Desktop\processed_new\' Group_list{gr} '_data_quality'], '-dpdf');
+    close all
 end
