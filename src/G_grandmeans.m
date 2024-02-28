@@ -12,7 +12,7 @@ plot_tiles = [N_horizontal_figs N_vertical_figs]; %tiles in the end figures
 GRERP=[];% need to be cleared like this for the avg erps to be kept somewhere
 Plot_binsgr={};%needs to be empty
 %% Subject info for each script
-Group_list={'cystinosis' 'Controls'};
+Group_list={'Name_grp1' 'Name_grp2'};
 for gr=1:length(Group_list)
     if strcmpi(Group_list{gr},'Name_grp1')
         subject_list = {'ID_1' 'ID_2'};
