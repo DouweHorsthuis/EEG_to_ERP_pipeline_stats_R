@@ -5,7 +5,16 @@
 % stores reaction times
 clear variables
 eeglab
-Group_RT=[]; % is needed to store the data
+Group_RT=[]; % is needed to store the data of all the groups together
+
+%% info needed for this script specific
+%participant_info_temp = []; % needed for creating matrix at the end
+binlist_location = 'D:\whereisthebinlisttextfile\'; %binlist should be named binlist.txt
+binlist_name='binlist.txt';
+epoch_time = [startime endtime]; %time in ms e.g. [-50 100]
+baseline_time = [startbasline endbasline]; %time in ms e.g. [-50 0]
+n_bins=number;% enter here the number of bins in your binlist
+
 %add here all the names of your groups, this script can give you group plots
 Group_list={'Name_grp1' 'Name_grp2'};
 for gr=1:length(Group_list)
@@ -19,21 +28,44 @@ for gr=1:length(Group_list)
     end
     home_path    = 'D:\whereisthedata\'; %place data is (something like 'C:\data\')
     save_path = 'D:\wheretosavethedata\'; %where to save the participants excel files with RTs
-    %need to add the folder with the functions
+     %need to add the folder with the functions
     file_loc=[fileparts(matlab.desktop.editor.getActiveFilename),filesep];
     addpath(genpath(file_loc));%adding path to your scripts so that the functions are found
+    participant_info_temp = string(zeros(length(subject_list), 6+n_bins)); %prealocationg space for speed
+    load([home_path 'participant_info_' Group_list{gr} '.mat']);
     for s=1:length(subject_list)
         fprintf('\n******\nProcessing subject %s\n******\n\n', subject_list{s});
+        % Path to the folder containing the current subject's data
         data_path  = [home_path subject_list{s} '/'];
-        %loading the ERP from the Epoching script it NEEDs to have been
-        %created using a RT binlist, nothing else is extra needed
-        ERP = pop_loaderp( 'filename', [subject_list{s} '_.erp'], 'filepath', data_path );
-        %Using the standard RT function from ERPlab, saving both the excel
-        %file as using the variable RT to put it on a group level together
+        % Load original dataset
+        fprintf('\n\n\n**** %s: Loading dataset ****\n\n\n', subject_list{s});
+        EEG = pop_loadset('filename', [subject_list{s} '_excom.set'], 'filepath', data_path);
+        %% Doing the same as the Epoching script but now for the RT bins
+        %epoching
+        EEG = eeg_checkset( EEG );
+        EEG  = pop_creabasiceventlist( EEG , 'AlphanumericCleaning', 'on', 'BoundaryNumeric', { -99 }, 'BoundaryString', { 'boundary' } );
+        EEG = eeg_checkset( EEG );
+        EEG  = pop_binlister( EEG , 'BDF', [binlist_location binlist_name], 'IndexEL',  1, 'SendEL2', 'EEG', 'Voutput', 'EEG' );
+        EEG = eeg_checkset( EEG );
+        EEG = pop_epochbin( EEG , epoch_time,  baseline_time); %epoch size and baseline size
+        EEG = eeg_checkset( EEG );
+        %deleting bad epochs (need erplab plugin for this)
+        EEG= pop_artmwppth( EEG , 'Channel', 1:EEG.nbchan, 'Flag',  1, 'Threshold',  120, 'Twindow', epoch_time, 'Windowsize',  200, 'Windowstep',  200 );% to flag bad epochs
+        percent_deleted = (length(nonzeros(EEG.reject.rejmanual))/(length(EEG.reject.rejmanual)))*100; %looks for the length of all the epochs that should be deleted / length of all epochs * 100
+        EEG = pop_rejepoch( EEG, [EEG.reject.rejmanual] ,0);%this deletes the flaged epoches
+        %creating ERPS and saving files
+        ERP = pop_averager( EEG , 'Criterion', 1, 'DSindex',1, 'ExcludeBoundary', 'on', 'SEM', 'on' );
+        EEG = pop_saveset( EEG, 'filename',[subject_list{s} '_epoched_RT.set'],'filepath', data_path);
+        ERP = pop_savemyerp(ERP, 'erpname', [subject_list{s} '_RT.erp'], 'filename', [subject_list{s} '_RT.erp'], 'filepath', data_path); %saving a.ERP file
+        for i=1:size(quality,1)
+            if strcmpi(num2str(quality(i,1)),subject_list{s})
+                participant_info_temp(i,:)= [quality(i,:),percent_deleted, ERP.ntrials.accepted  ];
+            end
+        end
+        %% This is the reaction time part
         RT = pop_rt2text(ERP, 'eventlist',1, 'filename', [save_path subject_list{s} '_rt.xls'], 'header', 'on', 'listformat', 'basic' );
         %collect RT per bin
-
-        for b= 1:2:7 %we want to look at bin 1,3,5,7 - this should be automated
+        for b= 1:size(ERP.bindescr,2) %looking at all the bins (all should be RT bins)
             clear  RT_temp subject cond group; %completely get rid of these, they confuse the grouping process
             RT_temp(:,4)=num2cell(RT.EVENTLIST.bdf(b).rt) ; %this is the file that will dicate the length of all the other files. Is the all the RTs per bin as a row
             for q = 1:length(RT_temp) %adding the same variable for the lenght of the variable RT_temp
@@ -47,10 +79,12 @@ for gr=1:length(Group_list)
             Group_RT=[Group_RT;RT_temp];
         end
     end
-
-    filename_table = [home_path 'RTs.xlsx' ];
-    writecell(Group_RT, filename_table); %saving excel with everyones info
-    save([home_path 'participant_RT'], 'Group_RT'); %saving matlab file with everyones info
-
-
+    participant_info_temp(:,2)=Group_list{gr};
+    colNames                   = [{'ID','Group','% auto deleted', 'Length dataset (sec)', 'Deleted channels', '%data deleted ERP'} ERP.bindescr]; %adding names for columns [ERP.bindescr] adds all the name of the bins
+    participant_info = array2table( participant_info_temp,'VariableNames',colNames); %creating table with column names
+    save([home_path 'participant_info_' Group_list{gr} '_RT'], 'participant_info', 'quality');
 end
+filename_table = [home_path 'RTs.xlsx' ];
+writecell(Group_RT, filename_table); %saving excel with everyones info
+save([home_path 'participant_RT'], 'Group_RT'); %saving matlab file with everyones info
+
