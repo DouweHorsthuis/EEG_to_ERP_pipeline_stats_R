@@ -145,18 +145,24 @@ interpolate channels). For more in-dept explanations see [Pipeline
 extended](#pipeline-extended), or click on the step you want to know
 more about, and you will be send to the wiki page for more info.
 
-[merging and creating a set extention](#a_merge_sets)\
-[Cleaning Optional](#cleaning_optional) [Downsampling](#downsampling)\
-[Filtering](#filtering)\
-[Adding channel info](#adding_channel_info)\
-[Deleting channels automatic](#deleting_channels) & [Deleting channels
-manual](#c_manual_check)\
-[Interpolation](#interpolate)\
-[Average reference](#average_reference)\
-[PCA](#pca)\
-[ICA](#ica)\
-[Delete bad components IC](#iclabel) [re-referencing
-(optional)](#re-referencing) [Epoching](#f_epoching)
+[merging and creating a set extention](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/wiki/A_merge_sets)  
+[Cleaning Optional](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/wiki/Ba_cleaning_optional)  
+[Downsampling](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/wiki/Bb_downs_filter_chaninfo_exclchan#downsampling)  
+[Filtering general](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/wiki/Bb_downs_filter_chaninfo_exclchan#filtering)  
+[Filtering in dept](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/wiki/Bb_downs_filter_chaninfo_exclchan#more-info-on-filtering)  
+[Adding channel info](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/wiki/Bb_downs_filter_chaninfo_exclchan#adding-channel-info)  
+[Deleting channels automatic](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/wiki/Bb_downs_filter_chaninfo_exclchan#deleting-channels)  
+[Deleting channels manual](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/wiki/C_manual_check)  
+[Interpolation](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/wiki/D_reref_exclextrn_interp_avgref_ica_autoexcom#interpolate)  
+[Average reference](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/wiki/D_reref_exclextrn_interp_avgref_ica_autoexcom#average-reference)  
+[PCA](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/wiki/D_reref_exclextrn_interp_avgref_ica_autoexcom#pca)  
+[ICA](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/wiki/D_reref_exclextrn_interp_avgref_ica_autoexcom#ica)  
+[Delete bad components IC](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/wiki/D_reref_exclextrn_interp_avgref_ica_autoexcom#iclabel)  
+[re-referencing (optional)](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/wiki/D_reref_exclextrn_interp_avgref_ica_autoexcom#re-referencing)  
+[Epoching](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/wiki/E_epoching)  
+[Reaction time](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/wiki/F_RT)  
+[Grandmeans](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/wiki/G_grandmeans)  
+[Dashboards](https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R/wiki/H_building_dashboard_group)
 
 ## All explanations are in the process of being moved to the wiki page
 
