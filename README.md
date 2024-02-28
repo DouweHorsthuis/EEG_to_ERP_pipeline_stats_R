@@ -197,7 +197,10 @@ how your data look
 much data get’s deleted when you clean your data and what would be the
 best settings for your data. 2/14/2024 - major update to get everything
 smoothed out. All programs should run without issues. There is a
-visualisation step at the end. There is now a reaction time script.
+visualization step at the end. There is now a reaction time script.  
+2/28/2024 - major update where all the scripts are re-written in a way
+that they flawlessly should run together while being adaptable without
+having to change the underling code.
 
 [Back to top](#eeg-pipeline-using-eeglab)
 
