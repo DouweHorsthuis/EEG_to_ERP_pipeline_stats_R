@@ -14,7 +14,8 @@ authors:
   given-names: "Ana A"
   orcid: "https://orcid.org/0000-0003-4030-0297"
 title: "EEG_to_ERP_pipeline_stats_R"
-version: 2.02
-doi: 10.5281/zenodo.7388199
-date-released: 2021-10-20
+version: 2.2
+DOI: 10.5281/zenodo.10798894
+
+date-released: 2024-3-8
 url: "https://github.com/DouweHorsthuis/EEG_to_ERP_pipeline_stats_R"
