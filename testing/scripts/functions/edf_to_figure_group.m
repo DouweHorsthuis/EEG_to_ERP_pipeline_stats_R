@@ -1,7 +1,8 @@
-function [eyetrHeatMap] = edf_to_figure(data_path)
+function [eyetrHeatMap] = edf_to_figure_group(data_path,id)
 %% edf_to_figure is a combination of functions from @EDF2Mat.
 % Edf2Mat is created by 'Adrian Etter, Marc Biedermann'
 % edf_to_figure is created by Douwe John Horsthuis (2022)
+% this is the followup where it combines the eyetracking of a group
 % This function generates one figure with the heatmap of the gaze positions of all the data.
 % It needs the data_path (where the .EDF files are of each participant)
 % It needs the screen ratio of the screen the partiicpant was looking e.g. [16:10]
@@ -10,13 +11,19 @@ function [eyetrHeatMap] = edf_to_figure(data_path)
 data_folder = dir(data_path);
 obj = struct('Samples', struct('posX', [], 'posY', [])); % Initialize obj
 amount = 0;
-
-for i = 1:length(data_folder)
-    if endsWith(data_folder(i).name, '.edf')
-        amount = amount + 1;
-        edf_temp = Edf2Mat([data_path filesep data_folder(i).name]); % Reading the eye tracking files
-        obj.Samples.posX = [obj.Samples.posX; edf_temp.Samples.posX]; % Combining all of them
-       obj.Samples.posY = [obj.Samples.posY; edf_temp.Samples.posY]; % Combining all of them
+for s = 1:length(id) %length of all participants
+    for l=1:length(data_folder) %look at all the IDs in the datafolder dir
+        if strcmpi(id{s},data_folder(l).name)%if the id of the participant has a folder
+            data_folder_indv = dir([data_path id{s} '\']); %create a dir to the individual
+            amount = amount + 1;
+            for i = 1:length(data_folder_indv)
+                if endsWith(data_folder_indv(i).name, '.edf')
+                    edf_temp = Edf2Mat([data_path id{s} filesep data_folder_indv(i).name]); % Reading the eye tracking files
+                    obj.Samples.posX = [obj.Samples.posX; edf_temp.Samples.posX]; % Combining all of them
+                    obj.Samples.posY = [obj.Samples.posY; edf_temp.Samples.posY]; % Combining all of them
+                end
+            end
+        end
     end
 end
 exist edf_temp;
@@ -46,31 +53,31 @@ elseif ans==1
 
     %% Generate data for heatmap
     gazedata = [posY, posX];
-    
+
 
     % Set minimum x and y to zero
-%     for i = 1:size(gazedata, 2)
-%         gazedata(:, i) = gazedata(:, i) - min(gazedata(:, i));
-%     end
+    %     for i = 1:size(gazedata, 2)
+    %         gazedata(:, i) = gazedata(:, i) - min(gazedata(:, i));
+    %     end
 
     %finding screen size
     for i = 1:length(edf_temp.RawEdf.FEVENT)
         if  contains(edf_temp.RawEdf.FEVENT(i).codestring, 'MESSAGEEVENT')
-        if  contains(edf_temp.RawEdf.FEVENT(i).message, 'DISPLAY_COORDS')
-            display_coords= str2num(edf_temp.RawEdf.FEVENT(i).message(end-9:end));
-        end
+            if  contains(edf_temp.RawEdf.FEVENT(i).message, 'DISPLAY_COORDS')
+                display_coords= str2num(edf_temp.RawEdf.FEVENT(i).message(end-9:end));
+            end
         end
     end
-%turning all gazes outsized of screen size to NaN
+    %turning all gazes outsized of screen size to NaN
     for i = 1:size(gazedata, 1)
         if   gazedata(i, 1) < 0 || gazedata(i, 2) < 0
-        gazedata(i, :) = [NaN, NaN];
+            gazedata(i, :) = [NaN, NaN];
         elseif gazedata(i, :) > [display_coords(2),display_coords(1)]
             gazedata(i, :) = [NaN, NaN];
         elseif gazedata(i, 1) > [display_coords(2)]
             gazedata(i, :) = [NaN, NaN];
         elseif gazedata(i, 2) > [display_coords(1)]
-             gazedata(i, :) = [NaN, NaN];
+            gazedata(i, :) = [NaN, NaN];
         end
     end
     gazedata = gazedata(~isnan(gazedata(:, 1)), :);
@@ -102,8 +109,8 @@ elseif ans==1
         disp('EDF File is empty')
         figure;
 
-        title(['This participant has no data inside the eyetracking file']);
-        xlabel(['This is an empty placeholder']);
+        title('This participant has no data inside the eyetracking file');
+        xlabel('This is an empty placeholder');
     else
         % Create figure
         figure;
@@ -112,7 +119,7 @@ elseif ans==1
         plotRange=[0 display_coords(1) 0 display_coords(2)];
         axis(plotRange);
         colorbar;
-        title(['Heat map of the eye movement for all ' num2str(amount) ' blocks']);
+        title(['Heat map of the eye movement for ' num2str(amount) ' participants out of the ' num2str(length(id))]);
         xlabel(['Percentage of Eye Tracking Time: ' num2str(eye_tracking_percentage) '%']);
     end
 end
