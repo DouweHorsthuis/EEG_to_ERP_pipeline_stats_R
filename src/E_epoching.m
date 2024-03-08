@@ -29,7 +29,7 @@ for gr=1:length(Group_list)
     %need to add the folder with the functions
     file_loc=[fileparts(matlab.desktop.editor.getActiveFilename),filesep];
     addpath(genpath(file_loc));%adding path to your scripts so that the functions are found
-
+    participant_info_temp = string(zeros(length(subject_list), 6+n_bins)); %prealocationg space for speed
     load([home_path 'participant_info_' Group_list{gr} '.mat']);
     participant_info_temp = string(zeros(length(subject_list), 4+n_bins)); %prealocationg space for speed
     %% Loop through all subjects
