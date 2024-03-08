@@ -1,9 +1,10 @@
+
 function [EEG]= readme_to_EEG(EEG, data_path)
 % readme_to_EEG reads a readme file if availible, and adds the data to the EEG
 % file, if readme file not availibe questions will be prompted to get the same info
 % Usage: [EEG]= readme_to_EEG(EEG, data_path)
 % If EEG is [], function still works but will create this file for you
-% if data_path is [] or if there is no readme file in that folder 
+% if data_path is [] or if there is no readme file in that folder
 %     function will instead prompt the questions to the user
 % the structuture EEG will have the following added info:
 % EEG.notes=Notes from readme file;
@@ -30,9 +31,9 @@ function [EEG]= readme_to_EEG(EEG, data_path)
 % *note: when "Results from readme file", readme_to_EEG will either find it in the readme file and use it
 % or if it doesn't find it, it will promt for the answer.
 readme_yn='no';
-   notes=[];date_1=[]; Age=[]; Sex=[]; Handedness=[]; glasses=[]; Medication=[]; Exp=[]; Externals=[]; Light=[]; Screen=[];Cap=[]; pres_version=[];
-    readme_1=["this is a string to set it up","this is the second string to set it up","this is the 3rd string to set it up","this is the 4rd string to set it up", "this is the last string to set it up"];
- 
+notes=[];date_1=[]; Age=[]; Sex=[]; Handedness=[]; glasses=[]; Medication=[]; Exp=[]; Externals=[]; Light=[]; Screen=[];Cap=[]; pres_version=[];
+readme_1=["this is a string to set it up","this is the second string to set it up","this is the 3rd string to set it up","this is the 4rd string to set it up", "this is the last string to set it up"];
+
 if ~isempty(data_path)
     data_folder=dir(data_path);
     for i = 1:length(data_folder)
@@ -86,6 +87,9 @@ if ~isempty(data_path)
                 Medication=extractBetween(readme_1, 'Medication:', 'Height');
                 Medication = strtrim(Medication);% deleting tabs, then deleting spaces
                 Medication=strcat('Medication: ',Medication);
+            elseif contains(readme_1,'Medication:')  && ~contains(readme_1,'Height')
+                prompt = "Medication:";
+                Medication= input(prompt,"s");
             end
             if contains(readme_1,'Exp:') && contains(readme_1,'booth')
                 Exp=extractBetween(readme_1, 'Exp:', 'booth');
@@ -95,7 +99,7 @@ if ~isempty(data_path)
             if contains(readme_1,'Externals:')&& contains(readme_1,'(normal')
                 Externals=extractBetween(readme_1, 'Externals:', '(normal');
                 if strlength(Externals)>25
-                Externals=extractBetween(readme_1, 'Externals:', 'External location');    
+                    Externals=extractBetween(readme_1, 'Externals:', 'External location');
                 end
                 Externals = strtrim(Externals);% deleting tabs, then deleting spaces
                 Externals=strcat('Externals: ',Externals);
@@ -115,112 +119,84 @@ if ~isempty(data_path)
                 Cap = strtrim(Cap);% deleting tabs, then deleting spaces
                 Cap=strcat('Cap size and #channels : ',Cap);
             end
-            if contains(readme_1,'notes:') && contains(readme_1,'Save as')
-                notes = extractBetween(readme_1,'notes:', 'Save as');
+            if (contains(readme_1,'notes:') || contains(readme_1,'Notes:')) && (contains(readme_1,'save as') || contains(readme_1,'Save as') || contains(readme_1,'ID#_visual'))
+                notes = extractBetween(readme_1,'notes:', 'save as');
+                if isempty(notes)
+                    notes = extractBetween(readme_1,'Notes:', 'save as');
+                end
+                if isempty(notes)
+                    notes = extractBetween(readme_1,'Notes:', 'Save as');
+                end
+                if isempty(notes)
+                    notes = extractBetween(readme_1,'Notes:', 'ID#_visual');
+                end
+                if isempty(notes)
+                    notes = extractBetween(readme_1,'notes:', 'ID#_visual');
+                end
                 notes = strtrim(notes); %deleting tabs, then deleting spaces
                 notes=strcat('Notes: ',notes);
             end
-            
+
         end
     end
-end
-if  isempty(pres_version)
-    prompt = "What Version of Presentation was used?";
-    pres_version= input(prompt,"s"); pres_version=strcat('Presentation Version:',cellstr(pres_version));
-end
-if  isempty(date_1) || strcmpi(date_1,'Date:') || strlength(date_1)>20
-    prompt = "Date of data collection (mm/dd/yyyy): ";
-    date_1= input(prompt,"s"); date_1=strcat('Date:',cellstr(date_1));
-end
-if  isempty(Age) || strcmpi(Age,'Age:') || strlength(Age)>10
-    prompt = "Age of participant: ";
-    Age= input(prompt,"s"); Age=strcat('Age: ',cellstr(Age));
-end
-if isempty(Sex) ||strcmpi(Sex,'Sex:') || strlength(Sex)>15
-    prompt = "Sex of participant: ";
-    Sex= input(prompt,"s"); Sex=strcat('Gender: ', cellstr(Sex));
-end
-if  isempty(Handedness) || strcmpi(Handedness,'Handedness:') || strlength(Handedness)>25 
-    prompt = "Handedness: ";
-    Handedness= input(prompt,"s"); Handedness=strcat('Handedness: ',cellstr(Handedness));
-end
-if isempty(glasses) || strcmpi(glasses,'Glasses or contacts:') || strlength(glasses)>35
-    prompt = "glasses or contacts: ";
-    glasses= input(prompt,"s"); glasses=strcat('Glasses or contacts: ', cellstr(glasses));
 end
 
-if isempty(Medication) || strcmpi(Medication,'Medication:') || strlength(Medication)>40
+
+if isempty(Medication)
+    Medication='Medication: not filled out in readme';
+elseif strlength(Medication)>40 %checking if it fits in the figure (+40 chr goes over the edge)
+    start=1;med_temp=char(Medication);med_temp_2={};length_med=ceil(strlength(Medication)/40)*40;
+    for i=1:length(med_temp) %to stop the spaces from being deleted
+        if isempty(med_temp(i))
+            med_temp{i}={' '};
+        end
+    end
+    for ii=40:40:length_med %looks for 80 chr increments
+        if start==1
+            med_temp_2=[med_temp_2,strcat('Medication: ', strcat(med_temp(start:ii)))];
+
+            start=ii+1;
+        elseif ii>strlength(Medication)
+            med_temp_2=[med_temp_2,strcat(med_temp(start:end))];
+        else
+            med_temp_2=[med_temp_2,strcat(med_temp(start:ii))];
+            start=ii+1;
+        end
+    end
+    Medication=med_temp_2; %Notes are now 80chr but with enters at the end so it still fits
+elseif strcmpi(Medication,"Medication:")
+    Medication='Medication: not filled out in readme';
+
+elseif strcmpi(Medication,"")
     prompt = "Medication:";
     Medication= input(prompt,"s");
-    if strlength(Medication)>40 %checking if it fits in the figure (+40 chr goes over the edge)
-        start=1;med_temp=cellstr(Medication')';med_temp_2={};length_med=ceil(strlength(Medication)/40)*40;
-        for i=1:length(med_temp) %to stop the spaces from being deleted
-            if isempty(med_temp{i})
-                med_temp{i}={' '};
-            end
-        end
-        for ii=40:40:length_med %looks for 80 chr increments
-            if start==1
-                med_temp_2=[med_temp_2,strcat('Medication: ', strcat(med_temp{start:ii}))];
-                
-                start=ii+1;
-            elseif ii>strlength(Medication)
-                med_temp_2=[med_temp_2,strcat(med_temp{start:end})];
-            else
-                med_temp_2=[med_temp_2,strcat(med_temp{start:ii})];
-                start=ii+1;
-            end
-        end
-        Medication=med_temp_2; %Notes are now 80chr but with enters at the end so it still fits
-    elseif strcmpi(Medication,"")
-        Medication='Medication: not filled out';
-    end
-else
-   % Medication=['Medication: ',Medication];
 end
-if isempty(Exp) || strcmpi(Exp,'Exp:') || strlength(Exp)>20
-    prompt = "Experimenter: ";
-    Exp= input(prompt,"s"); Exp=strcat('Experimenter: ',cellstr(Exp));
-end
-if isempty(Externals) || strcmpi(Externals,'Externals:') || strlength(Externals)>25
-    prompt = "Externals: ";
-    Externals= input(prompt,"s"); Externals=strcat('Externals: ',cellstr(Externals));
-end
-if  isempty(Light)|| strcmpi(Light,'Light:') || strlength(Light)>10
-    prompt = "Light on/off: ";
-    Light= input(prompt,"s"); Light=strcat('Light: ',cellstr(Light));
-end
-if  isempty(Screen)|| strcmpi(Screen,'Screen:') || strlength(Screen)>30
-    prompt = "Screen distance (cm): ";
-    Screen= input(prompt,"s"); Screen=strcat('Screen distance (cm): ',cellstr(Screen));
-end
-if  isempty(Cap)|| strcmpi(Cap,'Cap:') || strlength(Cap)>50
-    prompt = "Cap size and # channels: ";
-    Cap= input(prompt,"s"); Cap=strcat('Cap size and #channels : ',cellstr(Cap));
-end
+
 %% notes
-if  isempty(notes)|| strcmpi(notes,'Notes:') || strlength(notes)>45
+if  strcmpi(notes,'Notes:')
+    notes='No notes write ndown during EEG into readme';
+elseif   isempty(notes)
     prompt = "Please copy past all the text from the Notes here: ";
     notes= input(prompt,"s");
     if strlength(notes)>45 %checking if it fits in the figure (+90 chr goes over the edge)
-        start=1;notes_temp=cellstr(notes')';notes_temp_2={};length_notes=ceil(strlength(notes)/50)*50;
+        start=1;notes_temp=char(notes);notes_temp_2={};length_notes=ceil(strlength(notes)/50)*50;
         for i=1:length(notes_temp) %to stop the spaces from being deleted
-            if isempty(notes_temp{i})
-                notes_temp{i}={' '};
+            if isempty(notes_temp(i))
+                notes_temp(i)=(' ');
             end
         end
         if ~(rem(45,length_notes)==0)
-           length_notes= (ceil(length_notes/45))*45;
+            length_notes= (ceil(length_notes/45))*45;
         end
         for ii=45:45:length_notes+1 %looks for 80 chr increments
             if start==1
-                notes_temp_2=[notes_temp_2,strcat('Notes: ', strcat(notes_temp{start:ii}))];
+                notes_temp_2=[notes_temp_2,strcat('Notes: ', strcat(notes_temp(start:ii)))];
                 start=ii+1;
             elseif ii>strlength(notes) %making sure it will include the last bit
-                notes_temp_2=[notes_temp_2,strcat(notes_temp{start:end})];
+                notes_temp_2=[notes_temp_2,strcat(notes_temp(start:end))];
                 break
             else
-                notes_temp_2=[notes_temp_2,strcat(notes_temp{start:ii})];
+                notes_temp_2=[notes_temp_2,strcat(notes_temp(start:ii))];
                 start=ii+1;
             end
         end
@@ -246,14 +222,17 @@ if contains(readme_1,'Hearingtest') & contains(readme_1,'500hz') & contains(read
     hz4000=regexprep(strtrim(hz4000), '\t', ' ');% deleting whitespace, tabs, etc
     hz4000=strcat('4000Hz: ',hz4000);
 end
-if contains(readme_1,'Vision Test:') & contains(readme_1,'notes:')   & contains(readme_1,'vision test is not done on EEG day)') 
+if contains(readme_1,'Vision Test:') || (contains(readme_1,'notes:') || contains(readme_1,'Notes:'))   || contains(readme_1,'vision test is not done on EEG day)')
     vision=extractBetween(readme_1, 'vision test is not done on EEG day)', 'notes:');
+    if isempty(vision)
+        vision=extractBetween(readme_1, 'vision test is not done on EEG day)', 'Notes:');
+    end
     vision = strtrim(vision);% deleting tabs, then deleting spaces
     vision = regexprep(vision, '\t', ' '); vision = regexprep(vision, '  ', ' '); %cell  {' 20/12 20/32 20/14 '}
     vision=string(vision);
 end
 
-if isempty(vision) || contains(readme_1,'20/  20/') || strlength(vision)>20
+if isempty(vision) || contains(readme_1,'20/  20/') || strlength(vision)>23
     prompt = "Vision score left eye: ";
     left_eye= input(prompt,"s");
     prompt = "Vision score right eye: ";
@@ -261,23 +240,8 @@ if isempty(vision) || contains(readme_1,'20/  20/') || strlength(vision)>20
     prompt = "Vision score both eyes: ";
     both_eye= input(prompt,"s");
     vision=strcat(left_eye, " ",right_eye," ",both_eye);
-end 
-    if isempty(hz500) || strcmp(string(hz500), " 500   Hz:  dB dB ") || strlength(hz500)>20
-        prompt = "500hz hearing test results (left ear/ Right ear): ";
-        hz500= input(prompt,"s"); hz500=strcat(' 500   Hz   : ',cellstr(hz500));
-    end
-    if isempty(hz1000) ||strcmp(string(hz1000), " 1000 Hz:   dB  dB") || strlength(hz1000)>24
-        prompt = "1000hz hearing test results (left ear/ Right ear): ";
-        hz1000= input(prompt,"s"); hz1000=strcat(' 1000 Hz   : ',cellstr(hz1000));
-    end
-    if  isempty(hz2000) || strcmp(string(hz2000), " 2000 Hz:   dB  dB") || strlength(hz2000)>24
-        prompt = "2000hz hearing test results (left ear/ Right ear): ";
-        hz2000= input(prompt,"s"); hz2000=strcat(' 2000 Hz   : ',cellstr(hz2000));
-    end
-    if isempty(hz4000) || strcmp(string(hz4000), " 4000 Hz:   dB  dB") || strlength(hz4000)>24
-        prompt = "4000hz hearing test results (left ear/ Right ear): ";
-        hz4000= input(prompt,"s"); hz4000=strcat(' 4000 Hz   : ',cellstr(hz4000));
-    end
+end
+
 
 EEG.notes=notes;
 EEG.vision_info=" Left     Right Both (vision scores)";hearing_info= " Frequency Left Right";

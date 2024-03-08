@@ -33,6 +33,7 @@ else
     bridge.Bridged.Labels=strjoin(bridge.Bridged.Labels);
 end
 saveas(gcf,[save_path EEG_temp.subject '_bridged_channels'])
+print([save_path EEG_temp.subject '_bridged_channels'], '-dpng' ,'-r300');
 close all
 EEG.bridged=EEG_temp.bridged;
 end

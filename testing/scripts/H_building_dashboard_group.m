@@ -3,21 +3,20 @@
 % it wil first create one for each participant of a group
 % it wil then proceed to create one on a group level
 clear all
-home_path    = 'D:\whereisthedata\'; %place data is (something like 'C:\data\')
-home_path    = 'D:\tosavethefigure\'; %where to save the group level figure
-edf_path = 'D:\wherearetheeyetrackingfiles\'; %home path to where de EDF files are
-Group_list={'Name_grp1' 'Name_grp2'};
-
-task_name = 'Nameofyourparadigm';
-Plot_chans={'chan1' 'chan2'}; %channels that you want ERP plots for
-epoch_time = [startms endms];
-Plot_bins={'literal names of bins'}; %either names from ERP.bindescr or 'All'
+home_path    = 'C:\Users\douwe\Desktop\processed_new\'; %place data is (something like 'C:\data\')
+save_path_gr =  'C:\Users\douwe\Desktop\processed_new\'; %where to save the group level figure
+edf_path = 'C:\Users\douwe\Desktop\DATA\'; %home path to where de EDF files are
+Group_list={'controls' 'cystinosis'};
+task_name = 'SWAT';
+channels_names={'Fcz' 'Cz'}; %channels that you want ERP plots for
+epoch_time = [-50 500];
+Plot_bins={'All'}; %either names from ERP.bindescr or 'All'
 RT_yn = 'Yes'; %'Yes' 'No' - only if RT exist you can plot this
 for gr=1:length(Group_list)
-    if strcmpi(Group_list{gr},'Name_grp1')
-        subject_list = {'ID_1' 'ID_2'};
-    elseif strcmpi(Group_list{gr},'Name_grp2')
-        subject_list = {'ID_3' 'ID_4'};
+    if strcmpi(Group_list{gr},'cystinosis' )
+        subject_list = { '9182' '9182' '9109'};
+    elseif strcmpi(Group_list{gr},'controls')
+        subject_list = {'12709' '12091'  '12883'};
     elseif strcmpi(Group_list{gr},'grn')
         subject_list = {'id_1' 'id_2'};
     else
